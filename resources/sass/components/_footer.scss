@@ -1,0 +1,20 @@
+footer {
+    background: white;
+    height: 50px;
+    display: flex;
+    color: #9B9B9B;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+
+    @include media-breakpoint-down(xs) {
+        text-align: center;
+        height: 75px;
+    }
+
+    nav a {
+        margin-left: 15px;
+        color: #9B9B9B;
+        text-decoration: underline;
+    }
+}

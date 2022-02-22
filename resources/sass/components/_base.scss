@@ -1,0 +1,46 @@
+html, body, #app {
+    height: 100%;
+    color: $gray-dark;
+}
+
+body {
+    min-height: 100%;
+}
+
+main {
+    min-height: calc(100% - 125px);
+    padding-bottom: 50px;
+
+    &.authentication {
+        min-height: calc(100% - 50px);
+    }
+
+    @include media-breakpoint-down(md) {
+        min-height: calc(100% - 115px);
+
+        &.authentication {
+            min-height: calc(100% - 50px);
+        }
+    }
+
+    @include media-breakpoint-down(xs) {
+        min-height: calc(100% - 140px);
+
+        &.authentication {
+            min-height: calc(100% - 75px);
+        }
+    }
+}
+
+[v-cloak] {
+    display: none
+}
+
+label {
+    font-weight: 600;
+}
+
+.tooltip-icon {
+    margin-left: 5px;
+    margin-bottom: 2px;
+}

@@ -1,0 +1,112 @@
+.highlighted-stocks {
+
+    &:last-child {
+        @include media-breakpoint-down(sm) {
+            margin-bottom: -15px;
+        }
+    }
+
+    h2 {
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 15px;
+        margin-top: 30px;
+        color: $gray-dark;
+
+        @include media-breakpoint-down(md) {
+            font-size: 18px;
+        }
+    }
+
+    .stock {
+        text-decoration: none !important;
+        height: 100%;
+
+        @include media-breakpoint-down(sm) {
+            margin-bottom: 15px;
+            height: auto;
+        }
+
+        .card-body {
+            @include media-breakpoint-down(md) {
+                padding: 15px;
+            }
+        }
+
+        .chart {
+            height: 125px;
+            background: rgba(245, 247, 250, 0.5);
+            position: relative;
+
+            @include media-breakpoint-down(md) {
+                height: 100px;
+            }
+
+            &.loading {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2.5px;
+            color: $gray-dark;
+            line-height: 15px;
+
+            @include media-breakpoint-down(md) {
+                font-size: 13px;
+            }
+
+            &.loading {
+                height: 15px;
+                background: $gray;
+
+                @include media-breakpoint-down(md) {
+                    width: 100%;
+                }
+            }
+        }
+
+        .price {
+            font-weight: 600;
+            color: $gray;
+            line-height: 20px;
+
+            @include media-breakpoint-down(md) {
+                font-size: 12px;
+                line-height: 12px;
+                padding-top: 2.5px;
+            }
+
+            &.loading {
+                height: 15px;
+                margin: 2.5px 0;
+                background: $gray;
+                display: inline-block;
+                width: 150px;
+
+                @include media-breakpoint-down(md) {
+                    margin-bottom: 0;
+                    height: 12px;
+                    width: 75%;
+                }
+            }
+
+            span {
+                font-weight: 400;
+                font-size: 11px;
+
+                &.change-percentage-negative {
+                    color: $red;
+                }
+
+                &.change-percentage-positive {
+                    color: $green;
+                }
+            }
+        }
+    }
+}

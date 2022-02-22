@@ -1,0 +1,38 @@
+.buy-sell-shares {
+    .table {
+        border: 1px solid #e5e5e5;
+        margin: 15px 0;
+        font-size: 12px;
+
+        td {
+            border-top: 1px solid #e5e5e5;
+            border-left: 1px solid #e5e5e5;
+            padding-left: 0.5rem !important;
+            padding: 0.5rem;
+        }
+    }
+
+    .completed {
+        padding: 25px;
+        text-align: center;
+
+        h3 {
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+    }
+
+    .modal-body.loading {
+        text-align: center;
+        padding: 100px 0;
+
+        .loader {
+            margin: 15px auto;
+        }
+    }
+
+    h5 {
+        font-size: 13px;
+        line-height: 22px;
+    }
+}

@@ -1,0 +1,53 @@
+.settings-avatar {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+
+    a {
+        margin-top: 15px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+
+    .avatar-holder {
+        max-width: 90%;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+        width: 225px;
+
+        @include media-breakpoint-down(sm) {
+            width: 175px;
+        }
+
+        .avatar {
+            width: 100%;
+        }
+
+        .avatar-hover {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+
+            @include transition(300ms);
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}

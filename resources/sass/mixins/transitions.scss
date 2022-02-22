@@ -1,0 +1,4 @@
+@mixin transition-basic($speed: 250ms) {
+    -webkit-transition: all ease-in-out $speed;
+    transition: all ease-in-out $speed;
+}

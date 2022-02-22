@@ -1,0 +1,193 @@
+.stock-details {
+    h4 {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 15px;
+        margin-top: 30px;
+        color: #3E4C59;
+    }
+
+    .link a {
+        color: $gray;
+        text-decoration: underline;
+
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+
+    .detail {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+
+        &:last-child {
+            margin-bottom: 0;
+
+            @include media-breakpoint-down(sm) {
+                margin-bottom: 20px;
+            }
+        }
+
+        strong {
+            font-weight: 600;
+            margin-bottom: 2.5px;
+        }
+
+        a {
+            color: $primary;
+        }
+    }
+
+    .card-chart {
+        height: 375px;
+        position: relative;
+
+        @include media-breakpoint-down(md) {
+            height: 375px;
+        }
+
+        .tooltip-icon {
+            margin-bottom: 0;
+            margin-left: 7.5px;
+        }
+
+        .company_details {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+
+            @include media-breakpoint-down(md) {
+                top: 20px;
+                left: 20px;
+            }
+
+            h1 {
+                font-weight: 600;
+                font-size: 14px;
+                margin-bottom: 5px;
+
+                span {
+                    font-weight: 400;
+                }
+            }
+
+            h2 {
+                font-weight: 600;
+                font-size: 20px;
+                margin-bottom: 0;
+            }
+
+            .change-percentage-positive {
+                margin-left: 5px;
+                font-size: 14px;
+                color: $green;
+            }
+
+            .change-percentage-negative {
+                margin-left: 5px;
+                font-size: 14px;
+                color: $red;
+            }
+        }
+
+        .chart-ranges {
+            display: flex;
+            position: absolute;
+            right: 25px;
+            bottom: 25px;
+            background: white;
+            border: 1px solid $table-head-bg;
+            padding: 0 15px;
+            height: 35px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50px;
+            font-size: 12px;
+
+            @include media-breakpoint-down(md) {
+                right: 20px;
+                bottom: 20px;
+            }
+
+            li {
+                list-style: none;
+                padding: 9px 5px;
+                margin: 0 5px;
+                cursor: pointer;
+                font-weight: 600;
+                display: flex;
+                color: $gray;
+                line-height: 15px;
+                border-bottom: 2px solid transparent;
+                border-top: 2px solid transparent;
+                text-transform: uppercase;
+
+                &.range-3y, &.range-2y, &.range-3m, &.range-ytd {
+                    @include media-breakpoint-down(sm) {
+                        display: none;
+                    }
+                }
+
+                &:hover {
+                    opacity: 0.6;
+                }
+
+                &.active {
+                    border-bottom: 2px solid $gray-dark;
+                    color: $gray-dark;
+                }
+            }
+        }
+
+        .buy {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+            height: 35px;
+            padding: 0 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+
+            @include media-breakpoint-down(md) {
+                right: 20px;
+                top: 20px;
+            }
+        }
+
+        .loader-holder {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.6);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .chart {
+            position: relative;
+            height: 100%;
+
+            .chart-canvas-holder {
+                height: 375px;
+                position: relative;
+            }
+        }
+    }
+}

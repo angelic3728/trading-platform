@@ -1,0 +1,26 @@
+.my-investments {
+    height: 100%;
+    overflow: auto;
+
+    @include media-breakpoint-down(md) {
+        margin-bottom: 25px;
+        height: auto;
+    }
+
+    .card-loader {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .table-holder {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+
+        @include media-breakpoint-down(md) {
+            min-height: 250px;
+            max-height: 500px;
+        }
+    }
+}

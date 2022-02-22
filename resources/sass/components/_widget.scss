@@ -1,0 +1,70 @@
+.widget {
+    background: white;
+    border-bottom: 1px solid $card-border-color;
+    height: 70px;
+
+    &-content {
+        align-items: center;
+        overflow: hidden;
+        display: flex;
+    }
+
+    &-animation {
+        display: flex;
+        animation: widget-animation linear infinite;
+
+        &.animation-paused {
+            animation-play-state: paused;
+        }
+
+        &.animation-running {
+            animation-play-state: running;
+        }
+    }
+
+    &-stock {
+        margin-right: 50px;
+        text-decoration: none !important;
+
+        &:hover .widget-company-name {
+            text-decoration: underline;
+        }
+    }
+
+    &-company-name {
+        font-weight: 600;
+        color: $gray-dark;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    &-change-percentage {
+        display: block;
+        font-size: 10px;
+        line-height: 10px;
+
+        &.positive {
+            color: $green;
+        }
+        &.negative {
+            color: $red;
+        }
+    }
+
+    &-price {
+        font-weight: 600;
+        font-size: 11px;
+        color: $gray;
+    }
+
+    &-chart {
+        height: 25px;
+        width: 75px;
+        margin-left: 15px;
+    }
+
+    &-details {
+        display: flex;
+    }
+
+}

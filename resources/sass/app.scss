@@ -1,0 +1,39 @@
+// Variables
+@import 'variables/colors';
+@import 'variables/typography';
+@import 'variables/forms';
+
+// Libs
+@import '~bootstrap/scss/bootstrap';
+@import "~noty/src/noty.scss";
+@import "~noty/src/themes/mint.scss";
+
+// Mixins
+@import 'mixins/transitions';
+
+// Modules
+@import 'modules/typography';
+@import 'modules/table';
+@import 'modules/card';
+@import 'modules/pagination';
+@import 'modules/animations';
+@import 'modules/buttons';
+
+// Components
+@import 'components/authentication';
+@import 'components/modal';
+@import 'components/loaders';
+@import 'components/header';
+@import 'components/footer';
+@import 'components/base';
+@import 'components/account-manager';
+@import 'components/recent-documents';
+@import 'components/my-investments';
+@import 'components/highlighted-stocks';
+@import 'components/stock';
+@import 'components/buy-sell-modal';
+@import 'components/legal';
+@import 'components/settings';
+@import 'components/widget';
+@import 'components/balance';
+@import 'components/news';

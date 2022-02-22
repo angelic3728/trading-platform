@@ -1,0 +1,14 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+    font-size: 25px;
+    font-weight: 600;
+    margin-bottom: 15px;
+
+    @include media-breakpoint-down(md) {
+        font-size: 22px;
+    }
+}

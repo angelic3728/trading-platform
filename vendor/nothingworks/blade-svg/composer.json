@@ -1,0 +1,33 @@
+{
+    "name": "nothingworks/blade-svg",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Wathan",
+            "email": "adam.wathan@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^5.3|^6.0",
+        "illuminate/filesystem": "^5.3|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BladeSvg\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.5",
+        "mockery/mockery": "^0.9.5"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BladeSvg\\BladeSvgServiceProvider"
+            ]
+        }
+    }
+}

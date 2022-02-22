@@ -1,0 +1,20 @@
+.btn {
+    height: 40px;
+    font-weight: 600;
+    padding-left: 35px;
+    padding-right: 35px;
+
+    &.btn-rounded {
+        border-radius: 50px;
+    }
+
+    &.btn-animated {
+        @include transition(300ms);
+    }
+
+    .loader {
+        margin: 0;
+        height: 20px;
+        width: 20px;
+    }
+}

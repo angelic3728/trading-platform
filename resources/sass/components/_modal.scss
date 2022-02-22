@@ -1,0 +1,26 @@
+.modal-header {
+    border: none;
+    background: $primary;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 15px 1rem;
+
+    .modal-title {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .close {
+        color: white;
+        text-shadow: none;
+        opacity: 1;
+        margin: 0;
+        padding: 0;
+
+        &:hover {
+            color: white;
+            opacity: 0.5;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+.account-manager {
+    .name {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: #3E4C59;
+        margin-bottom: 15px;
+
+        img {
+          border-radius: 50%;
+          height: 45px;
+          width: 45px;
+          margin-right: 10px;
+        }
+    }
+
+    li {
+        list-style: none;
+        margin-bottom: 5px;
+        color: #3E4C59;
+    }
+
+    .card-header {
+        border: none;
+        padding-bottom: 0;
+    }
+}

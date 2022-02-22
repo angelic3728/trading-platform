@@ -1,0 +1,27 @@
+.loading-text-animation {
+    -webkit-animation: loading-text 2s infinite; /* Safari 4+ */
+    -moz-animation:    loading-text 2s infinite; /* Fx 5+ */
+    -o-animation:      loading-text 2s infinite; /* Opera 12+ */
+    animation:         loading-text 2s infinite; /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes loading-text {
+    0%   { opacity: 0.5; }
+    50%   { opacity: 0.8; }
+    100% { opacity: 0.5; }
+}
+@-moz-keyframes loading-text {
+    0%   { opacity: 0.5; }
+    50%   { opacity: 0.8; }
+    100% { opacity: 0.5; }
+}
+@-o-keyframes loading-text {
+    0%   { opacity: 0.5; }
+    50%   { opacity: 0.8; }
+    100% { opacity: 0.5; }
+}
+@keyframes loading-text {
+    0%   { opacity: 0.5; }
+    60%   { opacity: 0.8; }
+    100% { opacity: 0.5; }
+}
