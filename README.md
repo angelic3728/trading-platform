@@ -18,28 +18,17 @@ Next to these technologies, we also implement the following API's and services
 Copy `.env.example` to `.env` and update the values based on your settings
 
 ### Step 2
-Install composer and node modules
+Install composer
 ```
 composer install
-npm install
 ```
 
 ### Step 3
-Compile assets
-```
-npm run watch
-```
-or for production
-```
-npm run prod
-```
-
-### Step 4
 Configure database. First you need to create the tables
 ```
 php artisan migrate
 ```
-### Step 5
+### Step 4
 Import the NYSE stocks
 ```
 php artisan iex:import-stocks
@@ -50,28 +39,27 @@ Then import the LSE stocks (These are manually set in the lse-stocks.csv file)
 php artisan lse:import-stocks
 ```
 
-### Step 6
+### Step 5
 Setup your first manager account by inserting a row in the users table. You can leave the password empty.
 After the row is saved, run the following command to generate a password
 ```
 php artisan user:set-password
 ```
 
-### Step 7
+### Step 6
 Set the first highlighted stocks and widget stocks. At least 1 stocks should be highlighted and enabled for the widget to load the platform.
 
 You can set these by setting the `highlighted` or `widget` columns in the `stocks` table to `1`. You can have up to 4 stocks as highlighted.
 
 After changing these values, run `php artisan cache:clear` to clear the cache
 
-### Step 8
+### Step 7
 Link storage
 ```
 php artisan storage:link
 ```
 
-### Step 9
-
+### Step 8
 php artisan key:generate
 
 ## Admin Panel
