@@ -2,11 +2,6 @@
 
 @section('title', 'Dashboard')
 
-@push('breadcrumb')
-<li class="breadcrumb-item">Pages</li>
-<li class="breadcrumb-item active">Sample Page</li>
-@endpush
-
 @push('css')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animate.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/chartist.css')}}">
@@ -30,10 +25,9 @@
                             </div>
                         </div>
                         <div class="card-body text-center p-t-0">
-                            <h3 class="font-light">Wellcome Back, John!!</h3>
-                            <p class="font-light"> Your account manager is available from 05:00am to 17:00pm Monday to Friday.</p>
-                            <p class="font-light">If you need to speak to somebody outside of these ours, please</p>
-                            <a class="btn btn-light" href="#">click here</a>
+                            <h3 class="font-light">Welcome back John!</h3>
+                            <p class="font-light" style="font-size: 11px;">Your account manager is available from 05:00am to 17:00pm Monday to Friday. If you need to speak to somebody outside of these hours, please click below.</p>
+                            <a class="btn btn-light" href="#">Click Here</a>
                         </div>
                         <div class="confetti">
                             <div class="confetti-piece"></div>

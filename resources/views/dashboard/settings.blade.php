@@ -10,23 +10,45 @@
     </div>
 
     @if (session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
-
+    <!-- action="{{ route('settings.avatar') }}" -->
     <div class="row">
-        <div class="col-md-4 order-md-2">
-            <avatar src="{{ auth()->user()->avatar_url }}" action="{{ route('settings.avatar') }}"></avatar>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">Change Avatar</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('settings.avatar') }}" method="post" class="settings-avatar">
+                        @csrf
+                        @method('PUT')
+                        <div class="avatar-holder" onclick="selectFile">
+                            <img src="{{ auth()->user()->avatar_url }}" class="avatar" />
+                            <div class="avatar-hover">
+                                <img src="/icons/settings/file-upload.svg" />
+                            </div>
+                        </div>
+                        <a href="javascript:void(0)" onclick="selectFile()">Change Avatar</a>
+                        <button class="btn btn-success" type="submit">Save</button>
+                        <input type="file" name="avatar" id="avatar_input" style="display: none;" />
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="col-md-8 mt-4 mt-md-0 order-md-1">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
                     <div class="row align-items-center">
@@ -45,9 +67,9 @@
                             <input type="text" class="form-control{{ $errors->has('first_name') ? ' is-invalid' : '' }}" name="first_name" value="{{ auth()->user()->first_name }}" placeholder="Enter your first name" required>
 
                             @if ($errors->has('first_name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('first_name') }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('first_name') }}</strong>
+                            </span>
                             @endif
                         </div>
 
@@ -56,9 +78,9 @@
                             <input type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ auth()->user()->last_name }}" placeholder="Enter your last name" required>
 
                             @if ($errors->has('last_name'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('last_name') }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('last_name') }}</strong>
+                            </span>
                             @endif
                         </div>
 
@@ -67,9 +89,9 @@
                             <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ auth()->user()->email }}" placeholder="Enter your e-mail address" required>
 
                             @if ($errors->has('email'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('email') }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
                             @endif
                         </div>
 
@@ -78,9 +100,9 @@
                             <input type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ auth()->user()->phone }}" placeholder="Enter your phone number" required>
 
                             @if ($errors->has('phone'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('phone') }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('phone') }}</strong>
+                            </span>
                             @endif
                         </div>
 
@@ -91,11 +113,8 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card mt-4">
+        <div class="col-md-4">
+            <div class="card">
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
@@ -113,9 +132,9 @@
                             <input type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Enter an new password" required>
 
                             @if ($errors->has('password'))
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
                             @endif
                         </div>
 
@@ -133,4 +152,11 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    function selectFile() {
+        $('#avatar_input').click();
+    }
+</script>
+@endpush
 @endsection
