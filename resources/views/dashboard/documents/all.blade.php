@@ -91,7 +91,7 @@
     function upload(obj) {
         $("#submit_form_btn").click();
         $(obj).attr('onclick', '');
-        
+        $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
     }
     if ("{{Session::has('uploaded')}}")
         $.notify('<i class="fa fa-bell-o"></i>{{ Session::get("uploaded") }}', {

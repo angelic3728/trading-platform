@@ -71,7 +71,7 @@
                             </div>
                             <div class="d-flex-column p-2">
                                 <a href="" id="h_stock_link3">
-                                    <h6 href="#" id="h_stock_title3" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
+                                    <h6 id="h_stock_title3" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
                                 </a>
                                 <div class="center-content">
                                     <p class="d-sm-flex align-items-end">
