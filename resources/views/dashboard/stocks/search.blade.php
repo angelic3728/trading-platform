@@ -8,6 +8,7 @@
 
 @section('content')
 <div class="col-sm-12">
+    @if(!request()->filled('page') && !request()->filled('q'))
     <div class="card">
         <div class="card-header">
             <div class="header-top">
@@ -106,6 +107,7 @@
             </div>
         </div>
     </div>
+    @endif
     <div class="card mb-3">
         <div class="card-header">
             <div class="row align-items-center">

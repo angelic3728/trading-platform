@@ -38,9 +38,9 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
 
-        /**
-         * Validate Request
-         */
+        // /**
+        //  * Validate Request
+        //  */
         $request->validate([
             'title' => 'required',
             'file' => 'required|file',
@@ -63,12 +63,7 @@ class DocumentController extends Controller
         $document->type         = $request->file->getClientOriginalExtension();
         $document->save();
 
-        /**
-         * Json response
-         */
-        return response()->json([
-            'success' => true,
-        ]);
+        return redirect()->back()->with('uploaded', 'Your document is successfully uploaded!');
 
     }
 

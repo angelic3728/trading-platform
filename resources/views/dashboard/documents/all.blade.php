@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Transaction')
+@section('title', 'Documents')
 
 @push('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
@@ -8,12 +8,11 @@
 
 @section('content')
 
-<!-- Zero Configuration  Starts-->
 <div class="col-sm-12">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h5>Documents</h5>
-            <button type="button" class="btn btn-outline-success btn-sm">Upload</button>
+            <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalfat" data-whatever="@mdo">Upload</button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -46,12 +45,63 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="exampleModalfat" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Upload Document</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('api.documents.store') }}" method="post" id="upload_doc_form" enctype="multipart/form-data" class="needs-validation" novalidate="">
+                        @csrf
+                        <div class="form-group">
+                            <label class="form-label" for="doc_title">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Enter the title of the document" required>
+                            <div class="invalid-feedback">Please provide a valid document title.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea rows="3" class="form-control" name="description" placeholder="Enter an optional description"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">File</label>
+                            <input type="file" class="form-control" name="file" placeholder="Select your file" required>
+                            <div class="invalid-feedback">Please choose your document file</div>
+                        </div>
+                        <input type="submit" class="d-none" id="submit_form_btn">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" onclick="upload(this)">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- Zero Configuration  Ends-->
 
 @push('scripts')
 <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('assets/js/datatable/datatables/datatable.custom.js') }}"></script>
+<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
+<script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
+<script>
+    function upload(obj) {
+        $("#submit_form_btn").click();
+        $(obj).attr('onclick', '');
+        
+    }
+    if ("{{Session::has('uploaded')}}")
+        $.notify('<i class="fa fa-bell-o"></i>{{ Session::get("uploaded") }}', {
+            type: 'theme',
+            allow_dismiss: true,
+            delay: 2000,
+            showProgressbar: false,
+            timer: 300
+        });
+</script>
 @endpush
 
 @endsection
