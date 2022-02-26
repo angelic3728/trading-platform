@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use \DateTime;
 
 use Validator;
 use Storage;
@@ -24,47 +25,59 @@ class SettingsController extends Controller
          * Validate Request
          */
         $validator = Validator::make($request->all(), [
-            'avatar' => 'required|file|image',
+            'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        // print_r($validator->errors()); die();
 
         /**
          * If validation fails, go back
          */
-        if($validator->fails()){
+        if ($validator->fails()) {
 
             return redirect()->route('settings')->withError($validator->errors()->first('avatar'));
-
         }
 
         /**
          * Create square avatar in jpg format
          */
-        $avatar = Image::make($request->file('avatar'))->fit(500)->encode('jpg', 90);
 
         /**
          * File path
          *
          * Create md5 random name from the image source for the file name
          */
-        $file_path = 'users/'.md5((string) $avatar).'.jpg';
+        $datetime = new DateTime();
+
+        $datetime =  $datetime->format(DateTime::ATOM);
+        $file_name = strtotime($datetime) * 1000;
+        $file_extension = request()->file('avatar')->getClientOriginalExtension();
+        $file_name = $file_name.".".$file_extension;
+        $file_path = 'users/'.$file_name;
+
+        $avatar = Image::make($request->file('avatar'))->fit(100)->encode($file_extension, 90);
 
         /**
          * Store avatar
          */
+
+        // print_r($avatar);
+        // die();
         Storage::disk('public')->put($file_path, $avatar);
+
+        // print_r($avatar); die();
 
         /**
          * Update user
          */
         $user = auth()->user();
-        $user->avatar = $file_path;
+        $user-> avatar = "storage/".$file_path;
         $user->save();
 
         /**
          * Go back
          */
         return redirect()->route('settings')->withStatus('Your avatar has been saved');
-
     }
 
     public function updateUser(Request $request)
@@ -94,7 +107,6 @@ class SettingsController extends Controller
          * Go back
          */
         return redirect()->route('settings')->withStatus('Your account settings have been saved');
-
     }
 
     public function updatePassword(Request $request)
@@ -118,6 +130,5 @@ class SettingsController extends Controller
          * Go back
          */
         return redirect()->route('settings')->withStatus('Your password has been saved');
-
     }
 }

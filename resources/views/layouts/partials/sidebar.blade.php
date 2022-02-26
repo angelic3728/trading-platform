@@ -1,10 +1,15 @@
 <header class="main-nav">
     <div class="sidebar-user text-center">
-        <a class="setting-primary" href="{{ route('settings') }}"><i data-feather="settings"></i></a><img class="img-90 rounded-circle" src="{{ auth()->user()->avatar_url }}" alt="" />
+        <a class="setting-primary" href="{{ route('settings') }}"><i data-feather="settings"></i></a>
+        @if(File::exists(auth()->user()->avatar))
+        <img src="/{{ auth()->user()->avatar }}" class="img-90 rounded-circle"/>
+        @else
+        <img src="{{asset('assets/images/avtar/default.png')}}" class="img-90 rounded-circle" />
+        @endif
         <a href="user-profile" href="{{ route('settings') }}">
             <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->first_name." ".auth()->user()->last_name }}</h6>
         </a>
-        <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->email }}</h6>        
+        <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->email }}</h6>
     </div>
     <nav>
         <div class="main-navbar">

@@ -27,23 +27,30 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="mb-0">Change Avatar</h4>
+                            <h4 class="mb-0">Change Your Avatar</h4>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('settings.avatar') }}" method="post" class="settings-avatar">
+                    <form action="{{ route('settings.avatar') }}" method="post" class="settings-avatar"  enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <div class="avatar-holder" onclick="selectFile">
-                            <img src="{{ auth()->user()->avatar_url }}" class="avatar" />
-                            <div class="avatar-hover">
-                                <img src="/icons/settings/file-upload.svg" />
+                        <div class="d-block">
+                            <div class="avatar-holder d-flex justify-content-center">
+                                @if(File::exists(auth()->user()->avatar))
+                                <img src="{{ auth()->user()->avatar }}" class="img-90 rounded-circle avatar-preview" onclick="selectFile()" />
+                                @else
+                                <img src="{{asset('assets/images/avtar/default.png')}}" class="img-90 rounded-circle avatar-preview" onclick="selectFile()" />
+                                @endif
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <a href="javascript:void(0)" onclick="selectFile()" data-bs-toggle="tooltip" data-bs-placement="top" title="Image must be foresuqare bigger than 50*50. jpg|jpeg|png">Change Avatar</a>
+                            </div>
+                            <input type="file" name="avatar" id="avatar_input" style="display: none;" />
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary float-right" type="submit">Save</button>
                             </div>
                         </div>
-                        <a href="javascript:void(0)" onclick="selectFile()">Change Avatar</a>
-                        <button class="btn btn-success" type="submit">Save</button>
-                        <input type="file" name="avatar" id="avatar_input" style="display: none;" />
                     </form>
                 </div>
             </div>
@@ -153,10 +160,19 @@
     </div>
 </div>
 @push('scripts')
+<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <script>
     function selectFile() {
         $('#avatar_input').click();
     }
+
+    $('#avatar_input').change(function() {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            $('.avatar-preview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(this.files[0]);
+    });
 </script>
 @endpush
 @endsection
