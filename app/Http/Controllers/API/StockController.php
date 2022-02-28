@@ -36,7 +36,6 @@ class StockController extends Controller
          * Deteremine which action to perform
          */
         switch ($action) {
-
             case 'buy':
             case 'sell':
 

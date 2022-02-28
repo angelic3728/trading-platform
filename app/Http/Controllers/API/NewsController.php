@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use IEX;
-use DB;
-
-use App\Transaction;
 
 class NewsController extends Controller
 {
@@ -20,7 +17,6 @@ class NewsController extends Controller
          * Get Symbols
          */
         $symbols = explode(',', $request->symbols);
-
         /**
          * Get recent news
          */

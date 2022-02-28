@@ -3,6 +3,7 @@
 
 @push('css')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/chartist.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/prism.css')}}">
 @endpush
 
 @section('content')
@@ -11,26 +12,31 @@
         <div class="col">
             <div class="card income-card">
                 <div class="card-header">
-                    <div class="header-top">
-                        <h5>{{ array_get($data, 'company_name') }}</h5>
-                        <div class="center-content">
-                            <p class="d-sm-flex align-items-center">
-                                <span class="font-primary m-r-10 f-22 f-w-700" id="current_stock_price"></span>
-                                @if((float)array_get($data, 'change_percentage', 'null') >= 0)
-                                <span class="font-primary" id="current_stock_percentage"></span>
-                                @else
-                                <span class="font-danger" id="current_stock_percentage"></span>
-                                @endif
-                                @if(array_get($data, 'exchange') == 'LSE')
-                                <i class="fa fa-info-circle" style="color: #3458ff; padding: 4px; font-size: 18px;" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top" title="This stock has no real time pricing at the moment. All prices are based on the last closing price.">
-                                </i>
-                                @endif
-                            </p>
+                    <div class="header-top d-flex justify-content-between">
+                        <div class="title-content">
+                            <h5>{{ array_get($data, 'company_name') }}</h5>
+                            <div class="center-content">
+                                <p class="d-sm-flex align-items-center">
+                                    <span class="font-primary m-r-10 f-22 f-w-700" id="current_stock_price"></span>
+                                    @if((float)array_get($data, 'change_percentage', 'null') >= 0)
+                                    <span class="font-primary" id="current_stock_percentage"></span>
+                                    @else
+                                    <span class="font-danger" id="current_stock_percentage"></span>
+                                    @endif
+                                    @if(array_get($data, 'exchange') == 'LSE')
+                                    <i class="fa fa-info-circle" style="color: #3458ff; padding: 4px; font-size: 18px;" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top" title="This stock has no real time pricing at the moment. All prices are based on the last closing price.">
+                                    </i>
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal">Buy Shares</button>
                         </div>
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="loader-box justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
+                    <div class="loader-box chart-loader justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
                         <div class="loader-19"></div>
                     </div>
                     <div class="chart-content">
@@ -50,6 +56,65 @@
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('5y', this)">5y</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="buySharesModal" tabindex="-1" role="dialog" aria-labelledby="Document Modal Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Buy Shares from {{array_get($data, "symbol")}}</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Below you will find the most recent information about the stock you would like to buy shares from</h6>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Symbol</strong>:
+                                </td>
+                                <td>{{array_get($data, "symbol")}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Company</strong>:
+                                </td>
+                                <td>{{array_get($data, "company_name")}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Retail Price</strong>:
+                                </td>
+                                @if(array_get($data, 'currency') == 'USD')
+                                <td>${{array_get($data, "price")}}</td>
+                                @else
+                                <td>{{array_get($data, "price")}}p</td>
+                                @endif
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Institutional Price</strong>:
+                                </td>
+                                <td>{{ array_get($data, 'numbers.institutional_price', '-') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @if(array_get($data, 'exchange') == 'LSE')
+                    <small class="d-block mb-3">We don't have real time prices for this stock at the moment. All prices here are based on the last close price. When submitting an trade, we will confirm the actual price with you.</small>
+                    @endif
+                    <div class="form-group">
+                        <label class="form-label">Shares</label>
+                        <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
+                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
+                    </div>
+                    <div class="alert-wrapper"></div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary btn-rounded btn-animated" onclick="buyShares(this)">
+                            Buy
+                        </button>
                     </div>
                 </div>
             </div>
@@ -139,17 +204,11 @@
                         </div>
                     </div>
 
-                    <div class="row link">
-                        <div class="col">
-                            <hr>
-                        </div>
-                    </div>
-
-                    <div class="row link">
+                    <!-- <div class="row link">
                         <div class="col text-right">
                             <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this stock</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -223,21 +282,116 @@
     @endif
 
     @if(array_get($data, 'exchange') == 'NYSE')
-    <news symbols="{{ array_get($data, 'identifier') }}"></news>
+    <div class="row">
+        <div class="col">
+            <h2 class="title">Recent News</h2>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="loader-box news-loader justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
+                <div class="loader-19"></div>
+            </div>
+            <div class="row news-content" style="min-height: 440px;">
+                <div class="col-xl-4 col-md-6">
+                    <a href="" class="news-link-0">
+                        <div class="prooduct-details-box">
+                            <div class="media">
+                                <img class="align-self-center img-fluid news-img-0" src="" alt="#">
+                                <div class="media-body">
+                                    <p class="news-date-0 text-dark mb-0"></p>
+                                    <h6 class="news-headline-0"></h6>
+                                    <div class="summary news-summary-0"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <a href="" class="news-link-1">
+                        <div class="prooduct-details-box">
+                            <div class="media">
+                                <img class="align-self-center img-fluid news-img-1" src="" alt="#">
+                                <div class="media-body">
+                                    <p class="news-date-1 text-dark mb-0"></p>
+                                    <h6 class="news-headline-1"></h6>
+                                    <div class="summary news-summary-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <a href="" class="news-link-2">
+                        <div class="prooduct-details-box">
+                            <div class="media">
+                                <img class="align-self-center img-fluid news-img-2" src="" alt="#">
+                                <div class="media-body">
+                                    <p class="news-date-2 text-dark mb-0"></p>
+                                    <h6 class="news-headline-2"></h6>
+                                    <div class="summary news-summary-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="row no-news" style="display: none;">
+                <div class="col-sm-12">
+                    <div class="alert alert-light dark alert-dismissible fade show" id="zero_shares_alert" role="alert">
+                        There are no recent news.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @endif
     @endif
 </div>
 @push('scripts')
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
+<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <script>
     $(document).ready(function() {
-        $(".loader-box").css({
+        var identifier = "{{ array_get($data, 'identifier') }}";
+        $(".chart-loader").css({
             'top': $('.card-header').innerHeight() + "px",
             'height': $('.chart-content').innerHeight() + "px"
         });
+        $(".news-loader").css({
+            'height': $('.news-content').innerHeight() + "px"
+        });
         $(".chart-content").css("opacity", "0.3");
+        $(".news-content").css("opacity", "0.3");
         renderChart('1m');
+
+        $.ajax({
+            method: 'get',
+            url: '/api/news?symbols=' + identifier + '&&limit=3',
+            success: function(res) {
+                if (res.success) {
+                    var artiles = res.data;
+                    if (artiles.length > 0) {
+                        for (var i = 0; i < artiles.length; i++) {
+                            $('.news-img-' + i).attr('src', artiles[i]['image']);
+                            $('.news-link-' + i).attr('href', artiles[i]['url']);
+                            $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
+                            $('.news-headline-' + i).html(artiles[i]['headline']);
+                            if (artiles[i]['summary'].length > 150)
+                                $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
+                            else
+                                $('.news-summary-' + i).html(artiles[i]['summary']);
+                        }
+                    } else {
+                        $('.news-content').css('display', 'none');
+                        $('.no-news').css('display', 'block');
+                    }
+                    $(".news-content").css("opacity", "1");
+                    $(".news-loader").css('display', 'none');
+                }
+            }
+        });
     });
 
     function renderChart(range) {
@@ -363,13 +517,59 @@
                     colors: [vihoAdminConfig.primary],
                 };
                 $("#chart-timeline-dashboard").empty();
-                debugger;
                 var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
                 charttimeline.render();
                 $(".chart-content").css("opacity", "1");
-                $(".loader-box").css('display', 'none');
+                $(".chart-loader").css('display', 'none');
             }
         });
+    }
+
+    function buyShares(obj) {
+        var shares_amount = $("#shares_amount").val();
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        var institutional_price = "{{ array_get($data, 'numbers.institutional_price', '-') }}";
+        institutional_price = institutional_price.replace("$", "");
+        institutional_price = institutional_price.replace("p", "");
+        institutional_price = Number(institutional_price);
+
+        if (Number(shares_amount) == 0) {
+            $(".alert-wrapper").html('<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">The shares must be at least 1.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>');
+        } else {
+            $(obj).attr('onclick', '');
+            $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
+            $.ajax({
+                    method: 'post',
+                    url: '/api/stocks/{{array_get($data, "symbol")}}/buy',
+                    data: {
+                        shares: shares_amount,
+                        price: "{{array_get($data, 'price')}}",
+                        institutional_price: institutional_price,
+                        _token: csrf_token
+                    },
+                })
+                .then(response => {
+                    $(obj).attr('onclick', 'buyShares(this)');
+                    $(obj).html('Buy');
+                    if (response.success) {
+                        $.notify('<i class="fa fa-star-o"></i>Successfully confirmed!', {
+                            type: 'theme',
+                            allow_dismiss: true,
+                            delay: 2000,
+                            showProgressbar: false,
+                            timer: 1000
+                        });
+                    } else {
+                        $.notify('<i class="fa fa-bell-o"></i>', {
+                            type: 'theme',
+                            allow_dismiss: true,
+                            delay: 2000,
+                            showProgressbar: false,
+                            timer: 1000
+                        });
+                    }
+                })
+        }
     }
 
     function updateChart(range, obj) {
@@ -383,6 +583,16 @@
         $(".chart-content").css("opacity", "0.3");
         renderChart(range);
     }
+
+    function dateStr(obj) {
+        var mm = obj.getMonth() + 1; // getMonth() is zero-based
+        var dd = obj.getDate();
+
+        return [obj.getFullYear(),
+            (mm > 9 ? '' : '0') + mm,
+            (dd > 9 ? '' : '0') + dd
+        ].join(' : ');
+    };
 
     function formatPrice(price, currency) {
         switch (currency) {

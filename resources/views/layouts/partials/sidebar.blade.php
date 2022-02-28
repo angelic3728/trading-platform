@@ -6,7 +6,7 @@
         @else
         <img src="{{asset('assets/images/avtar/default.png')}}" class="img-90 rounded-circle" />
         @endif
-        <a href="user-profile" href="{{ route('settings') }}">
+        <a href="{{ route('settings') }}">
             <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->first_name." ".auth()->user()->last_name }}</h6>
         </a>
         <h6 class="mt-3 f-14 f-w-600">{{ auth()->user()->email }}</h6>

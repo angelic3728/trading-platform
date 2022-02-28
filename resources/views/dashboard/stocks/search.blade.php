@@ -21,7 +21,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-3">
-                    <div class="card income-card">
+                    <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
                                 <div id="chart-timeline-dashboard1" style="min-height: 120px;">
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="card income-card">
+                    <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
                                 <div id="chart-timeline-dashboard2" style="min-height: 120px;">
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="card income-card">
+                    <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
                                 <div id="chart-timeline-dashboard3" style="min-height: 120px;">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3">
-                    <div class="card income-card">
+                    <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
                                 <div id="chart-timeline-dashboard4" style="min-height: 120px;">
