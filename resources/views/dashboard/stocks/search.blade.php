@@ -179,7 +179,6 @@
             type: 'get',
             /* remind that 'data' is the response of the AjaxController */
             success: function(res) {
-                console.log(res);
                 if (res.success) {
                     for (var i = 0; i < res.data.length; i++) {
                         var adjustedData = [];

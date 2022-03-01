@@ -36,11 +36,11 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="loader-box chart-loader justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
+                    <div class="loader-box chart-loader justify-content-center align-items-center" style="inset:0px; position:absolute; z-index:10; display:flex;">
                         <div class="loader-19"></div>
                     </div>
                     <div class="chart-content">
-                        <div id="chart-timeline-dashboard" style="min-height: 440px;">
+                        <div id="chart-timeline-dashboard" class="d-flex justify-content-center align-items-center" style="min-height: 440px;">
                         </div>
                         <div class="d-flex justify-content-end p-10" id="range_btn_group">
                             <div class="btn-group btn-group-square" id="range_group" role="group">
@@ -286,6 +286,9 @@
         <div class="col">
             <h2 class="title">Recent News</h2>
         </div>
+        <div class="col-auto">
+            <a href="/news?symbols={{array_get($data, 'symbol')}}" class="see-more text-danger fw-bold d-none">See More</a>
+        </div>
     </div>
     <div class="card">
         <div class="card-body">
@@ -293,7 +296,7 @@
                 <div class="loader-19"></div>
             </div>
             <div class="row news-content" style="min-height: 440px;">
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6 news-0" style="display: none;">
                     <a href="" class="news-link-0">
                         <div class="prooduct-details-box">
                             <div class="media">
@@ -307,7 +310,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6 news-1" style="display: none;">
                     <a href="" class="news-link-1">
                         <div class="prooduct-details-box">
                             <div class="media">
@@ -321,7 +324,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="col-xl-4 col-md-6">
+                <div class="col-xl-4 col-md-6 news-2" style="display: none;">
                     <a href="" class="news-link-2">
                         <div class="prooduct-details-box">
                             <div class="media">
@@ -374,6 +377,7 @@
                     var artiles = res.data;
                     if (artiles.length > 0) {
                         for (var i = 0; i < artiles.length; i++) {
+                            $('.news-'+i).css('display', 'block');
                             $('.news-img-' + i).attr('src', artiles[i]['image']);
                             $('.news-link-' + i).attr('href', artiles[i]['url']);
                             $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
@@ -382,6 +386,11 @@
                                 $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
                             else
                                 $('.news-summary-' + i).html(artiles[i]['summary']);
+                            
+                            if(i == 2) {
+                                $('.see-more').removeClass('d-none');
+                                $('.see-more').addClass('d-block');
+                            }
                         }
                     } else {
                         $('.news-content').css('display', 'none');
@@ -399,128 +408,135 @@
             url: '/api/stocks/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
-                var times = 1;
-                var currency = "{{ array_get($data, 'currency') }}";
-                if ("{{array_get($data, 'exchange') == 'LSE'}}")
-                    times = 100;
-                var adjustedData = [];
-                for (var i = 0; i < res.data.length; i++) {
-                    var date = new Date(res.data[i]['date']);
-                    adjustedData[i] = [date.getTime(), Number((res.data[i]['fClose'] * times).toFixed(2))]
+                if (res.success && res.data.length != 0) {
+                    var times = 1;
+                    var currency = "{{ array_get($data, 'currency') }}";
+                    if ("{{array_get($data, 'exchange') == 'LSE'}}")
+                        times = 100;
+                    var adjustedData = [];
+                    for (var i = 0; i < res.data.length; i++) {
+                        var date = new Date(res.data[i]['date']);
+                        adjustedData[i] = [date.getTime(), Number((res.data[i]['fClose'] * times).toFixed(2))]
+                    }
+                    var options = {
+                        series: [{
+                            name: "Closing Price",
+                            data: adjustedData
+                        }],
+                        chart: {
+                            id: 'area-datetime',
+                            type: 'area',
+                            height: 425,
+                            zoom: {
+                                autoScaleYaxis: true
+                            },
+                            toolbar: {
+                                show: false
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        markers: {
+                            size: 0,
+                            style: 'hollow',
+                        },
+                        xaxis: {
+                            type: 'datetime',
+                            min: adjustedData[0][0],
+                            tickAmount: 6,
+                            axisTicks: {
+                                show: true,
+                            },
+                            axisBorder: {
+                                show: true
+                            },
+                        },
+                        tooltip: {
+                            x: {
+                                format: 'yyyy-MM-dd'
+                            },
+                            y: {
+                                formatter: function(val) {
+                                    if (currency == "GBP")
+                                        return formatPrice(val / 100, currency)
+                                    else
+                                        return formatPrice(val, currency)
+                                }
+                            }
+                        },
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.7,
+                                opacityTo: 0.9,
+                                stops: [0, 100]
+                            }
+                        },
+                        responsive: [{
+                                breakpoint: 1366,
+                                options: {
+                                    chart: {
+                                        height: 350
+                                    }
+                                }
+                            },
+                            {
+                                breakpoint: 1238,
+                                options: {
+                                    chart: {
+                                        height: 300
+                                    },
+                                    grid: {
+                                        padding: {
+                                            bottom: 5,
+                                        },
+                                    }
+                                }
+                            },
+                            {
+                                breakpoint: 992,
+                                options: {
+                                    chart: {
+                                        height: 300
+                                    }
+                                }
+                            },
+                            {
+                                breakpoint: 551,
+                                options: {
+                                    grid: {
+                                        padding: {
+                                            bottom: 10,
+                                        },
+                                    }
+                                }
+                            },
+                            {
+                                breakpoint: 535,
+                                options: {
+                                    chart: {
+                                        height: 250
+                                    }
+
+                                }
+                            }
+                        ],
+
+                        colors: [vihoAdminConfig.primary],
+                    };
+                    $("#chart-timeline-dashboard").empty();
+                    var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
+                    charttimeline.render();
+                    $(".chart-content").css("opacity", "1");
+                    $(".chart-loader").css('display', 'none');
+                } else {
+                    $("#chart-timeline-dashboard").empty();
+                    $("#chart-timeline-dashboard").html("<h3>No Chart Data!</h3>");
+                    $(".chart-content").css("opacity", "1");
+                    $(".chart-loader").css('display', 'none');
                 }
-                var options = {
-                    series: [{
-                        name: "Closing Price",
-                        data: adjustedData
-                    }],
-                    chart: {
-                        id: 'area-datetime',
-                        type: 'area',
-                        height: 425,
-                        zoom: {
-                            autoScaleYaxis: true
-                        },
-                        toolbar: {
-                            show: false
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    markers: {
-                        size: 0,
-                        style: 'hollow',
-                    },
-                    xaxis: {
-                        type: 'datetime',
-                        min: adjustedData[0][0],
-                        tickAmount: 6,
-                        axisTicks: {
-                            show: true,
-                        },
-                        axisBorder: {
-                            show: true
-                        },
-                    },
-                    tooltip: {
-                        x: {
-                            format: 'yyyy-MM-dd'
-                        },
-                        y: {
-                            formatter: function(val) {
-                                if (currency == "GBP")
-                                    return formatPrice(val / 100, currency)
-                                else
-                                    return formatPrice(val, currency)
-                            }
-                        }
-                    },
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.7,
-                            opacityTo: 0.9,
-                            stops: [0, 100]
-                        }
-                    },
-                    responsive: [{
-                            breakpoint: 1366,
-                            options: {
-                                chart: {
-                                    height: 350
-                                }
-                            }
-                        },
-                        {
-                            breakpoint: 1238,
-                            options: {
-                                chart: {
-                                    height: 300
-                                },
-                                grid: {
-                                    padding: {
-                                        bottom: 5,
-                                    },
-                                }
-                            }
-                        },
-                        {
-                            breakpoint: 992,
-                            options: {
-                                chart: {
-                                    height: 300
-                                }
-                            }
-                        },
-                        {
-                            breakpoint: 551,
-                            options: {
-                                grid: {
-                                    padding: {
-                                        bottom: 10,
-                                    },
-                                }
-                            }
-                        },
-                        {
-                            breakpoint: 535,
-                            options: {
-                                chart: {
-                                    height: 250
-                                }
-
-                            }
-                        }
-                    ],
-
-                    colors: [vihoAdminConfig.primary],
-                };
-                $("#chart-timeline-dashboard").empty();
-                var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
-                charttimeline.render();
-                $(".chart-content").css("opacity", "1");
-                $(".chart-loader").css('display', 'none');
             }
         });
     }

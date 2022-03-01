@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+.single-stock-link:hover {
+    color: black!important;
+}
+
+.see-more {
+    color:lightcoral!important;
+}

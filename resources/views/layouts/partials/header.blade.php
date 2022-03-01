@@ -8,11 +8,13 @@
     <div class="left-menu-header col">
       <ul>
         <li>
-          <form class="form-inline search-form">
+          <div class="search-form">
             <div class="search-bg"><i class="fa fa-search"></i>
-              <input class="form-control-plaintext" placeholder="Search here.....">
+              <input type="text" id="search_stocks" placeholder="Search Stocks" class="form-control" autocomplete="off">
+              <div class="search-results d-none shadow shadow-showcase bg-white flex-column" style="position: absolute; top:25px; z-index:99; padding:10px 15px; min-width:100%;">
+              </div>
             </div>
-          </form>
+          </div>
           <span class="d-sm-none mobile-search search-bg"><i class="fa fa-search"></i></span>
         </li>
       </ul>
