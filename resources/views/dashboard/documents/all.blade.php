@@ -57,7 +57,7 @@
                         @csrf
                         <div class="form-group">
                             <label class="form-label" for="doc_title">Title</label>
-                            <input type="text" class="form-control" name="title" placeholder="Enter the title of the document" required>
+                            <input type="text" id="doc_title" class="form-control" name="title" placeholder="Enter the title of the document" required>
                             <div class="invalid-feedback">Please provide a valid document title.</div>
                         </div>
 
@@ -68,7 +68,7 @@
 
                         <div class="form-group">
                             <label class="form-label">File</label>
-                            <input type="file" class="form-control" name="file" placeholder="Select your file" required>
+                            <input type="file" class="form-control" id="doc_file" name="file" placeholder="Select your file" required>
                             <div class="invalid-feedback">Please choose your document file</div>
                         </div>
                         <input type="submit" class="d-none" id="submit_form_btn">
@@ -90,8 +90,10 @@
 <script>
     function upload(obj) {
         $("#submit_form_btn").click();
-        $(obj).attr('onclick', '');
-        $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
+        if ($('#doc_title').val().trim().length !== 0 && $('#doc_file').val() != "") {
+            $(obj).attr('onclick', '');
+            $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
+        }
     }
     if ("{{Session::has('uploaded')}}")
         $.notify('<i class="fa fa-bell-o"></i>{{ Session::get("uploaded") }}', {

@@ -4,7 +4,7 @@ This repository contains the code for the whitelabel trading platform.
 The platform is build with the following technologies:
 * Laravel (PHP Framework)
 * Bootstrap (CSS / Sass Framework)
-* VueJS (Javascript Framework)
+* Viho Theme (jQuery & Bootstrap Theme)
 * Laravel Nova (Admin Panel - Customized)
 
 Next to these technologies, we also implement the following API's and services

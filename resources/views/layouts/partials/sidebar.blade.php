@@ -22,7 +22,7 @@
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('overview') ? 'active' : '' }}" href="{{ route('overview') }}"><i data-feather="home"></i><span>Dashboard</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('xtbs') ? 'active' : '' }}" href="{{ route('overview') }}"><i data-feather="aperture"></i><span>XTB's</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('xtbs') ? 'active' : '' }}" href="{{ route('xtbs') }}"><i data-feather="aperture"></i><span>XTB's</span></a>
                     </li>
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('transactions') ? 'active' : '' }}" href="{{ route('transactions') }}"><i data-feather="zap"></i><span>Transactions</span></a>
@@ -31,7 +31,10 @@
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('documents.index') ? 'active' : '' }}" href="{{ route('documents.index') }}"><i data-feather="file-text"></i><span>Documents</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('stocks.search') ? 'active' : '' }}" href="{{ route('stocks.search') }}"><i data-feather="bar-chart"></i><span>Trade Now</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('stocks.search') ? 'active' : '' }}" href="{{ route('stocks.search') }}"><i data-feather="bar-chart"></i><span>All Stocks</span></a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('mfds.search') ? 'active' : '' }}" href="{{ route('mfds.search') }}"><i data-feather="bar-chart"></i><span>All Mutual Funds</span></a>
                     </li>
                 </ul>
             </div>

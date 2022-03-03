@@ -46,7 +46,7 @@ class AccountManager extends Mailable
         /**
          * Prepare Subject
          */
-        if($this->action == 'buy'){
+        if($this->action == 'buy') {
 
             $subject = 'New Trade: '.$this->user->first_name.' '.$this->user->last_name.' bought '.$this->shares.' shares of '.$this->stock->symbol.' stock';
 

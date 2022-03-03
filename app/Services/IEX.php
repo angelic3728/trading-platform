@@ -36,6 +36,33 @@ class IEX
         return $symbols;
     }
 
+    public function getAvailableMFDSymbols(){
+        /**
+         * Get all Symbols
+         */
+        $symbols = $this->makeApiCall('get', 'ref-data/mutual-funds/symbols');
+
+        /**
+         * Only get us sysmbols
+         */
+        $symbols = $symbols->where('region', 'US');
+
+        /**
+         * Map data to individual collections
+         */
+        $symbols = $symbols->map(function ($symbol) {
+            return collect([
+                'symbol' => $symbol['symbol'],
+                'company_name' => $symbol['name'],
+            ]);
+        });
+
+        /**
+         * Return symbols
+         */
+        return $symbols;
+    }
+
     public function getDetails(string $symbol, string $range = '1m'){
 
         /**

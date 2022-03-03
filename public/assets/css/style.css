@@ -46857,36 +46857,24 @@ body.dark-sidebar .main-navbar ul.nav-pills .nav-item .nav-link {
     .progress-circle {
     position: relative;
 }
-.dashboard-default-sec .card.income-card .card-body .parrten,
-.dashboard-2-main .card.income-card .card-body .parrten {
-    position: absolute;
-    top: -25px;
-    right: -25px;
-}
-.dashboard-default-sec .card.income-card .card-body .parrten svg,
-.dashboard-2-main .card.income-card .card-body .parrten svg {
-    fill: rgba(36, 105, 92, 0.03);
-    width: 100px;
-    height: 100px;
-    -webkit-transform: rotate(-135deg);
-    transform: rotate(-135deg);
-}
 .dashboard-default-sec .card.income-card.card-primary .round-box,
 .dashboard-2-main .card.income-card.card-primary .round-box {
     background-color: rgba(36, 105, 92, 0.1);
 }
-.dashboard-default-sec .card.income-card.card-primary .round-box svg,
-.dashboard-2-main .card.income-card.card-primary .round-box svg {
-    fill: #24695c;
+.dashboard-default-sec .card.income-card.card-primary .round-box a i,
+.dashboard-2-main .card.income-card.card-primary .round-box a i {
+    color: #24695c;
 }
 .dashboard-default-sec .card.income-card.card-primary:hover .round-box,
 .dashboard-2-main .card.income-card.card-primary:hover .round-box {
     background-color: #24695c;
 }
-.dashboard-default-sec .card.income-card.card-primary:hover .round-box svg,
-.dashboard-2-main .card.income-card.card-primary:hover .round-box svg {
-    fill: #fff;
+
+.dashboard-default-sec .card.income-card.card-primary:hover .round-box a i,
+.dashboard-2-main .card.income-card.card-primary:hover .round-box a i {
+    color: #fff;
 }
+
 .dashboard-default-sec .card.income-card.card-secondary,
 .dashboard-2-main .card.income-card.card-secondary {
     border-color: #ede7e4;
@@ -46895,17 +46883,17 @@ body.dark-sidebar .main-navbar ul.nav-pills .nav-item .nav-link {
 .dashboard-2-main .card.income-card.card-secondary .round-box {
     background-color: rgba(186, 137, 93, 0.1);
 }
-.dashboard-default-sec .card.income-card.card-secondary .round-box svg,
-.dashboard-2-main .card.income-card.card-secondary .round-box svg {
-    fill: #ba895d;
+.dashboard-default-sec .card.income-card.card-secondary .round-box a i,
+.dashboard-2-main .card.income-card.card-secondary .round-box a i {
+    color: #ba895d;
 }
 .dashboard-default-sec .card.income-card.card-secondary:hover .round-box,
 .dashboard-2-main .card.income-card.card-secondary:hover .round-box {
     background-color: #ba895d;
 }
-.dashboard-default-sec .card.income-card.card-secondary:hover .round-box svg,
-.dashboard-2-main .card.income-card.card-secondary:hover .round-box svg {
-    fill: #fff;
+.dashboard-default-sec .card.income-card.card-secondary:hover .round-box a i,
+.dashboard-2-main .card.income-card.card-secondary:hover .round-box a i {
+    color: #fff;
 }
 .dashboard-default-sec .card.income-card .card-body h3,
 .dashboard-2-main .card.income-card .card-body h3 {

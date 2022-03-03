@@ -41,6 +41,11 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/viewAsUser/{user}', 'DashboardController@viewAsUser')->name('overview.viewasuser');
 
     /**
+     * Transactions
+     */
+    Route::get('xtbs', 'XtbsController@index')->name('xtbs');
+
+    /**
      * Documents
      */
     Route::get('documents', 'DocumentController@index')->name('documents.index');
@@ -56,6 +61,12 @@ Route::middleware(['auth', 'active'])->group(function () {
      */
     Route::get('stocks/search', 'StockController@index')->name('stocks.search');
     Route::get('stocks/{symbol}', 'StockController@show')->name('stocks.show');
+
+    /**
+     * Mutual Funds
+     */
+    Route::get('mfds/search', 'MutualFundsController@index')->name('mfds.search');
+    Route::get('mfds/{symbol}', 'MutualFundsController@show')->name('mfds.show');
 
     /**
      * Recent News
@@ -88,6 +99,20 @@ Route::middleware(['auth', 'active'])->group(function () {
          * Trading
          */
         Route::post('stocks/{symbol}/{action}', 'StockController@trade');
+
+        /**
+         * Get mutual funds stocks
+         */
+        Route::get('mstocks/investments', 'MutualFundsController@investments');
+        Route::get('mstocks/highlights', 'MutualFundsController@highlights');
+        Route::get('mstocks/all', 'MutualFundsController@all');
+        Route::get('mstocks/chart/{symbol}/{range}', 'MutualFundsController@chart');
+        Route::get('mstocks/{symbol}', 'MutualFundsController@details');
+
+        /**
+         * Trading
+         */
+        Route::post('mstocks/{symbol}/{action}', 'MutualFundsController@trade');
 
         /**
          * Documents

@@ -33,4 +33,13 @@ class Transaction extends Model
         return $this->belongsTo('App\Stock');
     }
 
+    /**
+     * Get the stock of the mutual funds transaction
+     */
+
+    public function mstock()
+    {
+        return $this->belongsTo('App\MutualFunds');
+    }
+
 }

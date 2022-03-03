@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use IEX;
-use DB;
-
-use App\Transaction;
 
 class NewsController extends Controller
 {

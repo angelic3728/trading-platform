@@ -32,8 +32,7 @@ class TransactionController extends Controller
                                           ->orWhere('stocks.company_name','LIKE', "%$request->q%");
                                 });
                             })
-                            ->latest()
-                            ->paginate(10);
+                            ->latest();
 
         /**
          * Return view

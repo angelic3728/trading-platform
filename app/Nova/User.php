@@ -57,7 +57,7 @@ class User extends Resource
     {
         return [
             Avatar::make('Avatar')
-                ->disk('public')
+                ->disk('avatar')
                 ->path('avatar'),
 
             Text::make('First Name')

@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
-use Storage;
+use App\Xtbs;
 
-use App\Document;
-
-class DocumentController extends Controller
+class XtbsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,25 +17,16 @@ class DocumentController extends Controller
     {
 
         /**
-         * Get all documents
+         * Get all xtbs
          */
-        $documents = Document::where('user_id', auth()->id())
-                        ->when($request->q, function ($query) use ($request) {
-                            return $query->where(function($query) use ($request){
-                                $query->where('title', 'LIKE', "%$request->q%")
-                                      ->orWhere('description','LIKE', "%$request->q%")
-                                      ->orWhere('type','LIKE', "%$request->q%");
-                            });
-                        })
-                        ->latest();
+        $xtbs = Xtbs::all();
 
         /**
          * Return view
          */
-        return view('dashboard.documents.all', [
-            'documents' => $documents,
+        return view('dashboard.xtbs.all', [
+            'xtbs' => $xtbs,
         ]);
-
     }
 
     /**
@@ -63,32 +51,14 @@ class DocumentController extends Controller
     }
 
     /**
-     * Download the specified resource.
+     * Display the specified resource.
      *
      * @param  int  $id
-     * @return Storage
+     * @return \Illuminate\Http\Response
      */
-    public function download($id)
+    public function show($id)
     {
-
-        /**
-         * Find Document
-         */
-        $document = Document::query()
-                        ->where('user_id', auth()->id())
-                        ->where('id', $id)
-                        ->firstOrFail();
-
-        /**
-         * Generate Filename
-         */
-        $file_name = Str::slug($document->title, '_').'.'.$document->type;
-
-        /**
-         * Downlod File
-         */
-        return Storage::download($document->file, $file_name);
-
+        //
     }
 
     /**
