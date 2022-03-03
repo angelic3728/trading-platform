@@ -12,7 +12,7 @@
 <div class="col-sm-12">
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h5>Transaction History</h5>
+            <h5>All XTB's</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -40,7 +40,7 @@
                             <td class="text-nowrap text-secondary">{{ ($xtb->coupon_type == "")?$xtb->coupon_type:"-" }}</td>
                             <td class="text-nowrap text-secondary">{{ $xtb->next_ex_date }}</td>
                             <td class="text-nowrap text-info">{{ $xtb->coupon_pa }}</td>
-                            <td class="text-nowrap text-success">{{ $xtb->xtb_price."$" }}</td>
+                            <td class="text-nowrap text-success">{{ "$".$xtb->xtb_price }}</td>
                             <td class="text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
                             <td class="text-nowrap text-dark">{{ $xtb->current_yield."%" }}</td>
                             <td class="text-nowrap text-danger">{{ ($xtb->trading_margin !="")?$xtb->trading_margin."%":"-" }}</td>

@@ -79,6 +79,11 @@ class StockController extends Controller
         /**
          * Prepare Data
          */
+
+        // $iex_data = IEX::getDetails($stock->symbol);
+        // print_r($iex_data);
+        // die();
+
         switch ($stock->data_source) {
 
             case 'iex':

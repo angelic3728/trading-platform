@@ -51,7 +51,7 @@ class MutualFunds extends Model
                 break;
 
             default:
-                return $price;
+                return '$'.number_format($price, $decimals);
                 break;
 
         }

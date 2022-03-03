@@ -68,20 +68,20 @@ class Xtbs extends Resource
                 ->sortable()
                 ->rules('required'),
 
-            Currency::make('XTB PRICE')
+            Text::make('XTB PRICE($)', 'xtb_price')
                 ->sortable()
                 ->rules('required'),
 
-            Text::make('YTM')
+            Text::make('YTM(%)', 'ytm')
                 ->sortable(),
 
-            Number::make('RUNNING/CURRENT YIELD', 'current_yield')
+            Number::make('RUNNING/CURRENT YIELD(%)', 'current_yield')
                 ->min(0)
                 ->max(100)
                 ->step(0.001)
                 ->sortable(),
 
-            Number::make('TRADING MARGIN')
+            Number::make('TRADING MARGIN(%)', 'trading_margin')
                 ->min(0)
                 ->max(100)
                 ->step(0.001)

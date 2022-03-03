@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Xtbs extends Model
 {
 
+    protected $casts = [
+        'maturity_date' => 'date',
+        'next_ex_date' => 'date',
+    ];
+
     protected $fillable = [
         'asx_code',
         'bond_issuer',
