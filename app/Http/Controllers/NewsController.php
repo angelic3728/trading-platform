@@ -12,7 +12,10 @@ class NewsController extends Controller
 
     public function overview(Request $request)
     {
-
+        /**
+         * Get Account Manager
+         */
+        $account_manager = auth()->user()->account_manager;
         /**
          * If there are no symbols, go to overview
          */
@@ -37,6 +40,7 @@ class NewsController extends Controller
          */
         return view('dashboard.news', [
             'news' => $news,
+            'account_manager' => $account_manager,
         ]);
 
     }

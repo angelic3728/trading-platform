@@ -22,7 +22,7 @@ class ImportStocks extends Command
      *
      * @var string
      */
-    protected $description = 'Import IEX Stocks';
+    protected $description = 'Import IEX US Stocks';
 
     /**
      * Create a new command instance.
@@ -49,17 +49,16 @@ class ImportStocks extends Command
         /**
          * Loop through symbols and insert them
          */
-        foreach($stocks as $item){
+        foreach ($stocks as $item) {
 
             $stock = new Stock;
             $stock->symbol = $item['symbol'];
             $stock->company_name = $item['company_name'];
-            $stock->link = 'https://finance.yahoo.com/quote/'.$item['symbol'].'?p='.$item['symbol'];
+            $stock->link = 'https://finance.yahoo.com/quote/' . $item['symbol'] . '?p=' . $item['symbol'];
             $stock->data_source = 'iex';
-            $stock->exchange = 'NYSE';
+            $stock->currency = $item['currency'];
+            $stock->exchange = $item['exchange'];
             $stock->save();
-
         }
-
     }
 }

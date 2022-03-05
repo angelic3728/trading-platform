@@ -33,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
             'dashboard.documents.all',
             'dashboard.stocks.search',
             'dashboard.stocks.details',
+            'dashboard.mfds.search',
+            'dashboard.mfds.details',
             'dashboard.transactions.all',
             'dashboard.news',
         ], 'App\Http\View\Composers\WidgetStocksComposer');

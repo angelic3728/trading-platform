@@ -18,27 +18,46 @@ class StockController extends Controller
      */
     public function index(Request $request)
     {
-
+        /**
+         * Get Account Manager
+         */
+        $account_manager = auth()->user()->account_manager;
         /**
          * Get Stocks
          */
-        $stocks = Stock::query()
-                      ->when($request->q, function ($query) use ($request) {
-                          return $query->where(function($query) use ($request){
-                              $query->where('symbol', 'LIKE', "%$request->q%")
-                                    ->orWhere('company_name','LIKE', "%$request->q%");
-                          });
-                      })
-                      ->orderBy('symbol', 'asc')
-                      ->paginate(25);
+        $stocks = ($request->ex == "" || $request->ex == "all") ?
+            Stock::query()
+            ->when($request->q, function ($query) use ($request) {
+                return $query->where(function ($query) use ($request) {
+                    $query->where('symbol', 'LIKE', "%$request->q%")
+                        ->orWhere('company_name', 'LIKE', "%$request->q%");
+                });
+            })
+            ->orderBy('symbol', 'asc')
+            ->paginate(25)
+            :
+            Stock::where('exchange', $request->ex)
+            ->when($request->q, function ($query) use ($request) {
+                return $query->where(function ($query) use ($request) {
+                    $query->where('symbol', 'LIKE', "%$request->q%")
+                        ->orWhere('company_name', 'LIKE', "%$request->q%");
+                });
+            })
+            ->orderBy('symbol', 'asc')
+            ->paginate(25);
+
+        $exchanges = Stock::select("exchange")
+            ->groupBy("exchange")
+            ->get();
 
         /**
          * Return view
          */
         return view('dashboard.stocks.search', [
             'stocks' => $stocks,
+            'exchanges' => $exchanges,
+            'account_manager' => $account_manager,
         ]);
-
     }
 
     /**
@@ -134,7 +153,6 @@ class StockController extends Controller
             default:
                 abort(500);
                 break;
-
         }
         /**
          * Return view
@@ -142,7 +160,6 @@ class StockController extends Controller
         return view('dashboard.stocks.details', [
             'data' => $data,
         ]);
-
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Bugsnag\Breadcrumbs;
 
+use Bugsnag\DateTime\Date;
 use InvalidArgumentException;
 
 class Breadcrumb
@@ -61,13 +62,6 @@ class Breadcrumb
      * @var string
      */
     const MANUAL_TYPE = 'manual';
-
-    /**
-     * The maximum length of the name.
-     *
-     * @var int
-     */
-    const MAX_LENGTH = 30;
 
     /**
      * The maximum size of the breadcrumb.
@@ -130,17 +124,13 @@ class Breadcrumb
             $name = '<no name>';
         }
 
-        if (strlen($name) > static::MAX_LENGTH) {
-            throw new InvalidArgumentException(sprintf('The breadcrumb name must be at most %d characters in length.', static::MAX_LENGTH));
-        }
-
         $types = static::getTypes();
 
         if (!in_array($type, $types, true)) {
             throw new InvalidArgumentException(sprintf('The breadcrumb type must be one of the set of %d standard types.', count($types)));
         }
 
-        $this->timestamp = gmdate('Y-m-d\TH:i:s\Z');
+        $this->timestamp = Date::now();
         $this->name = $name;
         $this->type = $type;
         $this->metaData = $metaData;

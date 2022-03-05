@@ -15,32 +15,38 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
+        /**
+         * Get Account Manager
+         */
+        $account_manager = auth()->user()->account_manager;
 
         /**
          * Get all transactions
          */
-        $transactions = Transaction::where('user_id', auth()->id())
-                            ->with('stock')
-                            ->join('stocks', 'transactions.stock_id', '=', 'stocks.id')
-                            ->select('transactions.*', 'stocks.symbol', 'stocks.company_name')
-                            ->when($request->q, function ($query) use ($request) {
-                                return $query->where(function($query) use ($request){
-                                    $query->where('transactions.shares', 'LIKE', "%$request->q%")
-                                          ->orWhere('transactions.price','LIKE', "%$request->q%")
-                                          ->orWhere('transactions.type','LIKE', "%$request->q%")
-                                          ->orWhere('stocks.symbol','LIKE', "%$request->q%")
-                                          ->orWhere('stocks.company_name','LIKE', "%$request->q%");
-                                });
-                            })
-                            ->latest();
+        $transactions1 = Transaction::where('user_id', auth()->id())
+            ->where('is_fund', '=', 0)
+            ->with('stock')
+            ->join('stocks', 'transactions.stock_id', '=', 'stocks.id')
+            ->select('transactions.*', 'stocks.symbol', 'stocks.company_name')
+            ->get();
 
+        $transactions2 = Transaction::where('user_id', auth()->id())
+            ->where('is_fund', '=', 1)
+            ->with('mutualFund')
+            ->join('mutual_funds', 'transactions.mutual_fund_id', '=', 'mutual_funds.id')
+            ->select('transactions.*', 'mutual_funds.symbol', 'mutual_funds.company_name')
+            ->get();
+
+
+        $merged = $transactions1->merge($transactions2);
+        $transactions = $merged->all();
         /**
          * Return view
          */
         return view('dashboard.transactions.all', [
             'transactions' => $transactions,
+            'account_manager' => $account_manager,
         ]);
-
     }
 
     /**

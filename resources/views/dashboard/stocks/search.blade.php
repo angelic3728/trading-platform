@@ -112,17 +112,32 @@
         <div class="card-header">
             <div class="row align-items-center">
                 <div class="col">
-                    @if(request()->filled('q'))
+                    @if(request()->filled('q') || request()->filled('ex'))
                     <h4 class="mb-0">Results ({{ $stocks->total() }})</h4>
                     @else
                     <h4 class="mb-0">All Stocks ({{ $stocks->total() }})</h4>
                     @endif
                 </div>
-                <div class="col-auto">
-                    <form action="{{ route('stocks.search') }}">
+                <div class="col-auto d-flex justify-content-between">
+                    <select class="form-control form-control-primary btn-square" name="select" style="max-width: 200px;" onchange="exchangeOption(this)">
+                        @if(!isset(request()->ex) || request()->ex == "all")
+                        <option value="all" selected>All</option>
+                        @else
+                        <option value="all">All</option>
+                        @endif
+                        @foreach($exchanges as $exchange)
+                        @if(request()->ex == $exchange->exchange)
+                        <option value="{{$exchange->exchange}}" selected>{{$exchange->exchange}}</option>
+                        @else
+                        <option value="{{$exchange->exchange}}">{{$exchange->exchange}}</option>
+                        @endif
+                        @endforeach
+                    </select>
+                    <form action="{{ route('stocks.search') }}" class="ms-3" style="min-width: 200px;">
                         <div class="search d-flex">
                             <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request()->q }}">
-                            <button type="submit" class="btn btn-iconsolid" href="javascript:void(0)"><i class="fa fa-search"></i></button>
+                            <input id="ex" type="hidden" class="form-control" placeholder="Search" name="ex" value="{{ request()->ex }}">
+                            <button type="submit" id="search_btn" class="btn btn-iconsolid" href="javascript:void(0)"><i class="fa fa-search"></i></button>
                         </div>
                     </form>
                 </div>
@@ -136,6 +151,8 @@
                             <tr>
                                 <th scope="col">Symbol</th>
                                 <th scope="col">Company Name</th>
+                                <th scope="col">Exchange</th>
+                                <th scope="col">Currency</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -144,6 +161,7 @@
                             <tr>
                                 <td width="10%">{{ $stock->symbol }}</td>
                                 <td>{{ $stock->company_name }}</td>
+                                <td>{{ $stock->exchange }}</td>
                                 <td class="text-right" nowrap>
                                     <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('stocks.show', ['symbol' => $stock->symbol]) }}">See More</a>
                                 </td>
@@ -164,8 +182,9 @@
         {{ $stocks->appends(request()->query())->links() }}
     </div>
 </div>
-@push('scripts') -->
-<script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script> -->
+@push('scripts')
+<script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
+<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <script>
     $(document).ready(function() {
@@ -184,12 +203,22 @@
                         var adjustedData = [];
                         var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
                         var times = res.data[i]['currency'] === "GBP" ? 100 : 1;
-                        for (var j = 0; j < res.data[i]['chart'].length; j++) {
-                            var stock = res.data[i]['chart'][j];
-                            var date = new Date(stock['date']);
-                            adjustedData[j] = [date.getTime(), Number((stock['fClose'] * times).toFixed(2))]
+                        if (res.data[i]['chart'].length != 0) {
+                            for (var j = 0; j < res.data[i]['chart'].length; j++) {
+                                var stock = res.data[i]['chart'][j];
+                                var date = new Date(stock['date']);
+                                adjustedData[j] = [date.getTime(), Number((stock['fClose'] * times).toFixed(2))]
+                            }
+                            renderChart(adjustedData, (i + 1), res.data[i]['currency'], displayData, res.data.length);
+                        } else {
+                            $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
+                                type: 'theme',
+                                allow_dismiss: true,
+                                delay: 2000,
+                                showProgressbar: false,
+                                timer: 4000
+                            });
                         }
-                        renderChart(adjustedData, (i + 1), res.data[i]['currency'], displayData, res.data.length);
                     }
                 }
             }
@@ -329,6 +358,12 @@
             $(".stock-contents").css("opacity", "1");
             $(".loader-box").css('display', 'none');
         }
+    }
+
+    function exchangeOption(obj) {
+        var exchange = obj.value;
+        $('#ex').attr('value', exchange);
+        $('#search_btn').click();
     }
 
     function formatPrice(price, currency) {

@@ -103,11 +103,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         /**
          * Get mutual funds stocks
          */
-        Route::get('mstocks/investments', 'MutualFundsController@investments');
-        Route::get('mstocks/highlights', 'MutualFundsController@highlights');
-        Route::get('mstocks/all', 'MutualFundsController@all');
-        Route::get('mstocks/chart/{symbol}/{range}', 'MutualFundsController@chart');
-        Route::get('mstocks/{symbol}', 'MutualFundsController@details');
+        Route::get('mfds/investments', 'MutualFundsController@investments');
+        Route::get('mfds/highlights', 'MutualFundsController@highlights');
+        Route::get('mfds/all', 'MutualFundsController@all');
+        Route::get('mfds/chart/{symbol}/{range}', 'MutualFundsController@chart');
+        Route::get('mfds/{symbol}', 'MutualFundsController@details');
 
         /**
          * Trading

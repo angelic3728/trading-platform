@@ -20,10 +20,11 @@
                     <thead>
                         <tr>
                             <th scope="col">Type</th>
-                            <th scope="col">Symbol</th>
+                            <th scope="col">Company Name</th>
                             <th scope="col">Price</th>
                             <th scope="col">Shares</th>
                             <th scope="col">Date</th>
+                            <th scope="col">Market</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,12 +32,13 @@
                         <tr>
                             <td class="type">{{ $transaction->type }}</td>
                             <td class="symbol-with-company-name">
-                                {{ $transaction->stock->symbol }}
-                                <small>{{ $transaction->stock->company_name }}</small>
+                                {{ $transaction->symbol }}
+                                <small>{{ $transaction->company_name }}</small>
                             </td>
-                            <td class="text-nowrap">{{ $transaction->stock->formatPrice($transaction->price) }}</td>
+                            <td class="text-nowrap">{{ $transaction->formatPrice($transaction->price) }}</td>
                             <td class="text-nowrap">{{ $transaction->shares }}</td>
                             <td class="text-nowrap">{{ $transaction->created_at }}</td>
+                            <td class="text-nowrap">{{ $transaction->is_fund=="1"?"Mutual Fund":"Stock" }}</td>
                         </tr>
                         @endforeach
                     </tbody>

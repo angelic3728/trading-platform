@@ -18,11 +18,13 @@ class BasicResolver implements ResolverInterface
                 $params = static::getInputParams($_SERVER, $_POST, true);
             }
 
-            return new PhpRequest($_SERVER,
+            return new PhpRequest(
+                $_SERVER,
                 empty($_SESSION) ? [] : $_SESSION,
                 empty($_COOKIE) ? [] : $_COOKIE,
                 static::getRequestHeaders($_SERVER),
-                $params);
+                $params
+            );
         }
 
         if (PHP_SAPI === 'cli' && isset($_SERVER['argv'])) {
@@ -54,11 +56,19 @@ class BasicResolver implements ResolverInterface
             return $headers;
         }
 
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        }
+
         $headers = [];
 
         foreach ($server as $name => $value) {
             if (substr($name, 0, 5) == 'HTTP_') {
                 $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            } elseif ($name === 'CONTENT_TYPE') {
+                $headers['Content-Type'] = $value;
+            } elseif ($name === 'CONTENT_LENGTH') {
+                $headers['Content-Length'] = $value;
             }
         }
 
@@ -120,7 +130,7 @@ class BasicResolver implements ResolverInterface
     protected static function parseInput(array $server, $input)
     {
         if (!$input) {
-            return;
+            return null;
         }
 
         if (isset($server['CONTENT_TYPE']) && stripos($server['CONTENT_TYPE'], 'application/json') === 0) {
@@ -132,5 +142,7 @@ class BasicResolver implements ResolverInterface
 
             return (array) $params ?: null;
         }
+
+        return null;
     }
 }

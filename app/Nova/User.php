@@ -35,7 +35,7 @@ class User extends Resource
      */
     public function title()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     /**
@@ -57,8 +57,8 @@ class User extends Resource
     {
         return [
             Avatar::make('Avatar')
-                ->disk('avatar')
-                ->path('avatar'),
+                ->disk('public')
+                ->path('/users'),
 
             Text::make('First Name')
                 ->sortable()
@@ -88,9 +88,9 @@ class User extends Resource
             Json::make('Cash On Account', [
 
                 Select::make('Currency', 'currency')->options([
-                        'USD' => 'USD',
-                        'GBP' => 'GBP',
-                    ])
+                    'USD' => 'USD',
+                    'GBP' => 'GBP',
+                ])
                     ->displayUsingLabels(),
 
                 Number::make('Amount', 'amount')
@@ -105,9 +105,11 @@ class User extends Resource
 
                 Json::make('Manager Information', [
                     Text::make('Availability')
-                    ->withMeta(['extraAttributes' => [
-                        'placeholder' => 'Example: "Monday - Friday (09:00 - 16:00 GMT)"']
-                    ]),
+                        ->withMeta([
+                            'extraAttributes' => [
+                                'placeholder' => 'Example: "Monday - Friday (09:00 - 16:00 GMT)"'
+                            ]
+                        ]),
                 ], 'extra'),
 
             ])->dependsOn('manager', true),
@@ -128,16 +130,16 @@ class User extends Resource
              * When the user is not yet activated
              */
             Text::make('Get Started Url', function () {
-                    return isset($this->get_started_url) ? '<a href="'.$this->get_started_url.'" target="_blank">'.$this->get_started_url.'</a>' : null;
-                })
+                return isset($this->get_started_url) ? '<a href="' . $this->get_started_url . '" target="_blank">' . $this->get_started_url . '</a>' : null;
+            })
                 ->asHtml()
                 ->onlyOnDetail(),
 
-            Text::make('Login As User', function() {
+            Text::make('Login As User', function () {
                 return '<a href="' . url('/') . '/viewAsUser/' . $this->id . '">Login</a>';
             })
-            ->asHtml()
-            ->onlyOnDetail(),
+                ->asHtml()
+                ->onlyOnDetail(),
 
             HasMany::make('Documents'),
 
@@ -202,14 +204,13 @@ class User extends Resource
     {
 
         return User::query()
-                  ->where('manager', true)
-                  ->get()
-                  ->mapWithKeys(function ($item) {
-                      return [
-                          $item->id => $item->first_name.' '.$item->last_name
-                      ];
-                  })
-                  ->toArray();
-
+            ->where('manager', true)
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [
+                    $item->id => $item->first_name . ' ' . $item->last_name
+                ];
+            })
+            ->toArray();
     }
 }

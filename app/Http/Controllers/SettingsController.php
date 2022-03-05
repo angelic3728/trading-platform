@@ -15,7 +15,14 @@ class SettingsController extends Controller
 
     public function index()
     {
-        return view('dashboard.settings');
+        /**
+         * Get Account Manager
+         */
+        $account_manager = auth()->user()->account_manager;
+
+        return view('dashboard.settings', [
+            'account_manager' => $account_manager,
+        ]);
     }
 
     public function updateAvatar(Request $request)
@@ -52,8 +59,8 @@ class SettingsController extends Controller
         $datetime =  $datetime->format(DateTime::ATOM);
         $file_name = strtotime($datetime) * 1000;
         $file_extension = request()->file('avatar')->getClientOriginalExtension();
-        $file_name = $file_name.".".$file_extension;
-        $file_path = 'users/'.$file_name;
+        $file_name = $file_name . "." . $file_extension;
+        $file_path = 'users/' . $file_name;
 
         $avatar = Image::make($request->file('avatar'))->fit(100)->encode($file_extension, 90);
 
@@ -71,7 +78,7 @@ class SettingsController extends Controller
          * Update user
          */
         $user = auth()->user();
-        $user-> avatar = "storage/".$file_path;
+        $user->avatar = $file_path;
         $user->save();
 
         /**

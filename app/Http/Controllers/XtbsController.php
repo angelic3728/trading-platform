@@ -15,7 +15,10 @@ class XtbsController extends Controller
      */
     public function index(Request $request)
     {
-
+        /**
+         * Get Account Manager
+         */
+        $account_manager = auth()->user()->account_manager;
         /**
          * Get all xtbs
          */
@@ -26,6 +29,7 @@ class XtbsController extends Controller
          */
         return view('dashboard.xtbs.all', [
             'xtbs' => $xtbs,
+            'account_manager' => $account_manager,
         ]);
     }
 

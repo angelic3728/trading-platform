@@ -47,8 +47,8 @@ class Exporter
     }
 
     /**
-     * @param mixed   $data
-     * @param Context $context
+     * @param array<mixed> $data
+     * @param Context      $context
      *
      * @return string
      */
@@ -173,18 +173,6 @@ class Exporter
         // above (fast) mechanism nor with reflection in Zend.
         // Format the output similarly to print_r() in this case
         if ($value instanceof \SplObjectStorage) {
-            // However, the fast method does work in HHVM, and exposes the
-            // internal implementation. Hide it again.
-            if (\property_exists('\SplObjectStorage', '__storage')) {
-                unset($array['__storage']);
-            } elseif (\property_exists('\SplObjectStorage', 'storage')) {
-                unset($array['storage']);
-            }
-
-            if (\property_exists('\SplObjectStorage', '__key')) {
-                unset($array['__key']);
-            }
-
             foreach ($value as $key => $val) {
                 $array[\spl_object_hash($val)] = [
                     'obj' => $val,
@@ -225,6 +213,10 @@ class Exporter
             return "$value.0";
         }
 
+        if ($this->isClosedResource($value)) {
+            return 'resource (closed)';
+        }
+
         if (\is_resource($value)) {
             return \sprintf(
                 'resource(%d) of type (%s)',
@@ -252,7 +244,7 @@ class Exporter
             "'";
         }
 
-        $whitespace = \str_repeat(' ', 4 * $indentation);
+        $whitespace = \str_repeat(' ', (int)(4 * $indentation));
 
         if (!$processed) {
             $processed = new Context;
@@ -311,5 +303,64 @@ class Exporter
         }
 
         return \var_export($value, true);
+    }
+
+    /**
+     * Determines whether a variable represents a resource, either open or closed.
+     *
+     * @param mixed $actual The variable to test.
+     *
+     * @return bool
+     */
+    private function isResource($value)
+    {
+        return $value !== null
+            && \is_scalar($value) === false
+            && \is_array($value) === false
+            && \is_object($value) === false;
+    }
+
+    /**
+     * Determines whether a variable represents a closed resource.
+     *
+     * @param mixed $actual The variable to test.
+     *
+     * @return bool
+     */
+    private function isClosedResource($value)
+    {
+        /*
+         * PHP 7.2 introduced "resource (closed)".
+         */
+        if (\gettype($value) === 'resource (closed)') {
+            return true;
+        }
+
+        /*
+         * If gettype did not work, attempt to determine whether this is
+         * a closed resource in another way.
+         */
+        $isResource       = \is_resource($value);
+        $isNotNonResource = $this->isResource($value);
+
+        if ($isResource === false && $isNotNonResource === true) {
+            return true;
+        }
+
+        if ($isNotNonResource === true) {
+            try {
+                $resourceType = @\get_resource_type($value);
+
+                if ($resourceType === 'Unknown') {
+                    return true;
+                }
+            } catch (TypeError $e) {
+                // Ignore. Not a resource.
+            } catch (Exception $e) {
+                // Ignore. Not a resource.
+            }
+        }
+
+        return false;
     }
 }

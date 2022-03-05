@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use IEX;
 
-use App\MutualFunds;
+use App\MutualFund;
 
 class ImportStocks extends Command
 {
@@ -15,7 +15,7 @@ class ImportStocks extends Command
      *
      * @var string
      */
-    protected $signature = 'mfd:import-stocks';
+    protected $signature = 'mfd:import-funds';
 
     /**
      * The console command description.
@@ -45,18 +45,19 @@ class ImportStocks extends Command
         /**
          * Get stocks
          */
-        $stocks = IEX::getAvailableMFDSymbols();
+        $mfds = IEX::getAvailableMFDSymbols();
         /**
          * Loop through symbols and insert them
          */
-        foreach($stocks as $item){
+        foreach($mfds as $item){
 
-            $stock = new MutualFunds();
-            $stock->symbol = $item['symbol'];
-            $stock->company_name = $item['company_name'];
-            $stock->link = 'https://finance.yahoo.com/quote/'.$item['symbol'].'?p='.$item['symbol'];
-            $stock->data_source = 'iex';
-            $stock->save();
+            $mfd = new MutualFund();
+            $mfd->symbol = $item['symbol'];
+            $mfd->company_name = $item['company_name'];
+            $mfd->exchange = $item['exchange'];
+            $mfd->link = 'https://finance.yahoo.com/quote/'.$item['symbol'].'?p='.$item['symbol'];
+            $mfd->data_source = 'iex';
+            $mfd->save();
 
         }
 

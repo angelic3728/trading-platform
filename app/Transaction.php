@@ -34,12 +34,30 @@ class Transaction extends Model
     }
 
     /**
-     * Get the stock of the mutual funds transaction
+     * Get the mutual fund of the transaction
      */
 
-    public function mstock()
+    public function mutualFund()
     {
-        return $this->belongsTo('App\MutualFunds');
+        return $this->belongsTo('App\MutualFund');
     }
 
+    public function formatPrice($price, $decimals = 2)
+    {
+
+        switch ($this->currency) {
+
+            case 'USD':
+                return '$' . number_format($price, $decimals);
+                break;
+
+            case 'GBP':
+                return number_format(($price * 100), $decimals) . 'p';
+                break;
+
+            default:
+                return $price;
+                break;
+        }
+    }
 }

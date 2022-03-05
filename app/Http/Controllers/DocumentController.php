@@ -20,22 +20,21 @@ class DocumentController extends Controller
     {
 
         /**
+         * Get Account Manager
+         */
+        $account_manager = auth()->user()->account_manager;
+
+        /**
          * Get all documents
          */
         $documents = Document::where('user_id', auth()->id())
-                        ->when($request->q, function ($query) use ($request) {
-                            return $query->where(function($query) use ($request){
-                                $query->where('title', 'LIKE', "%$request->q%")
-                                      ->orWhere('description','LIKE', "%$request->q%")
-                                      ->orWhere('type','LIKE', "%$request->q%");
-                            });
-                        })
-                        ->latest();
+                        ->get();
 
         /**
          * Return view
          */
         return view('dashboard.documents.all', [
+            'account_manager' => $account_manager,
             'documents' => $documents,
         ]);
 

@@ -3,22 +3,19 @@
 namespace Maatwebsite\Excel\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Maatwebsite\Excel\Writer;
-use Maatwebsite\Excel\Files\TemporaryFile;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Files\TemporaryFile;
+use Maatwebsite\Excel\Jobs\Middleware\LocalizeJob;
+use Maatwebsite\Excel\Writer;
 
 class AppendQueryToSheet implements ShouldQueue
 {
     use Queueable, Dispatchable, ProxyFailures;
 
     /**
-     * @var SerializedQuery
-     */
-    public $query;
-
-    /**
-     * @var string
+     * @var TemporaryFile
      */
     public $temporaryFile;
 
@@ -33,29 +30,52 @@ class AppendQueryToSheet implements ShouldQueue
     public $sheetIndex;
 
     /**
-     * @var object
+     * @var FromQuery
      */
     public $sheetExport;
 
     /**
-     * @param object          $sheetExport
+     * @var int
+     */
+    public $page;
+
+    /**
+     * @var int
+     */
+    public $chunkSize;
+
+    /**
+     * @param FromQuery       $sheetExport
      * @param TemporaryFile   $temporaryFile
      * @param string          $writerType
      * @param int             $sheetIndex
-     * @param SerializedQuery $query
+     * @param int             $page
+     * @param int             $chunkSize
      */
     public function __construct(
-        $sheetExport,
+        FromQuery $sheetExport,
         TemporaryFile $temporaryFile,
         string $writerType,
         int $sheetIndex,
-        SerializedQuery $query
+        int $page,
+        int $chunkSize
     ) {
         $this->sheetExport   = $sheetExport;
-        $this->query         = $query;
         $this->temporaryFile = $temporaryFile;
         $this->writerType    = $writerType;
         $this->sheetIndex    = $sheetIndex;
+        $this->page          = $page;
+        $this->chunkSize     = $chunkSize;
+    }
+
+    /**
+     * Get the middleware the job should be dispatched through.
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return (method_exists($this->sheetExport, 'middleware')) ? $this->sheetExport->middleware() : [];
     }
 
     /**
@@ -66,12 +86,16 @@ class AppendQueryToSheet implements ShouldQueue
      */
     public function handle(Writer $writer)
     {
-        $writer = $writer->reopen($this->temporaryFile, $this->writerType);
+        (new LocalizeJob($this->sheetExport))->handle($this, function () use ($writer) {
+            $writer = $writer->reopen($this->temporaryFile, $this->writerType);
 
-        $sheet = $writer->getSheetByIndex($this->sheetIndex);
+            $sheet = $writer->getSheetByIndex($this->sheetIndex);
 
-        $sheet->appendRows($this->query->execute(), $this->sheetExport);
+            $query = $this->sheetExport->query()->forPage($this->page, $this->chunkSize);
 
-        $writer->write($this->sheetExport, $this->temporaryFile, $this->writerType);
+            $sheet->appendRows($query->get(), $this->sheetExport);
+
+            $writer->write($this->sheetExport, $this->temporaryFile, $this->writerType);
+        });
     }
 }

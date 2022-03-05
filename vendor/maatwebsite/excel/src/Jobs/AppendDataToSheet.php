@@ -3,10 +3,11 @@
 namespace Maatwebsite\Excel\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Maatwebsite\Excel\Writer;
-use Maatwebsite\Excel\Files\TemporaryFile;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Maatwebsite\Excel\Files\TemporaryFile;
+use Maatwebsite\Excel\Jobs\Middleware\LocalizeJob;
+use Maatwebsite\Excel\Writer;
 
 class AppendDataToSheet implements ShouldQueue
 {
@@ -54,6 +55,16 @@ class AppendDataToSheet implements ShouldQueue
     }
 
     /**
+     * Get the middleware the job should be dispatched through.
+     *
+     * @return array
+     */
+    public function middleware()
+    {
+        return (method_exists($this->sheetExport, 'middleware')) ? $this->sheetExport->middleware() : [];
+    }
+
+    /**
      * @param Writer $writer
      *
      * @throws \PhpOffice\PhpSpreadsheet\Exception
@@ -61,12 +72,14 @@ class AppendDataToSheet implements ShouldQueue
      */
     public function handle(Writer $writer)
     {
-        $writer = $writer->reopen($this->temporaryFile, $this->writerType);
+        (new LocalizeJob($this->sheetExport))->handle($this, function () use ($writer) {
+            $writer = $writer->reopen($this->temporaryFile, $this->writerType);
 
-        $sheet = $writer->getSheetByIndex($this->sheetIndex);
+            $sheet = $writer->getSheetByIndex($this->sheetIndex);
 
-        $sheet->appendRows($this->data, $this->sheetExport);
+            $sheet->appendRows($this->data, $this->sheetExport);
 
-        $writer->write($this->sheetExport, $this->temporaryFile, $this->writerType);
+            $writer->write($this->sheetExport, $this->temporaryFile, $this->writerType);
+        });
     }
 }

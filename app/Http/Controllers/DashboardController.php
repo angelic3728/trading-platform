@@ -21,12 +21,10 @@ class DashboardController extends Controller
          * Get Account Manager
          */
         $account_manager = auth()->user()->account_manager;
-
         /**
          * Get Latest Documents
          */
         $documents = auth()->user()->documents()->latest()->take(5)->get();
-
         /**
          * Return view
          */

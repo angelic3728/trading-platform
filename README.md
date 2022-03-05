@@ -34,9 +34,14 @@ Import the NYSE stocks
 php artisan iex:import-stocks
 ```
 
-Then import the LSE stocks (These are manually set in the lse-stocks.csv file)
+Then import the LSE stocks
 ```
 php artisan lse:import-stocks
+```
+
+Then import the Mutual Funds
+```
+php artisan mfd:import-funds
 ```
 
 ### Step 5

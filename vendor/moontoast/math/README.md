@@ -19,8 +19,6 @@ allowing one to perform mathematical calculations on numeric strings,
 going well outside the integer range of the system and maintaining arbitrary
 precision for more precise calculations.
 
-Moontoast\Math requires PHP 5.3+ and the [bcmath extension][].
-
 ## Installation
 
 The preferred method of installation is via [Composer][]:
@@ -65,7 +63,7 @@ echo $bn; // 339532337419071774305803111643925486182
 
 ## License
 
-Copyright &copy; 2013-2016 Moontoast, Inc.
+Copyright &copy; 2013-2020 Moontoast, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -39,10 +39,12 @@ class WidgetStocksComposer
 
         });
 
+        // print_r($stocks); die();
+
         /**
          * Get Prices and Chart from IEX
          */
-        $data = IEX::getBatchData($stocks->where('data_source', 'iex')->pluck('identifier')->toArray(), ['price', 'chart', 'quote'], '1m');
+        $data = IEX::getBatchData($stocks->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
 
         /**
          * For each stock, add the price

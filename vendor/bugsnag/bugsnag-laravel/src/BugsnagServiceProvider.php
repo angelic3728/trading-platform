@@ -36,7 +36,7 @@ class BugsnagServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '2.17.0';
+    const VERSION = '2.23.0';
 
     /**
      * Boot the service provider.
@@ -50,6 +50,13 @@ class BugsnagServiceProvider extends ServiceProvider
         $this->setupEvents($this->app->events, $this->app->config->get('bugsnag'));
 
         $this->setupQueue($this->app->queue);
+
+        // Load the Client instance up-front if the OOM bootstrapper has been
+        // loaded. This avoids the possibility of initialising during an OOM,
+        // which can take a non-trivial amount of memory
+        if (class_exists(OomBootstrapper::class, false) && !$this->app->runningUnitTests()) {
+            $this->app->make('bugsnag');
+        }
     }
 
     /**
@@ -186,7 +193,7 @@ class BugsnagServiceProvider extends ServiceProvider
             $client = new Client(new Configuration($config['api_key']), new LaravelResolver($app), $this->getGuzzle($config));
 
             $this->setupCallbacks($client, $app, $config);
-            $this->setupPaths($client, $app->basePath(), $app->path(), isset($config['strip_path']) ? $config['strip_path'] : null, isset($config['project_root']) ? $config['project_root'] : null);
+            $this->setupPaths($client, $app, $config);
 
             $client->setReleaseStage(isset($config['release_stage']) ? $config['release_stage'] : $app->environment());
             $client->setHostname(isset($config['hostname']) ? $config['hostname'] : null);
@@ -213,6 +220,10 @@ class BugsnagServiceProvider extends ServiceProvider
                 $client->setFilters($config['filters']);
             }
 
+            if (isset($config['endpoint'])) {
+                $client->setNotifyEndpoint($config['endpoint']);
+            }
+
             if ($this->isSessionTrackingAllowed($config)) {
                 $endpoint = isset($config['session_endpoint']) ? $config['session_endpoint'] : null;
                 $this->setupSessionTracking($client, $endpoint, $this->app->events);
@@ -220,6 +231,18 @@ class BugsnagServiceProvider extends ServiceProvider
 
             if (isset($config['build_endpoint'])) {
                 $client->setBuildEndpoint($config['build_endpoint']);
+            }
+
+            if (array_key_exists('memory_limit_increase', $config)) {
+                $client->setMemoryLimitIncrease($config['memory_limit_increase']);
+            }
+
+            if (isset($config['discard_classes']) && is_array($config['discard_classes'])) {
+                $client->setDiscardClasses($config['discard_classes']);
+            }
+
+            if (isset($config['redacted_keys']) && is_array($config['redacted_keys'])) {
+                $client->setRedactedKeys($config['redacted_keys']);
             }
 
             return $client;
@@ -266,6 +289,11 @@ class BugsnagServiceProvider extends ServiceProvider
      */
     protected function getGuzzle(array $config)
     {
+        // If a 'bugsnag.guzzle' instance exists in the container, use it
+        if ($this->app->bound('bugsnag.guzzle')) {
+            return $this->app->make('bugsnag.guzzle');
+        }
+
         $options = [];
 
         if (isset($config['proxy']) && $config['proxy']) {
@@ -276,7 +304,7 @@ class BugsnagServiceProvider extends ServiceProvider
             $options['proxy'] = $config['proxy'];
         }
 
-        return Client::makeGuzzle(isset($config['endpoint']) ? $config['endpoint'] : null, $options);
+        return Client::makeGuzzle(null, $options);
     }
 
     /**
@@ -328,38 +356,29 @@ class BugsnagServiceProvider extends ServiceProvider
     /**
      * Setup the client paths.
      *
-     * @param \Bugsnag\Client $client
-     * @param string          $base
-     * @param string          $path
-     * @param string|null     $strip
-     * @param string|null     $project
+     * @param \Bugsnag\Client                           $client
+     * @param \Illuminate\Contracts\Container\Container $app
+     * @param array                                     $config
      *
      * @return void
      */
-    protected function setupPaths(Client $client, $base, $path, $strip, $project)
+    protected function setupPaths(Client $client, Container $app, array $config)
     {
-        if ($strip) {
-            $client->setStripPath($strip);
-
-            if (!$project) {
-                $client->setProjectRoot("{$strip}/app");
-            }
-
-            return;
+        if (isset($config['project_root_regex'])) {
+            $client->setProjectRootRegex($config['project_root_regex']);
+        } elseif (isset($config['project_root'])) {
+            $client->setProjectRoot($config['project_root']);
+        } else {
+            $client->setProjectRoot($app->path());
         }
 
-        if ($project) {
-            if ($base && substr($project, 0, strlen($base)) === $base) {
-                $client->setStripPath($base);
-            }
-
-            $client->setProjectRoot($project);
-
-            return;
+        if (isset($config['strip_path_regex'])) {
+            $client->setStripPathRegex($config['strip_path_regex']);
+        } elseif (isset($config['strip_path'])) {
+            $client->setStripPath($config['strip_path']);
+        } else {
+            $client->setStripPath($app->basePath());
         }
-
-        $client->setStripPath($base);
-        $client->setProjectRoot($path);
     }
 
     /**

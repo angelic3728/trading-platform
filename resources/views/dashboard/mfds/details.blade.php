@@ -67,19 +67,19 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <strong>Symbol</strong>:
+                                    <strong>Symbol</strong>
                                 </td>
                                 <td>{{array_get($data, "symbol")}}</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Company</strong>:
+                                    <strong>Company</strong>
                                 </td>
                                 <td>{{array_get($data, "company_name")}}</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Retail Price</strong>:
+                                    <strong>Retail Price</strong>
                                 </td>
                                 @if(array_get($data, 'currency') == 'USD')
                                 <td>${{array_get($data, "price")}}</td>
@@ -89,7 +89,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Institutional Price</strong>:
+                                    <strong>Institutional Price</strong>
                                 </td>
                                 <td>{{ array_get($data, 'numbers.institutional_price', '-') }}</td>
                             </tr>
@@ -116,7 +116,7 @@
 
     <div class="row">
         <div class="col">
-            <h2 class="title">Stock Details</h2>
+            <h2 class="title">Fund Details</h2>
         </div>
     </div>
     <div class="row">
@@ -223,7 +223,7 @@
 
     function renderChart(range) {
         $.ajax({
-            url: '/api/mstocks/chart/{{ array_get($data, "symbol") }}/' + range,
+            url: '/api/mfds/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
                 if (res.success && res.data.length != 0) {
@@ -374,7 +374,7 @@
             $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
             $.ajax({
                     method: 'post',
-                    url: '/api/mstocks/{{array_get($data, "symbol")}}/buy',
+                    url: '/api/mfds/{{array_get($data, "symbol")}}/buy',
                     data: {
                         shares: shares_amount,
                         price: "{{array_get($data, 'price')}}",

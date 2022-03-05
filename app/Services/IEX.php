@@ -9,7 +9,8 @@ use Carbon\Carbon;
 class IEX
 {
 
-    public function getAvailableSymbols(){
+    public function getAvailableSymbols()
+    {
         /**
          * Get all Symbols
          */
@@ -27,6 +28,8 @@ class IEX
             return collect([
                 'symbol' => $symbol['symbol'],
                 'company_name' => $symbol['name'],
+                'currency' => $symbol['currency'],
+                'exchange' => $symbol['exchange'],
             ]);
         });
 
@@ -36,7 +39,8 @@ class IEX
         return $symbols;
     }
 
-    public function getAvailableMFDSymbols(){
+    public function getAvailableMFDSymbols()
+    {
         /**
          * Get all Symbols
          */
@@ -54,6 +58,8 @@ class IEX
             return collect([
                 'symbol' => $symbol['symbol'],
                 'company_name' => $symbol['name'],
+                'exchange' => $symbol['exchange'],
+                'currency' => $symbol['currency'],
             ]);
         });
 
@@ -63,8 +69,39 @@ class IEX
         return $symbols;
     }
 
-    public function getDetails(string $symbol, string $range = '1m'){
+    public function getAvailableLSESymbols()
+    {
+        /**
+         * Get all Symbols
+         */
+        $symbols = $this->makeApiCall('get', '/stable/ref-data/exchange/XLON/symbols');
+        /**
+         * Only get us sysmbols
+         */
+        // $symbols = $symbols->where('region', 'LSE');
 
+        /**
+         * Map data to individual collections
+         */
+
+
+        $symbols = $symbols->map(function ($symbol) {
+            return collect([
+                'symbol' => $symbol['symbol'],
+                'company_name' => $symbol['name'],
+                'currency' => 'GBP',
+                'exchange' => 'LSE'
+            ]);
+        });
+
+        /**
+         * Return symbols
+         */
+        return $symbols;
+    }
+
+    public function getDetails(string $symbol, string $range = '1m')
+    {
         /**
          * Get data in 1 api call
          */
@@ -74,10 +111,10 @@ class IEX
          * Return first symbol
          */
         return $data->first();
-
     }
 
-    public function getChart(string $symbol, string $range = '1m'){
+    public function getChart(string $symbol, string $range = '1m')
+    {
 
         /**
          * Add interval on url depending on the range
@@ -86,21 +123,20 @@ class IEX
 
             case '2y':
             case '5y':
-                return $this->makeApiCall('GET', 'stock/'.$symbol.'/chart/'.$range, [
+                return $this->makeApiCall('GET', 'stock/' . $symbol . '/chart/' . $range, [
                     'chartInterval' => 5,
                 ]);
                 break;
 
             default:
-                $url = 'stock/'.$symbol.'/chart/'.$range;
-                return $this->makeApiCall('GET', 'stock/'.$symbol.'/chart/'.$range);
+                $url = 'stock/' . $symbol . '/chart/' . $range;
+                return $this->makeApiCall('GET', 'stock/' . $symbol . '/chart/' . $range);
                 break;
-
         }
-
     }
 
-    public function getRecentNews(array $symbols, int $limit){
+    public function getRecentNews(array $symbols, int $limit)
+    {
 
         /**
          * News Articles
@@ -117,16 +153,13 @@ class IEX
          */
         $data->each(function ($item, $key) use ($news) {
 
-            if(isset($item['news'])){
+            if (isset($item['news'])) {
 
-                foreach($item['news'] as $article){
+                foreach ($item['news'] as $article) {
 
                     $news->push($article);
-
                 }
-
             }
-
         });
 
         /**
@@ -148,11 +181,10 @@ class IEX
          * Return news
          */
         return $news->values();
-
     }
 
-    public function getBatchData(array $symbols, array $types = ['price', 'chart'], string $range = '1m'){
-
+    public function getBatchData(array $symbols, array $types = ['price', 'chart'], string $range = '1m')
+    {
         /**
          * Make Batch Request
          */
@@ -166,7 +198,6 @@ class IEX
          * Return symbols
          */
         return $symbols;
-
     }
 
     /**
@@ -177,7 +208,8 @@ class IEX
      * @param  array  $query
      * @return Collection
      */
-    protected function makeApiCall($method, $path, $query = []){
+    protected function makeApiCall($method, $path, $query = [])
+    {
 
         /**
          * Prepare Client
@@ -204,7 +236,5 @@ class IEX
          * Create collection for response
          */
         return collect($response);
-
     }
-
 }

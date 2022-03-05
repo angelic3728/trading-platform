@@ -8,6 +8,10 @@
 <!-- Bootstrap js-->
 <script src="{{asset('assets/js/bootstrap/popper.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap/bootstrap.min.js')}}"></script>
+<script src="../assets/js/owlcarousel/owl.carousel.js"></script>
+<script src="../assets/js/owlcarousel/owl-custom.js"></script>
+<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
+<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <!-- Plugins JS start-->
 @stack('scripts')
 <!-- Plugins JS Ends-->

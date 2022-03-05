@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\MutualFunds;
+use App\MutualFund;
 
 use IEX;
 
@@ -19,25 +19,46 @@ class MutualFundsController extends Controller
     {
 
         /**
-         * Get Stocks
+         * Get Account Manager
          */
-        $stocks = MutualFunds::query()
-                      ->when($request->q, function ($query) use ($request) {
-                          return $query->where(function($query) use ($request){
-                              $query->where('symbol', 'LIKE', "%$request->q%")
-                                    ->orWhere('company_name','LIKE', "%$request->q%");
-                          });
-                      })
-                      ->orderBy('symbol', 'asc')
-                      ->paginate(25);
+        $account_manager = auth()->user()->account_manager;
+        /**
+         * Get Funds
+         */
+        $mfds = ($request->ex == "" || $request->ex == "all") ?
+            MutualFund::query()
+            ->when($request->q, function ($query) use ($request) {
+                return $query->where(function ($query) use ($request) {
+                    $query->where('symbol', 'LIKE', "%$request->q%")
+                        ->orWhere('company_name', 'LIKE', "%$request->q%");
+                });
+            })
+            ->orderBy('symbol', 'asc')
+            ->paginate(25)
+            :
+            MutualFund::where('exchange', $request->ex)
+            ->when($request->q, function ($query) use ($request) {
+                return $query->where(function ($query) use ($request) {
+                    $query->where('symbol', 'LIKE', "%$request->q%")
+                        ->orWhere('company_name', 'LIKE', "%$request->q%");
+                });
+            })
+            ->orderBy('symbol', 'asc')
+            ->paginate(25);
+
+        $exchanges = MutualFund::select("exchange")
+            ->groupBy("exchange")
+            ->get();
+
 
         /**
          * Return view
          */
         return view('dashboard.mfds.search', [
-            'stocks' => $stocks,
+            'mfds' => $mfds,
+            'exchanges' => $exchanges,
+            'account_manager' => $account_manager,
         ]);
-
     }
 
     /**
@@ -73,7 +94,7 @@ class MutualFundsController extends Controller
         /**
          * Get Stock
          */
-        $stock = MutualFunds::where('symbol', $symbol)->firstOrFail();
+        $stock = MutualFund::where('symbol', $symbol)->firstOrFail();
 
         /**
          * Prepare Data
@@ -131,7 +152,6 @@ class MutualFundsController extends Controller
             default:
                 abort(500);
                 break;
-
         }
         /**
          * Return view
@@ -139,7 +159,6 @@ class MutualFundsController extends Controller
         return view('dashboard.mfds.details', [
             'data' => $data,
         ]);
-
     }
 
     /**

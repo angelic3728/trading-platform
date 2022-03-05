@@ -74,19 +74,19 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <strong>Symbol</strong>:
+                                    <strong>Symbol</strong>
                                 </td>
                                 <td>{{array_get($data, "symbol")}}</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Company</strong>:
+                                    <strong>Company</strong>
                                 </td>
                                 <td>{{array_get($data, "company_name")}}</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Retail Price</strong>:
+                                    <strong>Retail Price</strong>
                                 </td>
                                 @if(array_get($data, 'currency') == 'USD')
                                 <td>${{array_get($data, "price")}}</td>
@@ -96,7 +96,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Institutional Price</strong>:
+                                    <strong>Institutional Price</strong>
                                 </td>
                                 <td>{{ array_get($data, 'numbers.institutional_price', '-') }}</td>
                             </tr>
@@ -127,93 +127,6 @@
             <h2 class="title">Stock Details</h2>
         </div>
     </div>
-    @if(array_get($data, 'exchange') == 'NYSE')
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <h4>Company Information</h4>
-                            <p>{{ array_get($data, 'company.description', '-') }}</p>
-                        </div>
-
-                        <div class="col-lg-6 d-flex flex-column justify-content-between">
-                            <div class="row">
-                                <div class="col-sm-6 col-md-4">
-                                    <div class="detail">
-                                        <strong>Latest Price</strong>
-                                        <span>{{ array_get($data, 'numbers.latest_price', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Market Cap</strong>
-                                        <span>{{ array_get($data, 'numbers.market_cap', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>P/E Ratio</strong>
-                                        <span>{{ array_get($data, 'numbers.pe_ratio', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Exchange</strong>
-                                        <span>{{ array_get($data, 'company.exchange', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Sector</strong>
-                                        <span>{{ array_get($data, 'company.sector', '-') }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6 col-md-4">
-                                    <div class="detail">
-                                        <strong>Previous Close</strong>
-                                        <span>{{ array_get($data, 'numbers.previous_close', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Volume</strong>
-                                        <span>{{ array_get($data, 'numbers.volume', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Latest EPS</strong>
-                                        <span>{{ array_get($data, 'numbers.latest_eps', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Industry</strong>
-                                        <span>{{ array_get($data, 'company.industry', '-') }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6 col-md-4">
-                                    <div class="detail">
-                                        <strong>Institutional Price</strong>
-                                        <span>{{ array_get($data, 'numbers.institutional_price', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>AVG Total Volume</strong>
-                                        <span>{{ array_get($data, 'numbers.avg_total_volume', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Latest EPS Date</strong>
-                                        <span>{{ array_get($data, 'numbers.latest_eps_date', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Website</strong>
-                                        <a href="{{ array_get($data, 'company.website', '-') }}" target="_blank">{{ array_get($data, 'company.website', '-') }}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- <div class="row link">
-                        <div class="col text-right">
-                            <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this stock</a>
-                        </div>
-                    </div> -->
-                </div>
-            </div>
-        </div>
-    </div>
-    @elseif(array_get($data, 'exchange') == 'LSE')
     <div class="row">
         <div class="col">
             <div class="card">
@@ -279,7 +192,6 @@
             </div>
         </div>
     </div>
-    @endif
 
     @if(array_get($data, 'exchange') == 'NYSE')
     <div class="row">
@@ -297,7 +209,7 @@
             </div>
             <div class="row news-content" style="min-height: 440px;">
                 <div class="col-xl-4 col-md-6 news-0" style="display: none;">
-                    <a href="" class="news-link-0">
+                    <a href="" class="news-link-0" target="_blank">
                         <div class="prooduct-details-box">
                             <div class="media">
                                 <img class="align-self-center img-fluid news-img-0" src="" alt="#">
@@ -311,7 +223,7 @@
                     </a>
                 </div>
                 <div class="col-xl-4 col-md-6 news-1" style="display: none;">
-                    <a href="" class="news-link-1">
+                    <a href="" class="news-link-1" target="_blank">
                         <div class="prooduct-details-box">
                             <div class="media">
                                 <img class="align-self-center img-fluid news-img-1" src="" alt="#">
@@ -325,7 +237,7 @@
                     </a>
                 </div>
                 <div class="col-xl-4 col-md-6 news-2" style="display: none;">
-                    <a href="" class="news-link-2">
+                    <a href="" class="news-link-2" target="_blank">
                         <div class="prooduct-details-box">
                             <div class="media">
                                 <img class="align-self-center img-fluid news-img-2" src="" alt="#">
@@ -353,8 +265,6 @@
 </div>
 @push('scripts')
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
-<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <script>
     $(document).ready(function() {
         var identifier = "{{ array_get($data, 'identifier') }}";
@@ -377,7 +287,7 @@
                     var artiles = res.data;
                     if (artiles.length > 0) {
                         for (var i = 0; i < artiles.length; i++) {
-                            $('.news-'+i).css('display', 'block');
+                            $('.news-' + i).css('display', 'block');
                             $('.news-img-' + i).attr('src', artiles[i]['image']);
                             $('.news-link-' + i).attr('href', artiles[i]['url']);
                             $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
@@ -386,8 +296,8 @@
                                 $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
                             else
                                 $('.news-summary-' + i).html(artiles[i]['summary']);
-                            
-                            if(i == 2) {
+
+                            if (i == 2) {
                                 $('.see-more').removeClass('d-none');
                                 $('.see-more').addClass('d-block');
                             }

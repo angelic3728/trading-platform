@@ -1,5 +1,32 @@
 # moontoast/math Changelog
 
+## 1.2.1
+
+_Released: 2020-01-04_
+
+* Package is *abandoned*. Please transition to [brick/math](https://github.com/brick/math).
+
+## 1.2.0
+
+_Released: 2020-01-04_
+
+* Optimize algorithm for conversion from base-10 numbers
+* Simplify the algorithm for absolute value.
+* Introduce `BigNumberInterface`
+* Introduce `AbstractBigNumber` implementing `BigNumberInterface`, to
+  extract common code (mainly convenience and static methods).
+* Introduce `BigNumberImmutable`, extending `AbstractBigNumber` and composing
+  a mutable `BigNumber`.
+* Make `BigNumber` extend `AbstractBigNumber`.
+* Remove dependency on ext-bcmath.
+
+There is a subtle difference in how `BigNumberImmutable` works in respect to
+`BigNumber` when using `withScale` method instead of `setScale`:
+
+When invoking `BigNumberImmutable::withScale()`, the new instance will have the
+new value re-computed according to the new scale. With `BigNumber::setScale()`
+instead, the change doesn't happen until subsequent computations.
+
 ## 1.1.2
 
 _Released: 2017-02-16_

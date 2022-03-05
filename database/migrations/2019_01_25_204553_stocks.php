@@ -25,7 +25,7 @@ class Stocks extends Migration
             $table->string('link')->nullable();
             $table->string('data_source');
             $table->string('isin')->nullable();
-            $table->integer('discount_percentage')->default(0);
+            $table->string('currency');
             $table->boolean('highlighted')->default(false);
             $table->timestamps();
             $table->softDeletes();

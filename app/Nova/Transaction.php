@@ -20,10 +20,13 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Currency;
-
+use Epartment\NovaDependencyContainer\NovaDependencyContainer;
+use Epartment\NovaDependencyContainer\HasDependencies;
 
 class Transaction extends Resource
 {
+
+    use HasDependencies;
     /**
      * The model the resource corresponds to.
      *
@@ -60,22 +63,37 @@ class Transaction extends Resource
             ID::make()->sortable(),
 
             BelongsTo::make('User')
-                  ->withMeta([
-                      'belongsToId' => $this->user_id ?? $request->user_id,
-                      'value' => $this->user_id ? $this->user->first_name.' '.$this->user->last_name : $request->user_id,
-                  ]),
+                ->withMeta([
+                    'belongsToId' => $this->user_id ?? $request->user_id,
+                    'value' => $this->user_id ? $this->user->first_name . ' ' . $this->user->last_name : $request->user_id,
+                ]),
 
-            BelongsTo::make('Stock')
-                  ->searchable()
-                  ->withMeta([
-                      'belongsToId' => $this->stock_id ?? $request->stock_id,
-                      'value' => $this->stock_id ? $this->stock->symbol : $request->stock_id,
-                  ]),
+            Boolean::make('Is Mutual Fund', 'is_fund')
+                ->sortable(),
+
+            NovaDependencyContainer::make([
+                BelongsTo::make('Stock')
+                    ->searchable()
+                    ->withMeta([
+                        'belongsToId' => $this->stock_id ?? $request->stock_id,
+                        'value' => $this->stock_id ? $this->stock->symbol : $request->stock_id,
+                    ])
+                    ])->dependsOn('is_fund', false),
+
+            NovaDependencyContainer::make([
+                BelongsTo::make('Mutual Fund', 'mutualFund')
+                    ->searchable()
+                    ->withMeta([
+                        'belongsToId' => $this->fund_id ?? $request->fund_id,
+                        'value' => $this->fund_id ? $this->fund->symbol : $request->fund_id,
+                    ]),
+            ])->dependsOn('is_fund', true),
+
 
             Select::make('Type')->options([
-                    'sell' => 'SELL',
-                    'buy' => 'BUY',
-                ])
+                'sell' => 'SELL',
+                'buy' => 'BUY',
+            ])
                 ->displayUsingLabels()
                 ->rules('required')
                 ->withMeta([
@@ -83,18 +101,18 @@ class Transaction extends Resource
                 ]),
 
             Currency::make('Price')
-                    ->rules('required')
-                    ->withMeta([
-                        'value' => $this->price ?? $request->price,
-                    ]),
+                ->rules('required')
+                ->withMeta([
+                    'value' => $this->price ?? $request->price,
+                ]),
 
             Number::make('Shares')
-                    ->step(1)
-                    ->sortable()
-                    ->rules('required')
-                    ->withMeta([
-                        'value' => $this->shares ?? $request->shares,
-                    ]),
+                ->step(1)
+                ->sortable()
+                ->rules('required')
+                ->withMeta([
+                    'value' => $this->shares ?? $request->shares,
+                ]),
 
             Text::make('Created At')
                 ->exceptOnForms(),

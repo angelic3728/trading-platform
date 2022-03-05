@@ -37,8 +37,8 @@
                         @method('PUT')
                         <div class="d-block">
                             <div class="avatar-holder d-flex justify-content-center">
-                                @if(File::exists(auth()->user()->avatar))
-                                <img src="{{ auth()->user()->avatar }}" class="img-90 rounded-circle avatar-preview" onclick="selectFile()" />
+                                @if(File::exists('storage/'.auth()->user()->avatar))
+                                <img src="{{ 'storage/'.auth()->user()->avatar }}" class="img-90 rounded-circle avatar-preview" onclick="selectFile()" />
                                 @else
                                 <img src="{{asset('assets/images/avtar/default.png')}}" class="img-90 rounded-circle avatar-preview" onclick="selectFile()" />
                                 @endif

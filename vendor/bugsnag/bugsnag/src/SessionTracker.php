@@ -2,39 +2,57 @@
 
 namespace Bugsnag;
 
+use Exception;
+use InvalidArgumentException;
+
 class SessionTracker
 {
     /**
+     * The current session payload version.
+     *
+     * @deprecated Use {HttpClient::SESSION_PAYLOAD_VERSION} instead.
+     *
+     * @var string
+     */
+    protected static $SESSION_PAYLOAD_VERSION = HttpClient::SESSION_PAYLOAD_VERSION;
+
+    /**
      * The amount of time between each sending attempt.
+     *
+     * @var int
      */
     protected static $DELIVERY_INTERVAL = 30;
 
     /**
      * The maximum amount of sessions to hold onto.
+     *
+     * @var int
      */
     protected static $MAX_SESSION_COUNT = 50;
 
     /**
-     * The current payload version.
-     */
-    protected static $SESSION_PAYLOAD_VERSION = '1.0';
-
-    /**
      * The key for storing session counts.
+     *
+     * @var string
      */
     protected static $SESSION_COUNTS_KEY = 'bugsnag-session-counts';
 
     /**
      * The key for storing last sent data.
+     *
+     * @var string
      */
     protected static $SESSIONS_LAST_SENT_KEY = 'bugsnag-sessions-last-sent';
 
     /**
-     * The current client configuration.
-     *
      * @var Configuration
      */
     protected $config;
+
+    /**
+     * @var HttpClient
+     */
+    protected $http;
 
     /**
      * An array of session counts.
@@ -83,36 +101,48 @@ class SessionTracker
      *
      * @var int
      */
-    protected $lastSent;
+    protected $lastSent = 0;
 
     /**
      * The current session.
      *
      * @var array
      */
-    protected $currentSession;
+    protected $currentSession = [];
 
     /**
-     * Create a session tracker instance.
-     *
-     * @param Configuration $config the initial client configuration
-     *
-     * @return void
+     * @param Configuration   $config
+     * @param HttpClient|null $http   A HttpClient instance to use. Passing null
+     *                                is deprecated and $http will be required
+     *                                in the next major version.
      */
-    public function __construct(Configuration $config)
+    public function __construct(Configuration $config, HttpClient $http = null)
     {
         $this->config = $config;
-        $this->lastSent = 0;
+        $this->http = $http === null
+            ? new HttpClient($config, $config->getSessionClient())
+            : $http;
     }
 
+    /**
+     * @param Configuration $config
+     *
+     * @return void
+     *
+     * @deprecated Change the Configuration via the Client object instead.
+     */
     public function setConfig(Configuration $config)
     {
         $this->config = $config;
     }
 
+    /**
+     * @return void
+     */
     public function startSession()
     {
-        $currentTime = strftime('%Y-%m-%dT%H:%M:00');
+        $currentTime = date('Y-m-d\TH:i:00');
+
         $session = [
             'id' => uniqid('', true),
             'startedAt' => $currentTime,
@@ -121,32 +151,50 @@ class SessionTracker
                 'unhandled' => 0,
             ],
         ];
+
         $this->setCurrentSession($session);
         $this->incrementSessions($currentTime);
     }
 
-    protected function setCurrentSession(array $session)
+    /**
+     * @param array $session
+     *
+     * @return void
+     */
+    public function setCurrentSession(array $session)
     {
-        if (!is_null($this->sessionFunction)) {
+        if (is_callable($this->sessionFunction)) {
             call_user_func($this->sessionFunction, $session);
         } else {
             $this->currentSession = $session;
         }
     }
 
+    /**
+     * @return array
+     */
     public function getCurrentSession()
     {
-        if (!is_null($this->sessionFunction)) {
-            return call_user_func($this->sessionFunction);
-        } else {
-            return $this->currentSession;
+        if (is_callable($this->sessionFunction)) {
+            $currentSession = call_user_func($this->sessionFunction);
+
+            if (is_array($currentSession)) {
+                return $currentSession;
+            }
+
+            return [];
         }
+
+        return $this->currentSession;
     }
 
+    /**
+     * @return void
+     */
     public function sendSessions()
     {
         $locked = false;
-        if (!is_null($this->lockFunction) && !is_null($this->unlockFunction)) {
+        if (is_callable($this->lockFunction) && is_callable($this->unlockFunction)) {
             call_user_func($this->lockFunction);
             $locked = true;
         }
@@ -160,57 +208,82 @@ class SessionTracker
         }
     }
 
+    /**
+     * @param callable $lock
+     * @param callable $unlock
+     *
+     * @return void
+     */
     public function setLockFunctions($lock, $unlock)
     {
-        if (is_callable($lock) && is_callable($unlock)) {
-            $this->lockFunction = $lock;
-            $this->unlockFunction = $unlock;
-        } else {
+        if (!is_callable($lock) || !is_callable($unlock)) {
             throw new InvalidArgumentException('Both lock and unlock functions must be callable');
         }
+
+        $this->lockFunction = $lock;
+        $this->unlockFunction = $unlock;
     }
 
-    public function setRetryFunction($retry)
+    /**
+     * @param callable $function
+     *
+     * @return void
+     */
+    public function setRetryFunction($function)
     {
-        if (is_callable($retry)) {
-            $this->retryFunction = $retry;
-        } else {
+        if (!is_callable($function)) {
             throw new InvalidArgumentException('The retry function must be callable');
         }
+
+        $this->retryFunction = $function;
     }
 
+    /**
+     * @param callable $function
+     *
+     * @return void
+     */
     public function setStorageFunction($function)
     {
-        if (is_callable($function)) {
-            $this->storageFunction = $function;
-        } else {
+        if (!is_callable($function)) {
             throw new InvalidArgumentException('Storage function must be callable');
         }
+
+        $this->storageFunction = $function;
     }
 
+    /**
+     * @param callable $function
+     *
+     * @return void
+     */
     public function setSessionFunction($function)
     {
-        if (is_callable($function)) {
-            $this->sessionFunction = $function;
-        } else {
+        if (!is_callable($function)) {
             throw new InvalidArgumentException('Session function must be callable');
         }
+
+        $this->sessionFunction = $function;
     }
 
+    /**
+     * @param string $minute
+     * @param int $count
+     * @param bool $deliver
+     *
+     * @return void
+     */
     protected function incrementSessions($minute, $count = 1, $deliver = true)
     {
         $locked = false;
-        if (!is_null($this->lockFunction) && !is_null($this->unlockFunction)) {
+
+        if (is_callable($this->lockFunction) && is_callable($this->unlockFunction)) {
             call_user_func($this->lockFunction);
             $locked = true;
         }
 
         try {
             $sessionCounts = $this->getSessionCounts();
-
-            if (is_null($sessionCounts)) {
-                $sessionCounts = [];
-            }
 
             if (array_key_exists($minute, $sessionCounts)) {
                 $sessionCounts[$minute] += $count;
@@ -223,7 +296,9 @@ class SessionTracker
             if (count($sessionCounts) > self::$MAX_SESSION_COUNT) {
                 $this->trimOldestSessions();
             }
+
             $lastSent = $this->getLastSent();
+
             if ($deliver && ((time() - $lastSent) > self::$DELIVERY_INTERVAL)) {
                 $this->deliverSessions();
             }
@@ -234,36 +309,62 @@ class SessionTracker
         }
     }
 
+    /**
+     * @return array
+     */
     protected function getSessionCounts()
     {
-        if (!is_null($this->storageFunction)) {
-            return call_user_func($this->storageFunction, self::$SESSION_COUNTS_KEY);
-        } else {
-            return $this->sessionCounts;
+        if (is_callable($this->storageFunction)) {
+            $sessionCounts = call_user_func($this->storageFunction, self::$SESSION_COUNTS_KEY);
+
+            if (is_array($sessionCounts)) {
+                return $sessionCounts;
+            }
+
+            return [];
         }
+
+        return $this->sessionCounts;
     }
 
+    /**
+     * @param array $sessionCounts
+     *
+     * @return void
+     */
     protected function setSessionCounts(array $sessionCounts)
     {
-        if (!is_null($this->storageFunction)) {
-            return call_user_func($this->storageFunction, self::$SESSION_COUNTS_KEY, $sessionCounts);
-        } else {
-            $this->sessionCounts = $sessionCounts;
+        if (is_callable($this->storageFunction)) {
+            call_user_func($this->storageFunction, self::$SESSION_COUNTS_KEY, $sessionCounts);
         }
+
+        $this->sessionCounts = $sessionCounts;
     }
 
+    /**
+     * @return void
+     */
     protected function trimOldestSessions()
     {
         $sessions = $this->getSessionCounts();
-        uksort($sessions, function ($key) {
-            return strtotime($key);
+
+        // Sort the session counts so that the oldest minutes are first
+        // i.e. '2000-01-01T00:00:00' should be after '2000-01-01T00:01:00'
+        uksort($sessions, function ($a, $b) {
+            return strtotime($b) - strtotime($a);
         });
-        $sessions = array_reverse($sessions);
+
         $sessionCounts = array_slice($sessions, 0, self::$MAX_SESSION_COUNT);
+
         $this->setSessionCounts($sessionCounts);
     }
 
-    protected function constructPayload($sessions)
+    /**
+     * @param array $sessions
+     *
+     * @return array
+     */
+    protected function constructPayload(array $sessions)
     {
         $formattedSessions = [];
         foreach ($sessions as $minute => $count) {
@@ -278,30 +379,33 @@ class SessionTracker
         ];
     }
 
+    /**
+     * @return void
+     */
     protected function deliverSessions()
     {
         $sessions = $this->getSessionCounts();
+
         $this->setSessionCounts([]);
-        if (count($sessions) == 0) {
+
+        if (count($sessions) === 0) {
             return;
         }
-        $http = $this->config->getSessionClient();
+
+        if (!$this->config->shouldNotify()) {
+            return;
+        }
+
         $payload = $this->constructPayload($sessions);
-        $headers = [
-            'Bugsnag-Api-Key' => $this->config->getApiKey(),
-            'Bugsnag-Payload-Version' => self::$SESSION_PAYLOAD_VERSION,
-            'Bugsnag-Sent-At' => strftime('%Y-%m-%dT%H:%M:%S'),
-        ];
+
         $this->setLastSent();
 
         try {
-            $http->post('', [
-                'json' => $payload,
-                'headers' => $headers,
-            ]);
+            $this->http->sendSessions($payload);
         } catch (Exception $e) {
             error_log('Bugsnag Warning: Couldn\'t notify. '.$e->getMessage());
-            if (!is_null($this->retryFunction)) {
+
+            if (is_callable($this->retryFunction)) {
                 call_user_func($this->retryFunction, $sessions);
             } else {
                 foreach ($sessions as $minute => $count) {
@@ -311,22 +415,39 @@ class SessionTracker
         }
     }
 
+    /**
+     * @return void
+     */
     protected function setLastSent()
     {
         $time = time();
-        if (!is_null($this->storageFunction)) {
+
+        if (is_callable($this->storageFunction)) {
             call_user_func($this->storageFunction, self::$SESSIONS_LAST_SENT_KEY, $time);
         } else {
             $this->lastSent = $time;
         }
     }
 
+    /**
+     * @return int
+     */
     protected function getLastSent()
     {
-        if (!is_null($this->storageFunction)) {
-            return call_user_func($this->storageFunction, self::$SESSIONS_LAST_SENT_KEY);
-        } else {
-            return $this->lastSent;
+        if (is_callable($this->storageFunction)) {
+            $lastSent = call_user_func($this->storageFunction, self::$SESSIONS_LAST_SENT_KEY);
+
+            // $lastSent may be a string despite us storing an integer because
+            // some storage backends will convert all values into strings
+            // note: some invalid integers pass 'is_numeric' (e.g. bigger than
+            // PHP_INT_MAX) but these get cast to '0', which is the default anyway
+            if (is_numeric($lastSent)) {
+                return (int) $lastSent;
+            }
+
+            return 0;
         }
+
+        return $this->lastSent;
     }
 }
