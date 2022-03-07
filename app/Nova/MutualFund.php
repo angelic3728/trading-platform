@@ -33,7 +33,7 @@ class MutualFund extends Resource
      */
     public function title()
     {
-        return $this->company_name.' ('.$this->symbol.')';
+        return $this->company_name . ' (' . $this->symbol . ')';
     }
 
     /**
@@ -67,18 +67,21 @@ class MutualFund extends Resource
                 ->rules('required', 'max:255'),
 
             Select::make('Data Source', 'data_source')->options([
-                    'iex' => 'IEX',
-                    'custom' => 'Custom',
-                ])
+                'iex' => 'IEX',
+                'custom' => 'Custom',
+            ])
                 ->hideFromIndex()
                 ->rules('required'),
 
-            Number::make('Discount Percentage')
-                    ->min(0)
-                    ->max(100)
-                    ->step(1)
-                    ->sortable()
-                    ->rules('required'),
+            Text::make('Exchange')
+                ->sortable()
+                ->rules('required', 'max:255'),
+
+            Select::make('Currency')->options([
+                'USD' => 'USD',
+                'GBP' => 'GBP',
+                'EUR' => 'EUR',
+            ]),
 
             Text::make('Link')
                 ->rules('required', 'max:255')

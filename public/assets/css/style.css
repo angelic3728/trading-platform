@@ -7633,7 +7633,7 @@ table tbody .border-bottom-warning td {
     + li::before {
     position: absolute;
     content: "";
-    left: -14px;
+    left: -1px;
     top: 15px;
     width: 2px;
     height: 15px;

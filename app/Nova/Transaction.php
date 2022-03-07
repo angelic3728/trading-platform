@@ -58,6 +58,8 @@ class Transaction extends Resource
      */
     public function fields(Request $request)
     {
+        // print_r($this->mutual_fund_id); die();
+
         return [
 
             ID::make()->sortable(),
@@ -78,7 +80,7 @@ class Transaction extends Resource
                         'belongsToId' => $this->stock_id ?? $request->stock_id,
                         'value' => $this->stock_id ? $this->stock->symbol : $request->stock_id,
                     ])
-                    ])->dependsOn('is_fund', false),
+            ])->dependsOn('is_fund', false),
 
             NovaDependencyContainer::make([
                 BelongsTo::make('Mutual Fund', 'mutualFund')
@@ -100,10 +102,24 @@ class Transaction extends Resource
                     'value' => $this->type ?? $request->type,
                 ]),
 
-            Currency::make('Price')
+            Number::make('Price')
                 ->rules('required')
                 ->withMeta([
                     'value' => $this->price ?? $request->price,
+                ]),
+
+            ($this->is_fund == 1) ? BelongsTo::make('Currency', 'mutualFund', 'App\Nova\MutualFund')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->withMeta([
+                    'belongsToId' => $this->mutual_fund_id ?? $request->mutual_fund_id,
+                    'value' => $this->mutual_fund_id ? $this->mutualFund->gcurrency : $request->mutual_fund_id,
+                ]) : BelongsTo::make('Currency', 'stock', 'App\Nova\Stock')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->withMeta([
+                    'belongsToId' => $this->stock_id ?? $request->stock_id,
+                    'value' => $this->stock_id ? $this->stock->gcurrency : $request->stock_id,
                 ]),
 
             Number::make('Shares')

@@ -33,17 +33,14 @@ class WidgetStocksComposer
         /**
          * Get widget stocks and cache them for 15 minutes
          */
-        $stocks = Cache::remember('stocks:widget', 15, function () {
-
-            return Stock::where('widget', true)->get();
-
-        });
+        $stocks = Stock::where('widget', true)->get();
 
         // print_r($stocks); die();
 
         /**
          * Get Prices and Chart from IEX
          */
+
         $data = IEX::getBatchData($stocks->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
 
         /**
@@ -62,9 +59,9 @@ class WidgetStocksComposer
             switch ($stock['data_source']) {
 
                 case 'iex':
-                    $stock->put('price', array_get($data, $stock->get('identifier').'.price'));
-                    $stock->put('chart', array_get($data, $stock->get('identifier').'.chart'));
-                    $stock->put('change_percentage', array_get($data, $stock->get('identifier').'.quote.changePercent'));
+                    $stock->put('price', array_get($data, $stock->get('identifier') . '.price'));
+                    $stock->put('chart', array_get($data, $stock->get('identifier') . '.chart'));
+                    $stock->put('change_percentage', array_get($data, $stock->get('identifier') . '.quote.changePercent'));
                     break;
 
                 case 'custom':
@@ -78,21 +75,17 @@ class WidgetStocksComposer
                     $stock->put('chart', null);
                     $stock->put('change_percentage', null);
                     break;
-
             }
 
             /**
              * Return stock
              */
             return $stock->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'currency');
-
         });
 
         /**
          * Return Stocks
          */
         return $stocks;
-
     }
-
 }

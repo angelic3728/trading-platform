@@ -44,15 +44,17 @@ class Transaction extends Model
 
     public function formatPrice($price, $decimals = 2)
     {
-
-        switch ($this->currency) {
-
+        $currency = $this->is_fund == 0 ? $this->stock->symbol : $this->mutualFund->currency;
+        switch ($currency) {
             case 'USD':
                 return '$' . number_format($price, $decimals);
                 break;
 
             case 'GBP':
                 return number_format(($price * 100), $decimals) . 'p';
+                break;
+            case 'EUR':
+                return number_format(($price * 100), $decimals) . '€';
                 break;
 
             default:

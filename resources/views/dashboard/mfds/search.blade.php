@@ -201,7 +201,8 @@
                     for (var i = 0; i < res.data.length; i++) {
                         var adjustedData = [];
                         var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
-                        if (res.data[i]['chart'].length != 0) {
+                        debugger;
+                        if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
                             for (var j = 0; j < res.data[i]['chart'].length; j++) {
                                 var stock = res.data[i]['chart'][j];
                                 var date = new Date(stock['date']);
@@ -209,6 +210,10 @@
                             }
                             renderChart(adjustedData, (i + 1), 'USD', displayData, res.data.length);
                         } else {
+                            if (i == res.data.length - 1) {
+                                $(".fund-contents").css("opacity", "1");
+                                $(".loader-box").css('display', 'none');
+                            }
                             $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
                                 type: 'theme',
                                 allow_dismiss: true,

@@ -49,7 +49,7 @@ class Stock extends Resource
      */
     public function title()
     {
-        return $this->company_name.' ('.$this->symbol.')';
+        return $this->company_name . ' (' . $this->symbol . ')';
     }
 
     /**
@@ -83,26 +83,22 @@ class Stock extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Select::make('Data Source', 'data_source')->options([
-                    'iex' => 'IEX',
-                    'custom' => 'Custom',
-                ])
+            Select::make('Data Source')->options([
+                'iex' => 'IEX',
+                'custom' => 'Custom',
+            ])
                 ->hideFromIndex()
                 ->rules('required'),
 
-            Select::make('Exchange', 'exchange')->options([
-                    'NYSE' => 'NYSE',
-                    'LSE' => 'LSE',
-                ])
+            Select::make('Exchange')->options([
+                'XNYS' => 'XNYS',
+                'XLON' => 'XLON',
+                'ASX' => 'ASX',
+            ])
                 ->displayUsingLabels()
                 ->rules('required'),
 
-            Number::make('Discount Percentage')
-                    ->min(0)
-                    ->max(100)
-                    ->step(1)
-                    ->sortable()
-                    ->rules('required'),
+            Text::make('Currency', 'gcurrency')->sortable(),
 
             Text::make('Link')
                 ->rules('required', 'max:255')

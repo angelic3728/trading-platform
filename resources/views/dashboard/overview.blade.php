@@ -57,7 +57,7 @@
                                     <i class="fa fa-money fs-4"></i>
                                 </a>
                             </div>
-                            <h5>8,50,49</h5>
+                            <h5>$ {{$total_transaction_price}}</h5>
                             <p>Total Portfolio Value</p>
                         </div>
                     </div>

@@ -19,6 +19,7 @@
                 <table class="display" id="basic-1">
                     <thead>
                         <tr>
+                        <th scope="col">Symbol</th>
                             <th scope="col">Type</th>
                             <th scope="col">Company Name</th>
                             <th scope="col">Price</th>
@@ -30,9 +31,9 @@
                     <tbody>
                         @foreach($transactions as $transaction)
                         <tr>
+                        <td class="type">{{ $transaction->symbol }}</td>
                             <td class="type">{{ $transaction->type }}</td>
                             <td class="symbol-with-company-name">
-                                {{ $transaction->symbol }}
                                 <small>{{ $transaction->company_name }}</small>
                             </td>
                             <td class="text-nowrap">{{ $transaction->formatPrice($transaction->price) }}</td>

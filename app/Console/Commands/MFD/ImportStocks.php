@@ -55,6 +55,7 @@ class ImportStocks extends Command
             $mfd->symbol = $item['symbol'];
             $mfd->company_name = $item['company_name'];
             $mfd->exchange = $item['exchange'];
+            $mfd->currency = $item['currency'];
             $mfd->link = 'https://finance.yahoo.com/quote/'.$item['symbol'].'?p='.$item['symbol'];
             $mfd->data_source = 'iex';
             $mfd->save();

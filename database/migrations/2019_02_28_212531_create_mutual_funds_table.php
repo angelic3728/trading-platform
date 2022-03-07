@@ -20,7 +20,7 @@ class CreateMutualFundsTable extends Migration
             $table->string('link')->nullable();
             $table->string('data_source');
             $table->string('exchange')->nullable();
-            $table->integer('discount_percentage')->default(0);
+            $table->string('gcurrency');
             $table->boolean('highlighted')->default(false);
             $table->timestamps();
             $table->softDeletes();

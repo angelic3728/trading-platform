@@ -266,7 +266,7 @@ class StockController extends Controller
         /**
          * Get highlighted stocks and cache them for an hour
          */
-        $stocks = Cache::remember('stocks:highlighted', 60, function () {
+        $stocks = Cache::remember('stocks:highlighted', 15, function () {
 
             return Stock::where('highlighted', true)->get();
 

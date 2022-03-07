@@ -20,6 +20,10 @@ class IEX
          * Only get us sysmbols
          */
         $symbols = $symbols->where('region', 'US');
+        $symbols = $symbols->where('type', 'cs');
+        $symbols = $symbols->where('currency', '!=', 'ISK');
+        $symbols = $symbols->where('currency', '!=', 'MYR');
+        $symbols = $symbols->where('currency', '!=', 'BGN');
 
         /**
          * Map data to individual collections
@@ -78,7 +82,7 @@ class IEX
         /**
          * Only get us sysmbols
          */
-        // $symbols = $symbols->where('region', 'LSE');
+        $symbols = $symbols->where('type', 'cs');
 
         /**
          * Map data to individual collections
@@ -89,8 +93,8 @@ class IEX
             return collect([
                 'symbol' => $symbol['symbol'],
                 'company_name' => $symbol['name'],
-                'currency' => 'GBP',
-                'exchange' => 'LSE'
+                'currency' => $symbol['currency'],
+                'exchange' => $symbol['exchange']
             ]);
         });
 
@@ -198,6 +202,31 @@ class IEX
          * Return symbols
          */
         return $symbols;
+    }
+
+    public function getRates($currency_str)
+    {
+        $rates = $this->makeApiCall('get', '/stable/fx/latest', ['symbols'=>$currency_str]);
+        /**
+         * Map data to individual collections
+         */
+
+         $result = Array();
+
+        $rates = $rates->map(function ($symbol) {
+            return [$symbol['symbol']=>$symbol['rate']];
+        });
+
+        foreach($rates as $rate) {
+            array_push($result, $rate);
+        }
+
+        $result = call_user_func_array('array_merge', $result);
+
+        /**
+         * Return symbols
+         */
+        return $result;
     }
 
     /**

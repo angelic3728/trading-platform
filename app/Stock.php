@@ -21,7 +21,7 @@ class Stock extends Model
         'link',
         'exchange',
         'data_source',
-        'discount_percentage',
+        'gcurrency',
     ];
 
     /**
@@ -29,7 +29,7 @@ class Stock extends Model
      *
      * @var array
      */
-    protected $appends = ['currency', 'identifier'];
+    protected $appends = ['identifier'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -44,26 +44,6 @@ class Stock extends Model
     public function stockPrices()
     {
         return $this->hasMany('App\StockPrice');
-    }
-
-    /**
-     * Get currency based on data source
-     *
-     * @return string currency
-     */
-    public function getCurrencyAttribute()
-    {
-        switch ($this->exchange) {
-
-            case 'LSE':
-                return 'GBP';
-                break;
-
-            default:
-                return 'USD';
-                break;
-
-        }
     }
 
     /**

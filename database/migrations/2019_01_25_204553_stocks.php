@@ -25,7 +25,7 @@ class Stocks extends Migration
             $table->string('link')->nullable();
             $table->string('data_source');
             $table->string('isin')->nullable();
-            $table->string('currency');
+            $table->string('gcurrency');
             $table->boolean('highlighted')->default(false);
             $table->timestamps();
             $table->softDeletes();

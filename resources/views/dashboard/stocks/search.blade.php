@@ -162,6 +162,7 @@
                                 <td width="10%">{{ $stock->symbol }}</td>
                                 <td>{{ $stock->company_name }}</td>
                                 <td>{{ $stock->exchange }}</td>
+                                <td>{{ $stock->currency }}</td>
                                 <td class="text-right" nowrap>
                                     <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('stocks.show', ['symbol' => $stock->symbol]) }}">See More</a>
                                 </td>
@@ -203,7 +204,7 @@
                         var adjustedData = [];
                         var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
                         var times = res.data[i]['currency'] === "GBP" ? 100 : 1;
-                        if (res.data[i]['chart'].length != 0) {
+                        if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
                             for (var j = 0; j < res.data[i]['chart'].length; j++) {
                                 var stock = res.data[i]['chart'][j];
                                 var date = new Date(stock['date']);

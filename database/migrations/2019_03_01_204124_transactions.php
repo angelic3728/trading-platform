@@ -16,7 +16,8 @@ class Transactions extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('stock_id');
+            $table->unsignedInteger('stock_id')->nullable();
+            $table->unsignedInteger('mutual_fund_id')->nullable();
             $table->enum('type', ['buy', 'sell']);
             $table->decimal('price', 8, 2);
             $table->integer('shares');

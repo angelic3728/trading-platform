@@ -14,8 +14,6 @@ class MutualFund extends Model
         'symbol',
         'link',
         'data_source',
-        'currency',
-        'discount_percentage',
     ];
 
     /**
@@ -23,7 +21,7 @@ class MutualFund extends Model
      *
      * @var array
      */
-    protected $appends = ['currency', 'identifier'];
+    protected $appends = ['gcurrency', 'identifier'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -65,11 +63,6 @@ class MutualFund extends Model
     {
 
         return $last_price - ($last_price * ($this->discount_percentage / 100));
-    }
-
-    public function getCurrencyAttribute()
-    {
-        return 'USD';
     }
 
     public function getIdentifierAttribute()
