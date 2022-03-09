@@ -54,66 +54,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="buySharesModal" tabindex="-1" role="dialog" aria-labelledby="Document Modal Label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Buy Shares from {{array_get($data, "symbol")}}</h5>
-                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6>Below you will find the most recent information about the stock you would like to buy shares from</h6>
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <strong>Symbol</strong>
-                                </td>
-                                <td>{{array_get($data, "symbol")}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>Company</strong>
-                                </td>
-                                <td>{{array_get($data, "company_name")}}</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>Retail Price</strong>
-                                </td>
-                                @if(array_get($data, 'currency') == 'USD')
-                                <td>${{array_get($data, "price")}}</td>
-                                @else
-                                <td>{{array_get($data, "price")}}p</td>
-                                @endif
-                            </tr>
-                            <tr>
-                                <td>
-                                    <strong>Institutional Price</strong>
-                                </td>
-                                <td>{{ array_get($data, 'numbers.institutional_price', '-') }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    @if(array_get($data, 'exchange') == 'LSE')
-                    <small class="d-block mb-3">We don't have real time prices for this stock at the moment. All prices here are based on the last close price. When submitting an trade, we will confirm the actual price with you.</small>
-                    @endif
-                    <div class="form-group">
-                        <label class="form-label">Shares</label>
-                        <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
-                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
-                    </div>
-                    <div class="alert-wrapper"></div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary btn-rounded btn-animated" onclick="buyShares(this)">
-                            Buy
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="row">
         <div class="col">
             <h2 class="title">Fund Details</h2>
@@ -200,6 +140,65 @@
                             <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this stock</a>
                         </div>
                     </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="buySharesModal" tabindex="-1" role="dialog" aria-labelledby="Document Modal Label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Buy Shares from {{array_get($data, "symbol")}}</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Below you will find the most recent information about the stock you would like to buy shares from</h6>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>Symbol</strong>
+                                </td>
+                                <td>{{array_get($data, "symbol")}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Company</strong>
+                                </td>
+                                <td>{{array_get($data, "company_name")}}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Retail Price</strong>
+                                </td>
+                                @if(array_get($data, 'currency') == 'USD')
+                                <td>${{array_get($data, "price")}}</td>
+                                @else
+                                <td>{{array_get($data, "price")}}p</td>
+                                @endif
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Institutional Price</strong>
+                                </td>
+                                <td>{{ array_get($data, 'numbers.institutional_price', '-') }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @if(array_get($data, 'exchange') == 'LSE')
+                    <small class="d-block mb-3">We don't have real time prices for this stock at the moment. All prices here are based on the last close price. When submitting an trade, we will confirm the actual price with you.</small>
+                    @endif
+                    <div class="form-group">
+                        <label class="form-label">Shares</label>
+                        <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
+                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
+                    </div>
+                    <div class="alert-wrapper"></div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary btn-rounded btn-animated" onclick="buyShares(this)">
+                            Buy
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

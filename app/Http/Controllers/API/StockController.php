@@ -92,7 +92,7 @@ class StockController extends Controller
                 /**
                  * Get IEX Data
                  */
-                $iex_data = IEX::getDetails($stock->identifier);
+                $iex_data = IEX::getDetails($stock->symbol);
 
                 /**
                  * Put Price
@@ -102,7 +102,7 @@ class StockController extends Controller
                 break;
 
             case 'custom':
-                $stock->price = CustomStockData::price($stock->identifier);
+                $stock->price = CustomStockData::price($stock->symbol);
                 $stock->institutional_price = $stock->institutionalPrice($stock->price);
                 break;
 
@@ -187,7 +187,7 @@ class StockController extends Controller
          */
         $iex_symbols = $investments->map(function ($item, $key) {
 
-            return $item->stock->identifier;
+            return $item->stock->symbol;
 
         });
 
@@ -207,13 +207,13 @@ class StockController extends Controller
             switch ($item->stock->data_source) {
 
                 case 'iex':
-                    $last_price = array_get($iex_data, $item->stock->identifier.'.price', 0);
-                    $change_percentage = array_get($iex_data, $item->stock->identifier.'.quote.changePercent', 0);
+                    $last_price = array_get($iex_data, $item->stock->symbol.'.price', 0);
+                    $change_percentage = array_get($iex_data, $item->stock->symbol.'.quote.changePercent', 0);
                     break;
 
                 case 'custom':
-                    $last_price =  CustomStockData::price($item->stock->identifier);
-                    $change_percentage = CustomStockData::changePercentage($item->stock->identifier);
+                    $last_price =  CustomStockData::price($item->stock->symbol);
+                    $change_percentage = CustomStockData::changePercentage($item->stock->symbol);
                     break;
 
                 default:
@@ -275,8 +275,7 @@ class StockController extends Controller
         /**
          * Get Prices and Chart from IEX
          */
-        $data = IEX::getBatchData($stocks->where('data_source', 'iex')->pluck('identifier')->toArray(), ['price', 'chart', 'quote'], '1m');
-
+        $data = IEX::getBatchData($stocks->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
         /**
          * For each stock, add the price
          */
@@ -291,17 +290,16 @@ class StockController extends Controller
              * Add extra fields before returning it
              */
             switch ($stock['data_source']) {
-
                 case 'iex':
-                    $stock->put('price', array_get($data, $stock->get('identifier').'.price'));
-                    $stock->put('chart', array_get($data, $stock->get('identifier').'.chart'));
-                    $stock->put('change_percentage', array_get($data, $stock->get('identifier').'.quote.changePercent'));
+                    $stock->put('price', array_get($data, $stock->get('symbol').'.price'));
+                    $stock->put('chart', array_get($data, $stock->get('symbol').'.chart'));
+                    $stock->put('change_percentage', array_get($data, $stock->get('symbol').'.quote.changePercent'));
                     break;
 
                 case 'custom':
-                    $stock->put('price', CustomStockData::price($stock->get('identifier')));
-                    $stock->put('chart', CustomStockData::chart($stock->get('identifier'), '1m'));
-                    $stock->put('change_percentage', CustomStockData::changePercentage($stock->get('identifier')));
+                    $stock->put('price', CustomStockData::price($stock->get('symbol')));
+                    $stock->put('chart', CustomStockData::chart($stock->get('symbol'), '1m'));
+                    $stock->put('change_percentage', CustomStockData::changePercentage($stock->get('symbol')));
                     break;
 
                 default:
@@ -342,11 +340,11 @@ class StockController extends Controller
         switch ($stock->data_source) {
 
             case 'iex':
-                $chart = IEX::getChart($stock->identifier, $range);
+                $chart = IEX::getChart($stock->symbol, $range);
                 break;
 
             case 'custom':
-                $chart = CustomStockData::chart($stock->identifier, $range);
+                $chart = CustomStockData::chart($stock->symbol, $range);
                 break;
 
             default:
@@ -384,5 +382,4 @@ class StockController extends Controller
         ]);
 
     }
-
 }

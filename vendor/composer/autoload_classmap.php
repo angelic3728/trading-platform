@@ -50,6 +50,7 @@ return array(
     'App\\Mail\\Trade\\Confirmation\\User' => $baseDir . '/app/Mail/Trade/Confirmation/User.php',
     'App\\Mail\\User\\Invite' => $baseDir . '/app/Mail/User/Invite.php',
     'App\\MutualFund' => $baseDir . '/app/MutualFund.php',
+    'App\\MutualFundPrice' => $baseDir . '/app/MutualFundPrice.php',
     'App\\Nova\\Document' => $baseDir . '/app/Nova/Document.php',
     'App\\Nova\\Filters\\Document\\ProviderFilter' => $baseDir . '/app/Nova/Filters/Document/ProviderFilter.php',
     'App\\Nova\\Filters\\Document\\UserFilter' => $baseDir . '/app/Nova/Filters/Document/UserFilter.php',

@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 
-use App\Transaction;
-use App\Stock;
+use App\Xtbs;
 
 use IEX;
-use DB;
+use CustomStockData;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
@@ -25,8 +24,9 @@ class DashboardController extends Controller
         /**
          * Get Latest Documents
          */
-        $documents = auth()->user()->documents()->latest()->take(5)->get();
-        $transactions = auth()->user()->transactions()->get();
+        $documents = auth()->user()->documents()->orderBy('id', 'DESC')->latest()->take(5)->get();
+        $xtbs = Xtbs::query()->orderBy('id', 'DESC')->latest()->take(5)->get();
+        $transactions = auth()->user()->transactions()->orderBy('created_at', 'DESC')->get();
         $used_currencies = array();
 
         // get available currencies
@@ -47,13 +47,30 @@ class DashboardController extends Controller
 
         $total_transaction_price = 0;
 
-        // add calculated prices
         foreach ($transactions as $transaction) {
             if ($transaction->is_fund == 1) {
                 if ($transaction->mutualFund) {
+                    // add detailed info
+                    $transaction->symbol = $transaction->mutualFund->symbol;
+                    $transaction->company_name = $transaction->mutualFund->company_name;
+                    $transaction->gcurrency = $transaction->mutualFund->gcurrency;
+                    $transaction->data_source = $transaction->mutualFund->data_source;
+                    switch ($transaction->mutualFund->data_source) {
+                        case 'iex':
+                            $iex_data = IEX::getDetails($transaction->mutualFund->symbol);
+                            $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
+                            $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                            $transaction->institutional_price =
+                                array_has($iex_data, 'quote.latestPrice') ? round($transaction->mutualFund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                            break;
+                        case 'custom':
+                            $transaction->latest_price = round(CustomStockData::price($transaction->mutualFund->symbol), 3);
+                            $transaction->change_percentage = round(CustomStockData::changePercentage($transaction->mutualFund->symbol), 4);
+                    }
+                    // add real price and total prices
                     if ($transaction->mutualFund->gcurrency != "USD") {
                         $rate = $all_rates['USD' . $transaction->mutualFund->gcurrency];
-                        $transaction->realPrice = ($rate && $rate != 0) ? $transaction->price / $rate : $transaction->price;
+                        $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;
                         else
@@ -68,9 +85,27 @@ class DashboardController extends Controller
                 }
             } else {
                 if ($transaction->stock) {
+                    // add detailed info
+                    $transaction->symbol = $transaction->stock->symbol;
+                    $transaction->company_name = $transaction->stock->company_name;
+                    $transaction->gcurrency = $transaction->stock->gcurrency;
+                    $transaction->data_source = $transaction->stock->data_source;
+                    switch ($transaction->stock->data_source) {
+                        case 'iex':
+                            $iex_data = IEX::getDetails($transaction->stock->symbol);
+                            $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
+                            $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                            $transaction->institutional_price =
+                                array_has($iex_data, 'quote.latestPrice') ? round($transaction->stock->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                            break;
+                        case 'custom':
+                            $transaction->latest_price = round(CustomStockData::price($transaction->stock->symbol), 3);
+                            $transaction->change_percentage = round(CustomStockData::changePercentage($transaction->stock->symbol), 4);
+                    }
+                    // add real price and total prices
                     if ($transaction->stock->gcurrency != "USD") {
                         $rate = $all_rates['USD' . $transaction->stock->gcurrency];
-                        $transaction->realPrice = ($rate && $rate != 0) ? $transaction->price / $rate : $transaction->price;
+                        $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;
                         else
@@ -93,7 +128,8 @@ class DashboardController extends Controller
             'account_manager' => $account_manager,
             'documents' => $documents,
             'total_transaction_price' => $total_transaction_price,
-            'transactions' => $transactions
+            'transactions' => $transactions,
+            'xtbs' => $xtbs
         ]);
     }
 

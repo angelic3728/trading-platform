@@ -687,6 +687,7 @@ class ComposerStaticInit797b82e25c881cd4eaf61fc23ee3ad24
         'App\\Mail\\Trade\\Confirmation\\User' => __DIR__ . '/../..' . '/app/Mail/Trade/Confirmation/User.php',
         'App\\Mail\\User\\Invite' => __DIR__ . '/../..' . '/app/Mail/User/Invite.php',
         'App\\MutualFund' => __DIR__ . '/../..' . '/app/MutualFund.php',
+        'App\\MutualFundPrice' => __DIR__ . '/../..' . '/app/MutualFundPrice.php',
         'App\\Nova\\Document' => __DIR__ . '/../..' . '/app/Nova/Document.php',
         'App\\Nova\\Filters\\Document\\ProviderFilter' => __DIR__ . '/../..' . '/app/Nova/Filters/Document/ProviderFilter.php',
         'App\\Nova\\Filters\\Document\\UserFilter' => __DIR__ . '/../..' . '/app/Nova/Filters/Document/UserFilter.php',

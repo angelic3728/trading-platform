@@ -4,15 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StockPrice extends Model
+class MutualFundPrice extends Model
 {
-
     /**
-     * Get the stock of the price
+     * Get the mutualFund of the price
      */
-    public function stock()
+    public function mutualFund()
     {
-        return $this->belongsTo('App\Stock');
+        return $this->belongsTo('App\MutualFund');
     }
 
     /**
@@ -21,5 +20,4 @@ class StockPrice extends Model
      * @var array
      */
     protected $dates = ['date'];
-
 }

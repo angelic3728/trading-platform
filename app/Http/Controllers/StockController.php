@@ -90,6 +90,8 @@ class StockController extends Controller
     public function show($symbol)
     {
 
+        $account_manager = auth()->user()->account_manager;
+
         /**
          * Get Stock
          */
@@ -99,10 +101,6 @@ class StockController extends Controller
          * Prepare Data
          */
 
-        // $iex_data = IEX::getDetails($stock->symbol);
-        // print_r($iex_data);
-        // die();
-
         switch ($stock->data_source) {
 
             case 'iex':
@@ -110,9 +108,8 @@ class StockController extends Controller
                 $data = [
                     'source' => 'iex',
                     'symbol' => $stock->symbol,
-                    'identifier' => $stock->identifier,
                     'company_name' => $stock->company_name,
-                    'currency' => $stock->currency,
+                    'currency' => $stock->gcurrency,
                     'price' => array_get($iex_data, 'price'),
                     'change_percentage' => array_get($iex_data, 'quote.changePercent'),
                     'link' => $stock->link,
@@ -140,9 +137,8 @@ class StockController extends Controller
                 $data = [
                     'source' => 'custom',
                     'symbol' => $stock->symbol,
-                    'identifier' => $stock->identifier,
                     'company_name' => $stock->company_name,
-                    'currency' => $stock->currency,
+                    'currency' => $stock->gcurrency,
                     'price' => CustomStockData::price($stock->identifier),
                     'change_percentage' => CustomStockData::changePercentage($stock->identifier),
                     'link' => $stock->link,
@@ -159,6 +155,7 @@ class StockController extends Controller
          */
         return view('dashboard.stocks.details', [
             'data' => $data,
+            'account_manager' => $account_manager
         ]);
     }
 

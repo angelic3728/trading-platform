@@ -98,14 +98,23 @@
           var results = stocks;
           if (stocks.length > 10)
             var results = stocks.slice(0, 10);
-          for(var i=0; i<results.length; i++) {
-            $('.search-results').append('<a style="width:max-content; padding:10px 0px;" class="text-secondary single-stock-link" href="/stocks/' + results[i].symbol+'">'+results[i].symbol+' - <span>'+results[i].company_name+'</span></a>');
+          for (var i = 0; i < results.length; i++) {
+            $('.search-results').append('<a style="width:max-content; padding:10px 0px;" class="text-secondary single-stock-link" href="/stocks/' + results[i].symbol + '">' + results[i].symbol + ' - <span>' + results[i].company_name + '</span></a>');
           }
         }
       } else {
         $('.search-results').removeClass('d-flex');
         $('.search-results').addClass('d-none');
         $('.search-results').append('<span>No Stocks</span>');
+      }
+    });
+
+    $('#search_switch').on('click', function() {
+      var flag = $(this)[0].checked;
+      if (flag) {
+        $("#search_stocks").attr('placeholder', 'Search Stocks');
+      } else {
+        $("#search_stocks").attr('placeholder', 'Search Mutual Funds');
       }
     });
   </script>

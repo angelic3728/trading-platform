@@ -10,6 +10,7 @@ use Intrinio;
 use Cache;
 use DB;
 use Mail;
+use CustomFundData;
 
 use App\MutualFund;
 use App\Transaction;
@@ -20,7 +21,7 @@ class MutualFundsController extends Controller
     {
 
         /**
-         * Get Stock
+         * Get Mutual Fund
          */
         $mfd = MutualFund::where('symbol', $symbol)->firstOrFail();
 
@@ -75,7 +76,7 @@ class MutualFundsController extends Controller
     {
 
         /**
-         * Get Stock
+         * Get Mutual Fund
          */
         $mfd = MutualFund::where('symbol', $symbol)->firstOrFail();
 
@@ -174,7 +175,7 @@ class MutualFundsController extends Controller
          */
         $iex_symbols = $investments->map(function ($item, $key) {
 
-            return $item->mfd->identifier;
+            return $item->mfd->symbol;
         });
 
         /**
@@ -193,13 +194,13 @@ class MutualFundsController extends Controller
             switch ($item->mfd->data_source) {
 
                 case 'iex':
-                    $last_price = array_get($iex_data, $item->mfd->identifier . '.price', 0);
-                    $change_percentage = array_get($iex_data, $item->mfd->identifier . '.quote.changePercent', 0);
+                    $last_price = array_get($iex_data, $item->mfd->symbol . '.price', 0);
+                    $change_percentage = array_get($iex_data, $item->mfd->symbol . '.quote.changePercent', 0);
                     break;
 
                 case 'custom':
-                    $last_price =  CustomStockData::price($item->mfd->identifier);
-                    $change_percentage = CustomStockData::changePercentage($item->mfd->identifier);
+                    $last_price =  CustomFundData::price($item->mfd->symbol);
+                    $change_percentage = CustomFundData::changePercentage($item->mfd->symbol);
                     break;
 
                 default:
@@ -256,7 +257,7 @@ class MutualFundsController extends Controller
         /**
          * Get Prices and Chart from IEX
          */
-        $data = IEX::getBatchData($mfds->where('data_source', 'iex')->pluck('identifier')->toArray(), ['price', 'chart', 'quote'], '1m');
+        $data = IEX::getBatchData($mfds->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
 
         /**
          * For each mfd, add the price
@@ -280,9 +281,9 @@ class MutualFundsController extends Controller
                     break;
 
                 case 'custom':
-                    $mfd->put('price', CustomStockData::price($mfd->get('symbol')));
-                    $mfd->put('chart', CustomStockData::chart($mfd->get('symbol')));
-                    $mfd->put('change_percentage', CustomStockData::changePercentage($mfd->get('symbol')));
+                    $mfd->put('price', CustomFundData::price($mfd->get('symbol')));
+                    $mfd->put('chart', CustomFundData::chart($mfd->get('symbol')));
+                    $mfd->put('change_percentage', CustomFundData::changePercentage($mfd->get('symbol')));
                     break;
 
                 default:
@@ -310,7 +311,7 @@ class MutualFundsController extends Controller
     public function chart($symbol, $range)
     {
         /**
-         * Get Stock
+         * Get Mutual Fund
          */
         $mfd = MutualFund::where('symbol', $symbol)->firstOrFail();
 
@@ -321,6 +322,10 @@ class MutualFundsController extends Controller
 
             case 'iex':
                 $chart = IEX::getChart($mfd->symbol, $range);
+                break;
+
+            case 'custom':
+                $chart = CustomFundData::chart($mfd->symbol, $range);
                 break;
 
             default:

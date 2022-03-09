@@ -8,646 +8,439 @@
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/date-picker.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/prism.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vector-map.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/scrollable.css')}}">
 @endpush
 @section('content')
 @yield('breadcrumb-list')
 <!-- Container-fluid starts-->
 <div class="container-fluid dashboard-default-sec">
     <div class="row">
-        <div class="col-xl-5 box-col-12 des-xl-100">
+        <div class="col-xl-12">
             <div class="row">
-                <div class="col-xl-12 col-md-6 box-col-6 des-xl-50">
-                    <div class="card profile-greeting">
-                        <div class="card-header">
-                            <div class="header-top">
-                                <div class="setting-list bg-primary position-unset">
+                <div class="col-xl-5 box-col-12 des-xl-100">
+                    <div class="row">
+                        <div class="col-xl-12 col-md-6 box-col-6 des-xl-50">
+                            <div class="card profile-greeting p-t-25 p-b-25">
+                                <div class="card-header">
+                                    <div class="header-top">
+                                        <div class="setting-list bg-primary position-unset">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body text-center p-t-0">
+                                    <h3 class="font-light">Welcome back {{auth()->user()->first_name}}!</h3>
+                                    <p class="font-light" style="font-size: 11px;">Your account manager is available from 05:00am to 17:00pm Monday to Friday. If you need to speak to somebody outside of these hours, please click below.</p>
+                                    <a class="btn btn-light" href="#">Click Here</a>
+                                </div>
+                                <div class="confetti">
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="confetti-piece"></div>
+                                    <div class="code-box-copy">
+                                        <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#profile-greeting" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body text-center p-t-0">
-                            <h3 class="font-light">Welcome back John!</h3>
-                            <p class="font-light" style="font-size: 11px;">Your account manager is available from 05:00am to 17:00pm Monday to Friday. If you need to speak to somebody outside of these hours, please click below.</p>
-                            <a class="btn btn-light" href="#">Click Here</a>
+                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
+                            <div class="card income-card card-primary  p-t-10 p-b-10">
+                                <div class="card-body text-center">
+                                    <div class="round-box">
+                                        <a href="javascript:void(0)">
+                                            <i class="fa fa-money fs-4"></i>
+                                        </a>
+                                    </div>
+                                    <h5>$ {{$total_transaction_price}}</h5>
+                                    <p>Total Portfolio Value</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="confetti">
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="confetti-piece"></div>
-                            <div class="code-box-copy">
-                                <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#profile-greeting" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
+                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
+                            <div class="card income-card card-secondary p-t-10 p-b-10">
+                                <div class="card-body text-center">
+                                    <div class="round-box">
+                                        <a href="javascript:void(0)">
+                                            <i class="fa fa-credit-card-alt fs-4"></i>
+                                        </a>
+                                    </div>
+                                    <h5>{{ auth()->user()->getBalance() }}</h5>
+                                    <p>Your Account Balance</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
-                    <div class="card income-card card-primary">
-                        <div class="card-body text-center">
-                            <div class="round-box">
-                                <a href="javascript:void(0)">
-                                    <i class="fa fa-money fs-4"></i>
-                                </a>
-                            </div>
-                            <h5>$ {{$total_transaction_price}}</h5>
-                            <p>Total Portfolio Value</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
-                    <div class="card income-card card-secondary">
-                        <div class="card-body text-center">
-                            <div class="round-box">
-                                <a href="javascript:void(0)">
-                                    <i class="fa fa-credit-card-alt fs-4"></i>
-                                </a>
-                            </div>
-                            <h5>{{ auth()->user()->getBalance() }}</h5>
-                            <p>Your Account Balance</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-7 box-col-12 des-xl-100 dashboard-sec">
-            <div class="card income-card">
-                <div class="card-header">
-                    <div class="header-top d-sm-flex align-items-center">
-                        <h5>Sales overview</h5>
-                        <div class="center-content">
-                            <p class="d-sm-flex align-items-center"><span class="font-primary m-r-10 f-w-700">$859.25k</span><i class="toprightarrow-primary fa fa-arrow-up m-r-10"></i>86% More than last year</p>
-                        </div>
-                        <div class="setting-list">
-                            <ul class="list-unstyled setting-option">
-                                <li>
-                                    <div class="setting-primary"><i class="icon-settings"></i></div>
-                                </li>
-                                <li><i class="view-html fa fa-code font-primary"></i></li>
-                                <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
-                                <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
-                                <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
-                                <li><i class="icofont icofont-error close-card font-primary"></i></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div id="chart-timeline-dashbord"></div>
-                    <div class="code-box-copy">
-                        <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#yearly-overview" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-8 box-col-12 des-xl-100">
-            <div class="row">
-                <div class="col-xl-12 recent-order-sec">
-                    <div class="card">
+                <div class="col-xl-7 box-col-12 des-xl-100 dashboard-sec">
+                    <div class="card income-card">
                         <div class="card-header">
-                            <h5 class="pull-left">My Portfolio</h5>
+                            <div class="header-top d-sm-flex align-items-center">
+                                <h5>Account performance</h5>
+                            </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-0">
                             <div class="tabbed-card">
-                                <ul class="pull-right nav nav-tabs border-tab nav-success" id="top-tabdanger" role="tablist">
+                                <ul class="pull-right nav nav-tabs border-tab nav-success" id="chart_tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="top-home-danger" data-bs-toggle="tab" href="#top-homedanger" role="tab" aria-controls="top-homedanger" aria-selected="false"><i class="icofont icofont-ui-home"></i>Stocks</a>
+                                        <a class="nav-link active" id="stock_chart_tab" data-bs-toggle="tab" href="#stock_chart" role="tab" aria-controls="stock-chart" aria-selected="false"><i class="icofont icofont-ui-home"></i>Stocks</a>
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="profile-top-danger" data-bs-toggle="tab" href="#top-profiledanger" role="tab" aria-controls="top-profiledanger" aria-selected="true">
-                                            <i class="icofont icofont-man-in-glasses"></i>Mutual Funds
+                                        <a class="nav-link" id="mfd_chart_tab" data-bs-toggle="tab" href="#mfd_chart" role="tab" aria-controls="mfd-chart" aria-selected="true">
+                                            <i class="fa fa-cloud"></i>Mutual Funds
                                         </a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
-                                <div class="tab-content" id="top-tabContentdanger">
-                                    <div class="tab-pane fade" id="top-homedanger" role="tabpanel" aria-labelledby="top-home-tab">
-                                        <div class="table-responsive">
-                                            <!-- <h5>Recent Orders</h5> -->
-                                            <table class="table table-bordernone">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Date</th>
-                                                        <th>Quantity</th>
-                                                        <th>Value</th>
-                                                        <th>Rate</th>
-                                                        <th>
-                                                            <!-- <div class="setting-list">
-                                                                <ul class="list-unstyled setting-option">
-                                                                    <li>
-                                                                        <div class="setting-primary"><i class="icon-settings"> </i></div>
-                                                                    </li>
-                                                                    <li><i class="view-html fa fa-code font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-error close-card font-primary"></i></li>
-                                                                </ul>
-                                                            </div> -->
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-1.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Yellow New Nike shoes</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>16 August</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>54146</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-1.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$210326</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-2.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Sony Brand New Headphone</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>2 October</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>32015</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-2.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$548526</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-3.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Beautiful Golden Tree plant</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>21 March</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>12548</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-3.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$589565</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-4.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Marco M Kely Handbeg</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>31 December</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>15495</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-4.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$125424 </p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-5.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Being Human Branded T-Shirt </span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>26 January</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>56625</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-5.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$112103</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade active show" id="stock_chart" role="tabpanel" aria-labelledby="stock-chart">
+                                        <div id="chart-timeline-dashbord1"></div>
                                     </div>
-                                    <!-- <div class="code-box-copy">
-                                        <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#recent-order" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
-                                    </div> -->
-                                    <div class="tab-pane fade active show" id="top-profiledanger" role="tabpanel" aria-labelledby="profile-top-tab">
-                                        <div class="table-responsive">
-                                            <!-- <h5>Recent Orders</h5> -->
-                                            <table class="table table-bordernone">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Date</th>
-                                                        <th>Quantity</th>
-                                                        <th>Value</th>
-                                                        <th>Rate</th>
-                                                        <th>
-                                                            <!-- <div class="setting-list">
-                                                                <ul class="list-unstyled setting-option">
-                                                                    <li>
-                                                                        <div class="setting-primary"><i class="icon-settings"> </i></div>
-                                                                    </li>
-                                                                    <li><i class="view-html fa fa-code font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
-                                                                    <li><i class="icofont icofont-error close-card font-primary"></i></li>
-                                                                </ul>
-                                                            </div> -->
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-1.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Yellow New Nike shoes</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>16 August</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>54146</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-1.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$210326</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-2.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Sony Brand New Headphone</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>2 October</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>32015</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-2.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$548526</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-3.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Beautiful Golden Tree plant</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>21 March</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>12548</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-3.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$589565</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-4.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Marco M Kely Handbeg</span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>31 December</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>15495</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-4.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$125424 </p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="media"><img class="img-fluid rounded-circle" src="{{asset('assets/images/dashboard/product-5.png')}}" alt="" data-original-title="" title="">
-                                                                <div class="media-body"><a href="#"><span>Being Human Branded T-Shirt </span></a></div>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <p>26 January</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>56625</p>
-                                                        </td>
-                                                        <td><img class="img-fluid" src="{{asset('assets/images/dashboard/graph-5.png')}}" alt="" data-original-title="" title=""></td>
-                                                        <td>
-                                                            <p>$112103</p>
-                                                        </td>
-                                                        <td>
-                                                            <p>Done</p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                    <div class="tab-pane fade" id="mfd_chart" role="tabpanel" aria-labelledby="mutualfund-chart">
+                                        <div id="chart-timeline-dashbord2"></div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-50 box-col-6 des-xl-50">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="header-top d-sm-flex align-items-center">
-                                <h5>Growth Overview</h5>
-                                <div class="center-content">
-                                    <p class="d-flex align-items-center"><i class="toprightarrow-primary fa fa-arrow-up me-2"></i>80% Growth</p>
-                                </div>
-                                <div class="setting-list">
-                                    <ul class="list-unstyled setting-option">
-                                        <li>
-                                            <div class="setting-primary"><i class="icon-settings"> </i></div>
-                                        </li>
-                                        <li><i class="view-html fa fa-code font-primary"></i></li>
-                                        <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-error close-card font-primary"></i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body p-0">
-                            <div id="chart-dashbord"></div>
-                            <div class="code-box-copy">
-                                <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#sell-overview" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-50 box-col-6 des-xl-50">
-                    <div class="card latest-update-sec">
-                        <div class="card-header">
-                            <div class="header-top d-sm-flex align-items-center">
-                                <h5>Latest activity</h5>
-                                <div class="center-content">
-                                    <ul class="week-date">
-                                        <li class="font-primary">Today</li>
-                                        <li>Month </li>
-                                    </ul>
-                                </div>
-                                <div class="setting-list">
-                                    <ul class="list-unstyled setting-option">
-                                        <li>
-                                            <div class="setting-primary"><i class="icon-settings"></i></div>
-                                        </li>
-                                        <li><i class="view-html fa fa-code font-primary"></i></li>
-                                        <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-error close-card font-primary"> </i></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordernone">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="media">
-                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
-                                                        <g>
-                                                            <g>
-                                                                <path d="M506.35,80.699c-7.57-7.589-19.834-7.609-27.43-0.052L331.662,227.31l-42.557-42.557c-7.577-7.57-19.846-7.577-27.423,0                                                      L89.076,357.36c-7.577,7.57-7.577,19.853,0,27.423c3.782,3.788,8.747,5.682,13.712,5.682c4.958,0,9.93-1.894,13.711-5.682                                                      l158.895-158.888l42.531,42.524c7.57,7.57,19.808,7.577,27.397,0.032l160.97-160.323                                                      C513.881,100.571,513.907,88.288,506.35,80.699z"></path>
-                                                            </g>
-                                                        </g>
-                                                        <g>
-                                                            <g>
-                                                                <path d="M491.96,449.94H38.788V42.667c0-10.712-8.682-19.394-19.394-19.394S0,31.955,0,42.667v426.667                                                      c0,10.712,8.682,19.394,19.394,19.394H491.96c10.712,0,19.394-8.682,19.394-19.394C511.354,458.622,502.672,449.94,491.96,449.94z                                                      "></path>
-                                                            </g>
-                                                        </g>
-                                                        <g>
-                                                            <g>
-                                                                <path d="M492.606,74.344H347.152c-10.712,0-19.394,8.682-19.394,19.394s8.682,19.394,19.394,19.394h126.061v126.067                                                      c0,10.705,8.682,19.394,19.394,19.394S512,249.904,512,239.192V93.738C512,83.026,503.318,74.344,492.606,74.344z"></path>
-                                                            </g>
-                                                        </g>
-                                                    </svg>
-                                                    <div class="media-body"><span>Google project Apply Review</span>
-                                                        <p>Complete in 3 Hours</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" target="_blank">Edit</a></td>
-                                            <td><a href="#" target="_blank">Delete</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="media">
-                                                    <svg enable-background="new 0 0 512 512" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="m362 91v-60h-212v60h-150v390h512c0-16.889 0-372.29 0-390zm-182-30h152v30h-152zm302 390h-452v-202.844l90 36v46.844h90v-30h92v30h90v-46.844l90-36zm-302-150h-30v-60h30zm152-60h30v60h-30c0-7.259 0-52.693 0-60zm150-25.156-90 36v-40.844h-90v60h-92v-60h-90v40.844l-90-36c0-14.163 0-84.634 0-94.844h452z"></path>
-                                                    </svg>
-                                                    <div class="media-body"><span>Business Logo Create</span>
-                                                        <p>Complete in 2 Days</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" target="_blank">Edit</a></td>
-                                            <td><a href="#" target="_blank">Delete</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="media">
-                                                    <svg enable-background="new 0 0 512 512" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                                                        <g>
-                                                            <path d="m345.622 126.038c-50.748-45.076-130.482-46.914-183.244 3.903-21.262 20.478-35.375 47.381-39.737 75.754-5.454 35.471 2.872 70.834 23.444 99.576 56.271 78.616 49.132 141.058 49.915 145.691 0 16.435 6.211 31.795 17.491 43.253 11.289 11.469 26.386 17.785 42.509 17.785 33.084 0 60-26.916 60-60 .686-4.269-6.11-72.81 47.676-143.691 17.875-23.557 27.324-51.673 27.324-81.309 0-38.547-16.54-75.347-45.378-100.962zm-89.622 355.962c-16.486 0-29.462-13.096-29.975-30h59.975c0 16.542-13.458 30-30 30zm83.777-191.826c-30.015 39.554-47.946 84.707-52.569 131.826h-62.57c-4.961-45.331-23.43-91.26-54.157-134.19-15.985-22.333-22.444-49.876-18.188-77.556 7.293-47.43 49.733-88.262 103.846-88.262 58.661 0 104.861 47.891 104.861 105.008 0 23.032-7.339 44.877-21.223 63.174z"></path>
-                                                            <path d="m256 62c8.284 0 15-6.716 15-15v-32c0-8.284-6.716-15-15-15s-15 6.716-15 15v32c0 8.284 6.716 15 15 15z"></path>
-                                                            <path d="m419.385 149.99 25.98-15c7.174-4.142 9.632-13.316 5.49-20.49-4.142-7.175-13.316-9.633-20.49-5.49l-25.98 15c-7.174 4.142-9.632 13.316-5.49 20.49 4.162 7.21 13.349 9.613 20.49 5.49z"></path>
-                                                            <path d="m92.615 304.01-25.98 15c-7.174 4.142-9.632 13.316-5.49 20.49 4.163 7.21 13.35 9.613 20.49 5.49l25.98-15c7.174-4.142 9.632-13.316 5.49-20.49-4.141-7.175-13.316-9.632-20.49-5.49z"></path>
-                                                            <path d="m338.5 84.105c7.141 4.124 16.33 1.716 20.49-5.49l15-25.98c4.142-7.174 1.684-16.348-5.49-20.49-7.174-4.144-16.349-1.685-20.49 5.49l-15 25.98c-4.142 7.175-1.684 16.348 5.49 20.49z"></path>
-                                                            <path d="m153.01 78.615c4.163 7.21 13.35 9.613 20.49 5.49 7.174-4.142 9.632-13.316 5.49-20.49l-15-25.98c-4.142-7.174-13.315-9.633-20.49-5.49-7.174 4.142-9.632 13.316-5.49 20.49z"></path>
-                                                            <path d="m445.365 319.01-25.98-15c-7.175-4.143-16.349-1.684-20.49 5.49-4.142 7.174-1.684 16.348 5.49 20.49l25.98 15c7.141 4.124 16.33 1.716 20.49-5.49 4.143-7.174 1.685-16.348-5.49-20.49z"></path>
-                                                            <path d="m107.615 124.01-25.98-15c-7.175-4.144-16.348-1.684-20.49 5.49s-1.684 16.348 5.49 20.49l25.98 15c7.141 4.124 16.33 1.716 20.49-5.49 4.143-7.174 1.685-16.348-5.49-20.49z"></path>
-                                                            <path d="m466 212h-30c-8.284 0-15 6.716-15 15s6.716 15 15 15h30c8.284 0 15-6.716 15-15s-6.716-15-15-15z"></path>
-                                                            <path d="m91 227c0-8.284-6.716-15-15-15h-30c-8.284 0-15 6.716-15 15s6.716 15 15 15h30c8.284 0 15-6.716 15-15z"></path>
-                                                            <path d="m275.394 216.394-19.394 19.393-19.394-19.393c-5.857-5.858-15.355-5.858-21.213 0s-5.858 15.355 0 21.213l25.607 25.606v53.787c0 8.284 6.716 15 15 15s15-6.716 15-15v-53.787l25.606-25.606c5.858-5.858 5.858-15.355 0-21.213-5.857-5.859-15.355-5.859-21.212 0z"></path>
-                                                        </g>
-                                                    </svg>
-                                                    <div class="media-body"><span>Business Project Research</span>
-                                                        <p>Due in 1 hour</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" target="_blank">Edit</a></td>
-                                            <td><a href="#" target="_blank">Delete</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="media">
-                                                    <svg enable-background="new 0 0 512 512" viewbox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                                                        <g>
-                                                            <path d="m512 390v-390h-512v390h241v32h-15c-41.355 0-75 33.645-75 75v15h210v-15c0-41.355-33.645-75-75-75h-15v-32zm-226 62c19.556 0 36.239 12.539 42.43 30h-144.86c6.191-17.461 22.874-30 42.43-30zm-256-92v-330h452v330c-12.164 0-438.947 0-452 0z"></path>
-                                                            <path d="m136 180c24.813 0 45-20.187 45-45s-20.187-45-45-45-45 20.187-45 45 20.187 45 45 45zm0-60c8.271 0 15 6.729 15 15s-6.729 15-15 15-15-6.729-15-15 6.729-15 15-15z"></path>
-                                                            <path d="m184.568 197.848c-28.678-24.39-60.953-16.827-61.054-16.833-35.639 5.799-62.514 38.985-62.514 77.196v41.789h150v-45c0-22.034-9.634-42.865-26.432-57.152zm-3.568 72.152h-90v-11.789c0-23.666 16.049-44.122 37.332-47.584 13.509-2.198 26.578 1.38 36.801 10.074 10.083 8.577 15.867 21.078 15.867 34.299z"></path>
-                                                            <path d="m241 270h120v30h-120z"></path>
-                                                            <path d="m241 210h210v30h-210z"></path>
-                                                            <path d="m241 150h210v30h-210z"></path>
-                                                            <path d="m331 90h120v30h-120z"></path>
-                                                            <path d="m241 90h60v30h-60z"></path>
-                                                            <path d="m391 270h60v30h-60z"></path>
-                                                        </g>
-                                                    </svg>
-                                                    <div class="media-body"><span>Recruitment in IT Depertment</span>
-                                                        <p>Complete in 3 Hours</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" target="_blank">Edit</a></td>
-                                            <td><a href="#" target="_blank">Delete</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="media">
-                                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                                                        <g>
-                                                            <g>
-                                                                <path d="M256,0C114.848,0,0,114.848,0,256s114.848,256,256,256s256-114.848,256-256S397.152,0,256,0z M256,480                                                      C132.48,480,32,379.52,32,256S132.48,32,256,32s224,100.48,224,224S379.52,480,256,480z"></path>
-                                                            </g>
-                                                        </g>
-                                                        <g>
-                                                            <g>
-                                                                <path d="M340.688,292.688L272,361.376V96h-32v265.376l-68.688-68.688l-22.624,22.624l96,96c3.12,3.12,7.216,4.688,11.312,4.688                                                      s8.192-1.568,11.312-4.688l96-96L340.688,292.688z"></path>
-                                                            </g>
-                                                        </g>
-                                                    </svg>
-                                                    <div class="media-body"><span>Submit Riverfront Project</span>
-                                                        <p>Complete in 2 Days</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" target="_blank">Edit</a></td>
-                                            <td><a href="#" target="_blank">Delete </a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="code-box-copy">
-                                <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#latest-update-sec" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-4 box-col-12 des-xl-100">
+        <div class="col-xl-12">
             <div class="row">
-                <div class="col-xl-12 box-col-6 des-xl-50">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="header-top d-sm-flex align-items-center">
-                                <h5>User Activations</h5>
-                                <div class="center-content">
-                                    <p>Yearly User 24.65k</p>
+                <div class="col-xl-8 box-col-12 des-xl-100">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="pull-left">My Portfolio</h5>
                                 </div>
-                                <div class="setting-list">
-                                    <ul class="list-unstyled setting-option">
-                                        <li>
-                                            <div class="setting-primary"><i class="icon-settings"></i></div>
-                                        </li>
-                                        <li><i class="view-html fa fa-code font-primary"></i></li>
-                                        <li><i class="icofont icofont-maximize full-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-minus minimize-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-refresh reload-card font-primary"></i></li>
-                                        <li><i class="icofont icofont-error close-card font-primary"></i></li>
-                                    </ul>
+                                <div class="card-body">
+                                    <div class="tabbed-card">
+                                        <ul class="pull-right nav nav-tabs border-tab nav-success" id="portfolio-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="stock_tab" data-bs-toggle="tab" href="#stock_portfolio" role="tab" aria-controls="stock-portfolio" aria-selected="false"><i class="icofont icofont-ui-home"></i>Stocks</a>
+                                                <div class="material-border"></div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="mfd_tab" data-bs-toggle="tab" href="#mfd_portfolio" role="tab" aria-controls="mfd-portfolio" aria-selected="true">
+                                                    <i class="fa fa-cloud"></i>Mutual Funds
+                                                </a>
+                                                <div class="material-border"></div>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="portfolio_content">
+                                            <div class="tab-pane fade active show" id="stock_portfolio" role="tabpanel" aria-labelledby="stock-portfolio">
+                                                <div class="scroll-bar-wrap">
+                                                    <div class="both-side-scroll scroll-demo p-0">
+                                                        <div class="horz-scroll-content">
+                                                            <table class="table table-striped table-bordered" style="min-width: 1200px;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="text-center">Symbol</th>
+                                                                        <th class="text-center">Company Name</th>
+                                                                        <th class="text-center">Last Price</th>
+                                                                        <th class="text-center">Change Percentage</th>
+                                                                        <th class="text-center">Institutional Price</th>
+                                                                        <th class="text-center">Shares</th>
+                                                                        <th class="text-center">Value</th>
+                                                                        <th class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($transactions as $transaction)
+                                                                    @if($transaction->is_fund == 0)
+                                                                    <tr>
+                                                                        <td class="text-center">{{$transaction->symbol}}</td>
+                                                                        <td class="text-center">{{$transaction->company_name}}</td>
+                                                                        <td class="text-center fw-bold">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                        <td class="text-center">{{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}</td>
+                                                                        <td class="text-center fw-bold">{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                        <td class="text-center">{{$transaction->shares}}</td>
+                                                                        <td class="text-center">{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
+                                                                        <td class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">
+                                                                            <div>
+                                                                                <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Buy</button>
+                                                                                <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    @endif
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="mfd_portfolio" role="tabpanel" aria-labelledby="mfd-portfolio">
+                                                <div class="scroll-bar-wrap">
+                                                    <div class="both-side-scroll scroll-demo p-0">
+                                                        <div class="horz-scroll-content">
+                                                            <table class="table table-striped table-bordered" style="min-width: 1200px;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="text-center">Symbol</th>
+                                                                        <th class="text-center">Company Name</th>
+                                                                        <th class="text-center">Last Price</th>
+                                                                        <th class="text-center">Change Percentage</th>
+                                                                        <th class="text-center">Institutional Price</th>
+                                                                        <th class="text-center">Shares</th>
+                                                                        <th class="text-center">Value</th>
+                                                                        <th class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach($transactions as $transaction)
+                                                                    @if($transaction->is_fund == 1)
+                                                                    <tr>
+                                                                        <td class="text-center">{{ $transaction->symbol }}</td>
+                                                                        <td class="text-center">{{ $transaction->company_name }}</td>
+                                                                        <td class="text-center fw-bold">{{ ($transaction->latest_price)?$transaction->mutualFund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                        <td class="text-center">{{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}</td>
+                                                                        <td class="text-center fw-bold">{{ ($transaction->institutional_price) ? $transaction->mutualFund->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                        <td class="text-center">{{ $transaction->shares }}</td>
+                                                                        <td class="text-center">{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
+                                                                        <td class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">
+                                                                            <div>
+                                                                                <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Buy</button>
+                                                                                <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Sell</button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    @endif
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="tradeModal" tabindex="-1" role="dialog" aria-labelledby="Trade Shares Modal" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 id="modal_title" class="modal-title">Buy Shares from</h5>
+                                                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <h6>Below you will find the most recent information about the stock you would like to <span id="trade_type">buy</span> shares from</h6>
+                                                            <table class="table">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <strong>Symbol</strong>
+                                                                        </td>
+                                                                        <td><strong id="trade_symbol"></strong></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <strong>Company</strong>
+                                                                        </td>
+                                                                        <td><strong id="trade_company"></strong></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <strong>Retail Price</strong>
+                                                                        </td>
+                                                                        <td><strong id="trade_price"></strong></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <strong>Institutional Price</strong>
+                                                                        </td>
+                                                                        <td><strong id="trade_institutional_price"></strong></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <small id="trade_is_xnys" class="d-block mb-3">We don't have real time prices for this stock at the moment. All prices here are based on the last close price. When submitting an trade, we will confirm the actual price with you.</small>
+                                                            <div class="form-group">
+                                                                <label class="form-label text-primary" id="shares-label">Shares</label>
+                                                                <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
+                                                                <small class="text-info">Your account manager will contact you as soon as possible to confirm best price.</small>
+                                                            </div>
+                                                            <div class="alert-wrapper mb-2"></div>
+                                                            <div class="d-flex justify-content-end">
+                                                                <button type="button" class="btn btn-primary btn-rounded btn-animated" id="trade_btn" onclick="confirmTrade(this)">
+                                                                    BUY
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="card-body p-0">
-                            <div id="user-activation-dash-2"></div>
-                            <div class="code-box-copy">
-                                <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#user-activations" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-12 box-col-6 des-xl-50">
-                    <div class="card trasaction-sec">
-                        <div class="card-header">
-                            <div class="header-top d-sm-flex align-items-center">
-                                <h5>Transaction</h5>
-                                <div class="center-content">
-                                    <p>5878 Suceessfull Transaction</p>
+                <div class="col-xl-4 box-col-12 des-xl-100">
+                    <div class="row">
+                        <div class="col-xl-12 box-col-6 des-xl-50">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="header-top d-sm-flex align-items-center">
+                                        <h5>Monthly Account Performance</h5>
+                                    </div>
                                 </div>
-                                <div class="setting-list">
-                                    <ul class="list-unstyled setting-option">
-                                        <li>
-                                            <div class="setting-secondary"><i class="icon-settings"> </i></div>
-                                        </li>
-                                        <li><i class="view-html fa fa-code font-secondary"></i></li>
-                                        <li><i class="icofont icofont-maximize full-card font-secondary"></i></li>
-                                        <li><i class="icofont icofont-minus minimize-card font-secondary"></i></li>
-                                        <li><i class="icofont icofont-refresh reload-card font-secondary"></i></li>
-                                        <li><i class="icofont icofont-error close-card font-secondary"></i></li>
-                                    </ul>
+                                <div class="card-body p-0">
+                                    <div id="month_profit_dash"></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="transaction-totalbal">
-                            <h2> $2,09,352k <span class="ms-3"> <a class="btn-arrow arrow-secondary" href="javascript:void(0)"><i class="toprightarrow-secondary fa fa-arrow-up me-2"></i>98.54%</a></span></h2>
-                            <p>Total Balance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 box-col-12 des-xl-100">
+            <div class="row">
+                <div class="col-xl-4 col-50 box-col-6 des-xl-50">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-top d-sm-flex align-items-center">
+                                <h5>Available XTB's</h5>
+                            </div>
+                            <a class="btn btn-outline-success btn-xs" href="{{ route('xtbs') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                            <div id="chart-3dash"></div>
-                            <div class="code-box-copy">
-                                <button class="code-box-copy__btn btn-clipboard" data-clipboard-target="#transaction" title="Copy"><i class="icofont icofont-copy-alt"></i></button>
+                            <div class="scroll-bar-wrap">
+                                <div class="horizontal-scroll scroll-demo p-0">
+                                    <div class="horz-scroll-content">
+                                        <table class="table table-striped table-bordered" style="min-width: 1200px;">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">ASX CODE</th>
+                                                    <th class="text-center">BOND ISSUER</th>
+                                                    <th class="text-center">MATURITY DATE</th>
+                                                    <th class="text-center">COUPON TYPE</th>
+                                                    <th class="text-center">NEXT EX.DATE</th>
+                                                    <th class="text-center">COUPON P.A</th>
+                                                    <th class="text-center">XTB PRICE</th>
+                                                    <th class="text-center">YTM</th>
+                                                    <th class="text-center">RUNNING CURRENT YIELD</th>
+                                                    <th class="text-center">TRADING MARGIN</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($xtbs as $xtb)
+                                                <tr>
+                                                    <td class="text-center text-nowrap text-secondary">{{ $xtb->asx_code }}</td>
+                                                    <td class="text-center text-nowrap"><a href="https://xtbs.com.au/xtbs-profile/{{ $xtb->asx_code }}" target="_blank">{{ $xtb->bond_issuer }}</a></td>
+                                                    <td class="text-center">{{ $xtb->maturity_date }}</td>
+                                                    <td class="text-center text-nowrap text-secondary">{{ ($xtb->coupon_type == "")?$xtb->coupon_type:"-" }}</td>
+                                                    <td class="text-center text-center text-nowrap text-secondary">{{ $xtb->next_ex_date }}</td>
+                                                    <td class="text-center text-nowrap text-info">{{ ($xtb->coupon_pa && $xtb->coupon_pa != "")?$xtb->coupon_pa:"-" }}</td>
+                                                    <td class="text-center text-nowrap text-success fw-bold">{{ "$".$xtb->xtb_price }}</td>
+                                                    <td class="text-center text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
+                                                    <td class="text-center text-nowrap text-dark">{{ $xtb->current_yield."%" }}</td>
+                                                    <td class="text-center text-nowrap text-danger">{{ ($xtb->trading_margin !="")?$xtb->trading_margin."%":"-" }}</td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-50 box-col-6 des-xl-50">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-top d-sm-flex align-items-center">
+                                <h5>Recent Account Activity</h5>
+                            </div>
+                            <a class="btn btn-outline-success btn-xs" href="{{ route('transactions') }}">see more</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="scroll-bar-wrap">
+                                <div class="horizontal-scroll scroll-demo p-0">
+                                    <div class="horz-scroll-content">
+                                        <table class="table table-striped table-bordered" style="min-width: 1200px;">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Symbol</th>
+                                                    <th class="text-center">Type</th>
+                                                    <th class="text-center">Company Name</th>
+                                                    <th class="text-center">Price</th>
+                                                    <th class="text-center">Shares</th>
+                                                    <th class="text-center">Date</th>
+                                                    <th class="text-center">Market</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($transactions->take(5) as $transaction)
+                                                <tr>
+                                                    <td class="text-center">{{ $transaction->symbol }}</td>
+                                                    <td class="text-center">{{ $transaction->type }}</td>
+                                                    <td class="text-center">
+                                                        <small>{{ $transaction->company_name }}</small>
+                                                    </td>
+                                                    <td class="text-center">{{ $transaction->is_fund=="1"?$transaction->mutualFund->formatPrice($transaction->price):$transaction->stock->formatPrice($transaction->price) }}</td>
+                                                    <td class="text-center">{{ $transaction->shares }}</td>
+                                                    <td class="text-center">{{ $transaction->created_at }}</td>
+                                                    <td class="text-center">{{ $transaction->is_fund=="1"?"Mutual Fund":"Stock" }}</td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 box-col-6 des-xl-50">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-top d-sm-flex align-items-center">
+                                <h5>Recent Document</h5>
+                            </div>
+                            <a class="btn btn-outline-success btn-xs" href="{{ route('documents.index') }}">see more</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="scroll-bar-wrap">
+                                <div class="horizontal-scroll scroll-demo p-0">
+                                    <div class="horz-scroll-content">
+                                        <table class="table table-striped table-bordered" style="min-width: 1200px;">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Type</th>
+                                                    <th class="text-center">Title</th>
+                                                    <th class="text-center">Description</th>
+                                                    <th class="text-center">Provided by</th>
+                                                    <th class="text-center">Date</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($documents as $document)
+                                                <tr>
+                                                    <td class="text-center">{{ $document->type }}</td>
+                                                    <td class="text-center">{{ $document->title }}</td>
+                                                    <td class="text-center">{{ $document->description }}</td>
+                                                    <td class="text-center">{{ $document->provider->first_name }} {{ $document->provider->last_name }}</td>
+                                                    <td class="text-center">{{ $document->created_at }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('documents.download', ['id' => $document->id]) }}" target="_blank">Download</a>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -662,8 +455,6 @@
 @push('scripts')
 <script src="{{asset('assets/js/chart/chartist/chartist.js')}}"></script>
 <script src="{{asset('assets/js/chart/chartist/chartist-plugin-tooltip.js')}}"></script>
-<script src="{{asset('assets/js/chart/knob/knob.min.js')}}"></script>
-<script src="{{asset('assets/js/chart/knob/knob-chart.js')}}"></script>
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script src="{{asset('assets/js/chart/apex-chart/stock-prices.js')}}"></script>
 <script src="{{asset('assets/js/prism/prism.min.js')}}"></script>
@@ -675,16 +466,344 @@
 <script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('assets/js/vector-map/jquery-jvectormap-2.0.2.min.js')}}"></script>
 <script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-world-mill-en.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-us-aea-en.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-uk-mill-en.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-au-mill.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-chicago-mill-en.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-in-mill.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-asia-mill.js')}}"></script>
+<script src="{{asset('assets/js/scrollable/perfect-scrollbar.min.js')}}"></script>
+<script src="{{asset('assets/js/scrollable/scrollable-custom.js')}}"></script>
 <script src="{{asset('assets/js/dashboard/default.js')}}"></script>
 <script src="{{asset('assets/js/notify/index.js')}}"></script>
 <script src="{{asset('assets/js/datepicker/date-picker/datepicker.js')}}"></script>
 <script src="{{asset('assets/js/datepicker/date-picker/datepicker.en.js')}}"></script>
 <script src="{{asset('assets/js/datepicker/date-picker/datepicker.custom.js')}}"></script>
+<script>
+    $(document).ready(function() {
+        var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'is_fund' => $transaction->is_fund, 'type' => $transaction->type];}) -> toJson() !!};
+        var monthProfits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        for (var i = 0; i < chartData.length; i++) {
+            var current_date = new Date();
+            var action_date = new Date(chartData[i]['created_at']);
+            if (action_date.getFullYear() == current_date.getFullYear()) {
+                if (chartData[i]['type'] == 'buy') {
+                    monthProfits[Number(action_date.getMonth())] = Number((monthProfits[Number(action_date.getMonth())] + Number(chartData[i]['realPrice'])).toFixed(2));
+                } else {
+                    monthProfits[Number(action_date.getMonth())] = Number((monthProfits[Number(action_date.getMonth())] - Number(chartData[i]['realPrice'])).toFixed(2));
+                }
+            }
+
+        };
+
+        var stockData = $.grep(chartData, function(v) {
+            return v.is_fund == 0;
+        });
+        var mfdData = $.grep(chartData, function(v) {
+            return v.is_fund == 1;
+        });
+
+        stockData = stockData.reverse();
+        mfdData = mfdData.reverse();
+
+        adjustedStockData = [];
+        adjustedMfdData = [];
+        total1 = 0;
+        total2 = 0;
+
+        for (var i = 0; i < stockData.length; i++) {
+            total1 = (stockData[i]['type'] == 'buy') ? total1 + Number(stockData[i]['realPrice']) : total1 - Number(stockData[i]['realPrice']);
+            adjustedStockData[i] = [stockData[i]['created_at'], Number(total1.toFixed())];
+        }
+
+        for (var i = 0; i < mfdData.length; i++) {
+            total2 = (mfdData[i]['type'] == 'buy') ? total2 + Number(mfdData[i]['realPrice']) : total2 - number(mfdData[i]['realPrice']);
+            adjustedMfdData[i] = [mfdData[i]['created_at'], Number(total2.toFixed())];
+        }
+
+        renderChart(adjustedStockData, '#chart-timeline-dashbord1');
+        renderChart(adjustedMfdData, '#chart-timeline-dashbord2');
+        renderBarChart(monthProfits, '#month_profit_dash');
+    });
+
+    function renderChart(adjustedData, obj) {
+        var options = {
+            series: [{
+                name: "Total Price",
+                data: adjustedData
+            }],
+            chart: {
+                id: 'area-datetime',
+                type: 'area',
+                height: 425,
+                zoom: {
+                    autoScaleYaxis: true
+                },
+                toolbar: {
+                    show: false
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+                style: 'hollow',
+            },
+            xaxis: {
+                type: 'datetime',
+                min: adjustedData[0]['created_at'],
+                tickAmount: 6,
+                axisTicks: {
+                    show: true,
+                },
+                axisBorder: {
+                    show: true
+                },
+            },
+            yaxis: {
+                formatter: function(val) {
+                    return val.toFixed(2);
+                }
+            },
+            tooltip: {
+                x: {
+                    format: 'yyyy-MM-dd'
+                },
+                y: {
+                    formatter: function(val) {
+                        return '$' + val;
+                    }
+                }
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                    stops: [0, 100]
+                }
+            },
+            responsive: [{
+                    breakpoint: 1366,
+                    options: {
+                        chart: {
+                            height: 350
+                        }
+                    }
+                },
+                {
+                    breakpoint: 1238,
+                    options: {
+                        chart: {
+                            height: 300
+                        },
+                        grid: {
+                            padding: {
+                                bottom: 5,
+                            },
+                        }
+                    }
+                },
+                {
+                    breakpoint: 992,
+                    options: {
+                        chart: {
+                            height: 300
+                        }
+                    }
+                },
+                {
+                    breakpoint: 551,
+                    options: {
+                        grid: {
+                            padding: {
+                                bottom: 10,
+                            },
+                        }
+                    }
+                },
+                {
+                    breakpoint: 535,
+                    options: {
+                        chart: {
+                            height: 250
+                        }
+
+                    }
+                }
+            ],
+
+            colors: [vihoAdminConfig.primary],
+        };
+        var charttimeline = new ApexCharts(document.querySelector(obj), options);
+        charttimeline.render();
+    }
+
+    function renderBarChart(data, obj) {
+        var options = {
+            chart: {
+                height: 350,
+                type: 'bar',
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    endingShape: 'rounded',
+                    columnWidth: '55%',
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            series: [{
+                name: 'Monthly Payment',
+                data: data
+            }],
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            },
+            yaxis: {
+                formatter: function(val) {
+                    return val.toFixed(2);
+                }
+            },
+            fill: {
+                opacity: 1
+
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return "$ " + val
+                    }
+                }
+            },
+            colors: [vihoAdminConfig.secondary]
+        }
+
+        var barChart = new ApexCharts(
+            document.querySelector(obj),
+            options
+        );
+
+        barChart.render();
+    }
+
+    function confirmTrade(obj, type, symbol, price, institutional_price, current_shares, is_fund) {
+        var shares_amount = $("#shares_amount").val();
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+
+        if (Number(shares_amount) == 0) {
+            $(".alert-wrapper").html('<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">The shares must be at least 1.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>');
+        } else if (type.toLowerCase() == 'sell' && Number(shares_amount) > current_shares)
+            $(".alert-wrapper").html('<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">The shares you want to sell must be equal or less than your current shares.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>');
+
+        else {
+            $(obj).attr('onclick', '');
+            $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
+            var url = is_fund == 0 ? '/api/stocks/' + symbol + '/' + type.toLowerCase() : '/api/mfds/' + symbol + '/' + type.toLowerCase();
+            $.ajax({
+                    method: 'post',
+                    url: url,
+                    data: {
+                        shares: shares_amount,
+                        price: price,
+                        institutional_price: institutional_price,
+                        _token: csrf_token
+                    },
+                })
+                .then(response => {
+                    $(obj).attr('onclick', 'buyShares(this)');
+                    $(obj).html(type.toLowerCase() == 'buy' ? 'BUY' : 'SELL');
+                    if (response.success) {
+                        $.notify('<i class="fa fa-star-o"></i>Successfully confirmed!', {
+                            type: 'theme',
+                            allow_dismiss: true,
+                            delay: 2000,
+                            showProgressbar: false,
+                            timer: 1000
+                        });
+                    } else {
+                        $.notify('<i class="fa fa-bell-o"></i>', {
+                            type: 'theme',
+                            allow_dismiss: true,
+                            delay: 2000,
+                            showProgressbar: false,
+                            timer: 1000
+                        });
+                    }
+                })
+        }
+    }
+
+    function openTradeModel(type, symbol, company_name, price, institutional_price, currency, shares, is_fund, exchange) {
+        $("#shares_amount").val("");
+        if (type == "buy") {
+            $('#modal_title').text('Buy shares from ' + symbol);
+            $('#trade_type').text('buy');
+            $('#trade_btn').text("BUY");
+            $('#trade_btn').removeClass('btn-danger');
+            $('#trade_btn').addClass('btn-primary');
+        } else {
+            $('#modal_title').text('Sell shares from ' + symbol);
+            $('#trade_type').text('sell');
+            $('#trade_btn').text("SELL");
+            $('#trade_btn').removeClass('btn-primary');
+            $('#trade_btn').addClass('btn-danger');
+        }
+
+        $('#trade_symbol').text(symbol);
+        $('#trade_company').text(company_name);
+        $('#trade_price').text(formatPrice(Number(price), currency));
+        $('#trade_institutional_price').text(formatPrice(Number(institutional_price), currency));
+
+        if (exchange.toLowerCase() == 'xnys')
+            $('#trade_is_xnys').css('display', 'none');
+        else
+            $('#trade_is_xnys').css('display', 'block');
+
+        $('#shares-label').text('Shares (Current Shares: ' + shares + ")");
+        $('#trade_btn').attr('onclick', 'confirmTrade(this, "' + type + '", "' + symbol + '", ' + price + ', ' + institutional_price + ', ' + shares + ', ' + is_fund + ')');
+        $('#tradeModal').modal('show');
+    }
+
+    // format Price and Percentage functions
+    function formatPrice(price, currency) {
+        switch (currency) {
+            case "USD":
+                return "$" + Number(price).toFixed(2);
+                break;
+
+            case "GBP":
+                return Number(price * 100).toFixed(2) + "p";
+                break;
+
+            case "EUR":
+                return Number(price.toFixed(2)) + "€";
+                break;
+
+            case "AUD":
+                return "A$" + Number(price.toFixed(2)) + "€";
+                break;
+
+            case "CAD":
+                return "C$" + Number(price.toFixed(2));
+                break;
+
+            default:
+                return price;
+                break;
+        }
+    }
+
+    function formatPercentage(percentage) {
+        return (Number(percentage) * 100).toFixed(2) + "%";
+    }
+</script>
 @endpush
 @endsection

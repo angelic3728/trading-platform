@@ -4,8 +4,6 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 
-use Carbon\Carbon;
-
 class IEX
 {
 

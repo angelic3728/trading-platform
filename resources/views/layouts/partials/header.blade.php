@@ -14,8 +14,16 @@
               <div class="search-results d-none shadow shadow-showcase bg-white flex-column" style="position: absolute; top:25px; z-index:99; padding:10px 15px; min-width:100%;">
               </div>
             </div>
+
           </div>
           <span class="d-sm-none mobile-search search-bg"><i class="fa fa-search"></i></span>
+        </li>
+        <li>
+          <div class="media-body text-end switch-sm">
+            <label class="switch" style="margin-bottom: -1px;">
+              <input type="checkbox" id="search_switch" checked=""><span class="switch-state bg-success"></span>
+            </label>
+          </div>
         </li>
       </ul>
     </div>

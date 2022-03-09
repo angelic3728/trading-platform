@@ -1,35 +1,35 @@
 <?php
 namespace App\Services;
 
-use App\Stock;
-use App\StockPrice;
+use App\MutualFund;
+use App\MutualFundPrice;
 
 use Carbon\Carbon;
 
-class CustomStockData
+class CustomFundData
 {
 
     /**
-     * Finds latest price for stock
+     * Finds latest price for fund
      *
-     * @param string $identifier
+     * @param string $symbol
      * @return float
      */
-    function price($identifier)
+    function price($symbol)
     {
 
         /**
-         * Find Stock
+         * Find Fund
          */
-        $stock = Stock::query()
-            ->where('symbol', $identifier)
+        $fund = MutualFund::query()
+            ->where('symbol', $symbol)
             ->first();
 
         /**
-         * Return Stock Price
+         * Return Mutual Fund Price
          */
-        return StockPrice::query()
-            ->where('stock_id', $stock->id)
+        return MutualFundPrice::query()
+            ->where('mutual_fund_id', $fund->id)
             ->latest()
             ->first()
             ->price;
@@ -37,42 +37,42 @@ class CustomStockData
     }
 
     /**
-     * Returns change percentage for stock
-     * @param  string $identifier
+     * Returns change percentage for mutual fund
+     * @param  string $symbol
      * @return mixed
      */
-    function changePercentage($identifier)
+    function changePercentage($symbol)
     {
 
         /**
-         * Find Stock
+         * Find Mutual Fund
          */
-        $stock = Stock::query()
-            ->where('symbol', $identifier)
+        $fund = MutualFund::query()
+            ->where('symbol', $symbol)
             ->first();
 
         /**
          * Get Yesterdays Price
          */
-        $stock_price_yesterday = StockPrice::query()
-            ->where('stock_id', $stock->id)
+        $fund_price_yesterday = MutualFundPrice::query()
+            ->where('mutual_fund_id', $fund->id)
             ->where('date', Carbon::yesterday())
             ->first();
 
         /**
          * Get Todays Price
          */
-        $stock_price_today = StockPrice::query()
-            ->where('stock_id', $stock->id)
+        $fund_price_today = MutualFundPrice::query()
+            ->where('mutual_fund_id', $fund->id)
             ->where('date', Carbon::today())
             ->first();
 
         /**
          * Show change percentage if both are available
          */
-        if(isset($stock_price_today) && isset($stock_price_yesterday)){
+        if(isset($fund_price_today) && isset($fund_price_yesterday)){
 
-            return (1 - floatval($stock_price_yesterday->price) / floatval($stock_price_today->price));
+            return (1 - floatval($fund_price_yesterday->price) / floatval($fund_price_today->price));
 
         } else {
 
@@ -85,7 +85,7 @@ class CustomStockData
     /**
      * Prepare chart
      *
-     * @param  string $identifier
+     * @param  string $symbol
      * @param  string $range
      * @return array
      */
@@ -138,27 +138,25 @@ class CustomStockData
         }
 
         /**
-         * Find Stock
+         * Find Mutual Fund
          */
-        $stock = Stock::query()
+        $fund = MutualFund::query()
             ->where('symbol', $symbol)
             ->first();
 
         /**
-         * Get all stock prices between those dates
+         * Get all mutual fund prices between those dates
          */
-        $prices = StockPrice::query()
-            ->where('stock_id', $stock->id)
+        $prices = MutualFundPrice::query()
+            ->where('mutual_fund_id', $fund->id)
             ->whereBetween('date', [$start_date, $end_date])
             ->orderBy('date', 'asc')
             ->get()
             ->map(function ($item, $key) {
-
                 return [
                     'date' => $item->date->toDateString(),
                     'fClose' => floatval($item->price),
                 ];
-
             });
 
         /**

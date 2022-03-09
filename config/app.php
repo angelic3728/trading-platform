@@ -190,6 +190,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\IEXServiceProvider::class,
         App\Providers\CustomStockDataServiceProvider::class,
+        App\Providers\CustomFundDataServiceProvider::class,
 
     ],
 
@@ -224,6 +225,7 @@ return [
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'IEX' => App\Facades\IEX::class,
         'CustomStockData' => App\Facades\CustomStockData::class,
+        'CustomFundData' => App\Facades\CustomFundData::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,

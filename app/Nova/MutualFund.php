@@ -73,11 +73,17 @@ class MutualFund extends Resource
                 ->hideFromIndex()
                 ->rules('required'),
 
-            Text::make('Exchange')
-                ->sortable()
-                ->rules('required', 'max:255'),
+            Select::make('Exchange')->options([
+                'ASE' => 'ASE',
+                'NAS' => 'NAS',
+                'NYS' => 'NYS',
+                'OTC' => 'OTC',
+                'PSE' => 'PSE',
+            ])
+                ->displayUsingLabels()
+                ->rules('required'),
 
-            Select::make('Currency')->options([
+            Select::make('Currency', 'gcurrency')->options([
                 'USD' => 'USD',
                 'GBP' => 'GBP',
                 'EUR' => 'EUR',

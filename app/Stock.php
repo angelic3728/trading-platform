@@ -25,13 +25,6 @@ class Stock extends Model
     ];
 
     /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['identifier'];
-
-    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -53,23 +46,37 @@ class Stock extends Model
      */
     public function formatPrice($price, $decimals = 2)
     {
-
-        switch ($this->currency) {
+        switch ($this->gcurrency) {
 
             case 'USD':
-                return '$'.number_format($price, $decimals);
+                return '$' . number_format($price, $decimals);
                 break;
 
             case 'GBP':
-                return number_format(($price * 100), $decimals).'p';
+                return number_format(($price * 100), $decimals) . 'p';
+                break;
+
+            case 'EUR':
+                return number_format($price, $decimals) . '€';
+                break;
+
+            case 'AUD':
+                return 'A$' . number_format($price, $decimals);
+                break;
+
+            case 'CAD':
+                return 'C$' . number_format($price, $decimals);
                 break;
 
             default:
                 return $price;
                 break;
-
         }
+    }
 
+    // Formats currency
+    public function getGcurrencyAttribute($gcurrency) {
+        return $gcurrency;
     }
 
     /**
@@ -81,7 +88,6 @@ class Stock extends Model
     {
 
         return $last_price - ($last_price * ($this->discount_percentage / 100));
-
     }
 
     /**
@@ -101,8 +107,6 @@ class Stock extends Model
             default:
                 return $this->symbol;
                 break;
-
         }
-
     }
 }

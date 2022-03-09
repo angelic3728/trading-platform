@@ -9,14 +9,14 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Illuminate\Http\Request;
 
-class StockPrice extends Resource
+class MutualFundPrice extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\StockPrice';
+    public static $model = 'App\MutualFundPrice';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -37,13 +37,13 @@ class StockPrice extends Resource
     public static function label()
     {
 
-        return 'Stock Prices';
+        return 'Mutual Fund Prices';
     }
 
     public static function singularLabel()
     {
 
-        return 'Stock Price';
+        return 'Fund Price';
     }
 
     /**
@@ -51,7 +51,7 @@ class StockPrice extends Resource
      *
      * @var string
      */
-    public static $group = 'Stocks';
+    public static $group = 'Mutual Funds';
 
     /**
      * Get the fields displayed by the resource.
@@ -62,27 +62,25 @@ class StockPrice extends Resource
     public function fields(Request $request)
     {
         return [
-
             ID::make()
-                ->sortable(),
+                  ->sortable(),
 
-            BelongsTo::make('Stock')
-                ->searchable()
-                ->onlyOnIndex(),
+            BelongsTo::make('MutualFund')
+                  ->searchable()
+                  ->onlyOnIndex(),
 
-            Select::make('Stock', 'stock_id')->options($this->customStocks())
-                ->onlyOnForms()
-                ->rules('required'),
+            Select::make('MutualFund', 'mutual_fund_id')->options($this->customMutualFunds())
+                  ->onlyOnForms()
+                  ->rules('required'),
 
             Date::make('Date')
-                ->sortable()
-                ->rules('required'),
+                  ->sortable()
+                  ->rules('required'),
 
             Number::make('Price')
-                ->sortable()
-                ->step(0.001)
-                ->rules('required'),
-
+                  ->sortable()
+                  ->step(0.001)
+                  ->rules('required'),
         ];
     }
 
@@ -130,20 +128,15 @@ class StockPrice extends Resource
         return [];
     }
 
-    /**
-     * Get all custom added stocks
-     *
-     * @return array
-     */
-    private function customStocks()
+    private function customMutualFunds()
     {
 
-        return \App\Stock::query()
+        return \App\MutualFund::query()
             ->where('data_source', 'custom')
             ->get()
             ->mapWithKeys(function ($item) {
-
                 return [$item->id => $item->company_name];
             });
+
     }
 }

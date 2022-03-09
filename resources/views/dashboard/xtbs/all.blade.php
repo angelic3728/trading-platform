@@ -39,7 +39,7 @@
                             <td class="text-nowrap text-dark">{{ $xtb->maturity_date }}</td>
                             <td class="text-nowrap text-secondary">{{ ($xtb->coupon_type == "")?$xtb->coupon_type:"-" }}</td>
                             <td class="text-nowrap text-secondary">{{ $xtb->next_ex_date }}</td>
-                            <td class="text-nowrap text-info">{{ $xtb->coupon_pa }}</td>
+                            <td class="text-nowrap text-info">{{ ($xtb->coupon_pa && $xtb->coupon_pa != "")?$xtb->coupon_pa:"-" }}</td>
                             <td class="text-nowrap text-success">{{ "$".$xtb->xtb_price }}</td>
                             <td class="text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
                             <td class="text-nowrap text-dark">{{ $xtb->current_yield."%" }}</td>

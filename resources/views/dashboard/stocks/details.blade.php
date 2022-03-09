@@ -193,7 +193,6 @@
         </div>
     </div>
 
-    @if(array_get($data, 'exchange') == 'NYSE')
     <div class="row">
         <div class="col">
             <h2 class="title">Recent News</h2>
@@ -202,7 +201,7 @@
             <a href="/news?symbols={{array_get($data, 'symbol')}}" class="see-more text-danger fw-bold d-none">See More</a>
         </div>
     </div>
-    <div class="card">
+    <div class="card news-container">
         <div class="card-body">
             <div class="loader-box news-loader justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
                 <div class="loader-19"></div>
@@ -261,13 +260,12 @@
         </div>
     </div>
     @endif
-    @endif
 </div>
 @push('scripts')
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script>
     $(document).ready(function() {
-        var identifier = "{{ array_get($data, 'identifier') }}";
+        var symbol = "{{ array_get($data, 'symbol') }}";
         $(".chart-loader").css({
             'top': $('.card-header').innerHeight() + "px",
             'height': $('.chart-content').innerHeight() + "px"
@@ -278,39 +276,42 @@
         $(".chart-content").css("opacity", "0.3");
         $(".news-content").css("opacity", "0.3");
         renderChart('1m');
+        if ("{{array_get($data, 'data_source') == 'iex'}}") {
+            $.ajax({
+                method: 'get',
+                url: '/api/news?symbols=' + symbol + '&&limit=3',
+                success: function(res) {
+                    if (res.success) {
+                        var artiles = res.data;
+                        if (artiles.length > 0) {
+                            for (var i = 0; i < artiles.length; i++) {
+                                $('.news-' + i).css('display', 'block');
+                                $('.news-img-' + i).attr('src', artiles[i]['image']);
+                                $('.news-link-' + i).attr('href', artiles[i]['url']);
+                                $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
+                                $('.news-headline-' + i).html(artiles[i]['headline']);
+                                if (artiles[i]['summary'].length > 150)
+                                    $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
+                                else
+                                    $('.news-summary-' + i).html(artiles[i]['summary']);
 
-        $.ajax({
-            method: 'get',
-            url: '/api/news?symbols=' + identifier + '&&limit=3',
-            success: function(res) {
-                if (res.success) {
-                    var artiles = res.data;
-                    if (artiles.length > 0) {
-                        for (var i = 0; i < artiles.length; i++) {
-                            $('.news-' + i).css('display', 'block');
-                            $('.news-img-' + i).attr('src', artiles[i]['image']);
-                            $('.news-link-' + i).attr('href', artiles[i]['url']);
-                            $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
-                            $('.news-headline-' + i).html(artiles[i]['headline']);
-                            if (artiles[i]['summary'].length > 150)
-                                $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
-                            else
-                                $('.news-summary-' + i).html(artiles[i]['summary']);
-
-                            if (i == 2) {
-                                $('.see-more').removeClass('d-none');
-                                $('.see-more').addClass('d-block');
+                                if (i == 2) {
+                                    $('.see-more').removeClass('d-none');
+                                    $('.see-more').addClass('d-block');
+                                }
                             }
+                        } else {
+                            $('.news-content').css('display', 'none');
+                            $('.no-news').css('display', 'block');
                         }
-                    } else {
-                        $('.news-content').css('display', 'none');
-                        $('.no-news').css('display', 'block');
+                        $(".news-content").css("opacity", "1");
+                        $(".news-loader").css('display', 'none');
                     }
-                    $(".news-content").css("opacity", "1");
-                    $(".news-loader").css('display', 'none');
                 }
-            }
-        });
+            });
+        } else {
+            $('.news-container').css('display', 'none');
+        }
     });
 
     function renderChart(range) {
@@ -320,8 +321,8 @@
             success: function(res) {
                 if (res.success && res.data.length != 0) {
                     var times = 1;
-                    var currency = "{{ array_get($data, 'currency') }}";
-                    if ("{{array_get($data, 'exchange') == 'LSE'}}")
+                    var currency = "{{ array_get($data, 'gcurrency') }}";
+                    if ("{{array_get($data, 'exchange') == 'XLON'}}")
                         times = 100;
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {

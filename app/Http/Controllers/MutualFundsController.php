@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\MutualFund;
 
 use IEX;
+use CustomFundData;
 
 class MutualFundsController extends Controller
 {
@@ -91,31 +92,29 @@ class MutualFundsController extends Controller
     public function show($symbol)
     {
 
+        $account_manager = auth()->user()->account_manager;
+
         /**
          * Get Stock
          */
-        $stock = MutualFund::where('symbol', $symbol)->firstOrFail();
+        $fund = MutualFund::where('symbol', $symbol)->firstOrFail();
 
         /**
          * Prepare Data
          */
 
-        // $iex_data = IEX::getDetails($stock->symbol);
-        // print_r($iex_data);
-        // die();
-
-        switch ($stock->data_source) {
+        switch ($fund->data_source) {
 
             case 'iex':
-                $iex_data = IEX::getDetails($stock->symbol);
+                $iex_data = IEX::getDetails($fund->symbol);
                 $data = [
                     'source' => 'iex',
-                    'symbol' => $stock->symbol,
-                    'company_name' => $stock->company_name,
-                    'currency' => "USD",
+                    'symbol' => $fund->symbol,
+                    'company_name' => $fund->company_name,
+                    'currency' => $fund->gcurrency,
                     'price' => array_get($iex_data, 'price'),
                     'change_percentage' => array_get($iex_data, 'quote.changePercent'),
-                    'link' => $stock->link,
+                    'link' => $fund->link,
                     'company' => [
                         'description' => array_get($iex_data, 'company.description'),
                         'exchange' => array_get($iex_data, 'company.exchange'),
@@ -124,10 +123,10 @@ class MutualFundsController extends Controller
                         'website' => array_get($iex_data, 'company.website'),
                     ],
                     'numbers' => [
-                        'latest_price' => array_has($iex_data, 'quote.latestPrice') ? $stock->formatPrice(array_get($iex_data, 'quote.latestPrice')) : null,
-                        'previous_close' => array_has($iex_data, 'quote.previousClose') ? $stock->formatPrice(array_get($iex_data, 'quote.previousClose')) : null,
-                        'institutional_price' => array_has($iex_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($iex_data, 'price'))) : null,
-                        'market_cap' => array_has($iex_data, 'quote.marketCap') ? $stock->formatPrice(array_get($iex_data, 'quote.marketCap'), 0) : null,
+                        'latest_price' => array_has($iex_data, 'quote.latestPrice') ? $fund->formatPrice(array_get($iex_data, 'quote.latestPrice')) : null,
+                        'previous_close' => array_has($iex_data, 'quote.previousClose') ? $fund->formatPrice(array_get($iex_data, 'quote.previousClose')) : null,
+                        'institutional_price' => array_has($iex_data, 'price') ? $fund->formatPrice($fund->institutionalPrice(array_get($iex_data, 'price'))) : null,
+                        'market_cap' => array_has($iex_data, 'quote.marketCap') ? $fund->formatPrice(array_get($iex_data, 'quote.marketCap'), 0) : null,
                         'volume' => array_has($iex_data, 'quote.latestVolume') ? number_format(array_get($iex_data, 'quote.latestVolume')) : null,
                         'avg_total_volume' => array_has($iex_data, 'quote.avgTotalVolume') ? number_format(array_get($iex_data, 'quote.avgTotalVolume')) : null,
                         'pe_ratio' => array_has($iex_data, 'quote.peRatio') ? number_format(array_get($iex_data, 'quote.peRatio'), 2) : null,
@@ -138,14 +137,13 @@ class MutualFundsController extends Controller
             case 'custom':
                 $data = [
                     'source' => 'custom',
-                    'symbol' => $stock->symbol,
-                    'identifier' => $stock->identifier,
-                    'company_name' => $stock->company_name,
-                    'currency' => $stock->currency,
-                    'price' => CustomStockData::price($stock->identifier),
-                    'change_percentage' => CustomStockData::changePercentage($stock->identifier),
-                    'link' => $stock->link,
-                    'exchange' => $stock->exchange,
+                    'symbol' => $fund->symbol,
+                    'company_name' => $fund->company_name,
+                    'currency' => $fund->gcurrency,
+                    'price' => CustomFundData::price($fund->identifier),
+                    'change_percentage' => CustomFundData::changePercentage($fund->identifier),
+                    'link' => $fund->link,
+                    'exchange' => $fund->exchange,
                 ];
                 break;
 
@@ -158,6 +156,7 @@ class MutualFundsController extends Controller
          */
         return view('dashboard.mfds.details', [
             'data' => $data,
+            'account_manager' => $account_manager
         ]);
     }
 
