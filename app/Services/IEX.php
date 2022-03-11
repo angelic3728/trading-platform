@@ -102,7 +102,7 @@ class IEX
         return $symbols;
     }
 
-    public function getDetails(string $symbol, string $range = '1m')
+    public function getDetails(string $symbol)
     {
         /**
          * Get data in 1 api call

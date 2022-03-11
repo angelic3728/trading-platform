@@ -12,17 +12,17 @@ class CustomStockData
     /**
      * Finds latest price for stock
      *
-     * @param string $identifier
+     * @param string $symbol
      * @return float
      */
-    function price($identifier)
+    function price($symbol)
     {
 
         /**
          * Find Stock
          */
         $stock = Stock::query()
-            ->where('symbol', $identifier)
+            ->where('symbol', $symbol)
             ->first();
 
         /**
@@ -38,17 +38,17 @@ class CustomStockData
 
     /**
      * Returns change percentage for stock
-     * @param  string $identifier
+     * @param  string $symbol
      * @return mixed
      */
-    function changePercentage($identifier)
+    function changePercentage($symbol)
     {
 
         /**
          * Find Stock
          */
         $stock = Stock::query()
-            ->where('symbol', $identifier)
+            ->where('symbol', $symbol)
             ->first();
 
         /**
@@ -85,7 +85,7 @@ class CustomStockData
     /**
      * Prepare chart
      *
-     * @param  string $identifier
+     * @param  string $symbol
      * @param  string $range
      * @return array
      */

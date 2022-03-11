@@ -67,7 +67,6 @@ class MutualFund extends Resource
                 ->rules('required', 'max:255'),
 
             Select::make('Data Source', 'data_source')->options([
-                'iex' => 'IEX',
                 'custom' => 'Custom',
             ])
                 ->hideFromIndex()

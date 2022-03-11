@@ -45,4 +45,8 @@ return [
         'token' => env('IEX_TOKEN'),
     ],
 
+    'asx' => [
+        'url' => env('ASX_URL'),
+        'apikey' => env('ASX_KEY'),
+    ],
 ];

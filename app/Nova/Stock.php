@@ -84,7 +84,6 @@ class Stock extends Resource
                 ->rules('required', 'max:255'),
 
             Select::make('Data Source')->options([
-                'iex' => 'IEX',
                 'custom' => 'Custom',
             ])
                 ->hideFromIndex()

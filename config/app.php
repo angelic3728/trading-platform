@@ -189,6 +189,7 @@ return [
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\IEXServiceProvider::class,
+        App\Providers\ASXServiceProvider::class,
         App\Providers\CustomStockDataServiceProvider::class,
         App\Providers\CustomFundDataServiceProvider::class,
 
@@ -224,6 +225,7 @@ return [
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'IEX' => App\Facades\IEX::class,
+        'ASX' => App\Facades\ASX::class,
         'CustomStockData' => App\Facades\CustomStockData::class,
         'CustomFundData' => App\Facades\CustomFundData::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
