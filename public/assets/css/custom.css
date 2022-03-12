@@ -7,3 +7,10 @@
 .see-more {
     color:lightcoral!important;
 }
+
+@media( min-width: 1629px ) {
+    .profile-greeting {
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+    }
+}

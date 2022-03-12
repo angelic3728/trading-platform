@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Stock;
 
 use IEX;
+use ASX;
 use CustomStockData;
 
 class StockController extends Controller

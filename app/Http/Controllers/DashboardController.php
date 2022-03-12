@@ -30,102 +30,103 @@ class DashboardController extends Controller
         $xtbs = Xtbs::query()->orderBy('id', 'DESC')->latest()->take(5)->get();
         $transactions = auth()->user()->transactions()->orderBy('created_at', 'DESC')->get();
         $used_currencies = array();
-
-        // get available currencies
-        foreach ($transactions as $transaction) {
-            if ($transaction->is_fund == 1) {
-                if ($transaction->mutualFund && $transaction->mutualFund->gcurrency != "USD" && !in_array("USD" . $transaction->mutualFund->gcurrency, $used_currencies)) {
-                    array_push($used_currencies, "USD" . $transaction->mutualFund->gcurrency);
-                }
-            } else {
-                if ($transaction->stock && $transaction->stock->gcurrency != "USD" && !in_array("USD" . $transaction->stock->gcurrency, $used_currencies)) {
-                    array_push($used_currencies, "USD" . $transaction->stock->gcurrency);
-                }
-            }
-        }
-
-        $currency_str = implode(",", $used_currencies);
-        $all_rates = IEX::getRates($currency_str);
-
         $total_transaction_price = 0;
 
-        foreach ($transactions as $transaction) {
-            if ($transaction->is_fund == 1) {
-                if ($transaction->mutualFund) {
-                    // add detailed info
-                    $transaction->symbol = $transaction->mutualFund->symbol;
-                    $transaction->company_name = $transaction->mutualFund->company_name;
-                    $transaction->gcurrency = $transaction->mutualFund->gcurrency;
-                    $transaction->data_source = $transaction->mutualFund->data_source;
-                    switch ($transaction->mutualFund->data_source) {
-                        case 'iex':
-                            $iex_data = IEX::getDetails($transaction->mutualFund->symbol);
-                            $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
-                            $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
-                            $transaction->institutional_price =
-                                array_has($iex_data, 'quote.latestPrice') ? round($transaction->mutualFund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
-                            break;
-                        case 'custom':
-                            $transaction->latest_price = round(CustomFundData::price($transaction->mutualFund->symbol), 3);
-                            $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->mutualFund->symbol), 4);
-                            $transaction->institutional_price = round(CustomFundData::price($transaction->mutualFund->symbol), 3);
+        if (count($transactions) != 0) {
+            // get available currencies
+            foreach ($transactions as $transaction) {
+                if ($transaction->is_fund == 1) {
+                    if ($transaction->mutualFund && $transaction->mutualFund->gcurrency != "USD" && !in_array("USD" . $transaction->mutualFund->gcurrency, $used_currencies)) {
+                        array_push($used_currencies, "USD" . $transaction->mutualFund->gcurrency);
                     }
-                    // add real price and total prices
-                    if ($transaction->mutualFund->gcurrency != "USD") {
-                        $rate = $all_rates['USD' . $transaction->mutualFund->gcurrency];
-                        $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
-                        if ($transaction->type == "buy")
-                            $total_transaction_price += $transaction->realPrice;
-                        else
-                            $total_transaction_price -= $transaction->realPrice;
-                    } else {
-                        $transaction->realPrice = $transaction->price;
-                        if ($transaction->type == "buy")
-                            $total_transaction_price += $transaction->realPrice;
-                        else
-                            $total_transaction_price -= $transaction->realPrice;
+                } else {
+                    if ($transaction->stock && $transaction->stock->gcurrency != "USD" && !in_array("USD" . $transaction->stock->gcurrency, $used_currencies)) {
+                        array_push($used_currencies, "USD" . $transaction->stock->gcurrency);
                     }
                 }
-            } else {
-                if ($transaction->stock) {
-                    // add detailed info
-                    $transaction->symbol = $transaction->stock->symbol;
-                    $transaction->company_name = $transaction->stock->company_name;
-                    $transaction->gcurrency = $transaction->stock->gcurrency;
-                    $transaction->data_source = $transaction->stock->data_source;
-                    switch ($transaction->stock->data_source) {
-                        case 'iex':
-                            $iex_data = IEX::getDetails($transaction->stock->symbol);
-                            $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
-                            $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
-                            $transaction->institutional_price =
-                                array_has($iex_data, 'quote.latestPrice') ? round($transaction->stock->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
-                            break;
-                        case 'asx':
-                            $iex_data = ASX::getDetails($transaction->stock->symbol);
-                            $transaction->latest_price = array_has($iex_data, 'latest_price') ? round(array_get($iex_data, 'latest_price'), 3) : null;
-                            $transaction->change_percentage = array_has($iex_data, 'change_percentage') ? round(array_get($iex_data, 'change_percentage'), 4) : null;
-                            $transaction->institutional_price = array_has($iex_data, 'price') ? round(array_get($iex_data, 'latest_price'), 3) : null;
-                            break;
-                        case 'custom':
-                            $transaction->latest_price = round(CustomStockData::price($transaction->stock->symbol), 3);
-                            $transaction->change_percentage = round(CustomStockData::changePercentage($transaction->stock->symbol), 4);
-                            $transaction->institutional_price = round(CustomStockData::price($transaction->stock->symbol), 3);
+            }
+
+            $currency_str = implode(",", $used_currencies);
+            $all_rates = IEX::getRates($currency_str);            
+
+            foreach ($transactions as $transaction) {
+                if ($transaction->is_fund == 1) {
+                    if ($transaction->mutualFund) {
+                        // add detailed info
+                        $transaction->symbol = $transaction->mutualFund->symbol;
+                        $transaction->company_name = $transaction->mutualFund->company_name;
+                        $transaction->gcurrency = $transaction->mutualFund->gcurrency;
+                        $transaction->data_source = $transaction->mutualFund->data_source;
+                        switch ($transaction->mutualFund->data_source) {
+                            case 'iex':
+                                $iex_data = IEX::getDetails($transaction->mutualFund->symbol);
+                                $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
+                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                                $transaction->institutional_price =
+                                    array_has($iex_data, 'quote.latestPrice') ? round($transaction->mutualFund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                                break;
+                            case 'custom':
+                                $transaction->latest_price = round(CustomFundData::price($transaction->mutualFund->symbol), 3);
+                                $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->mutualFund->symbol), 4);
+                                $transaction->institutional_price = round(CustomFundData::price($transaction->mutualFund->symbol), 3);
+                        }
+                        // add real price and total prices
+                        if ($transaction->mutualFund->gcurrency != "USD") {
+                            $rate = $all_rates['USD' . $transaction->mutualFund->gcurrency];
+                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
+                            if ($transaction->type == "buy")
+                                $total_transaction_price += $transaction->realPrice;
+                            else
+                                $total_transaction_price -= $transaction->realPrice;
+                        } else {
+                            $transaction->realPrice = $transaction->price;
+                            if ($transaction->type == "buy")
+                                $total_transaction_price += $transaction->realPrice;
+                            else
+                                $total_transaction_price -= $transaction->realPrice;
+                        }
                     }
-                    // add real price and total prices
-                    if ($transaction->stock->gcurrency != "USD") {
-                        $rate = $all_rates['USD' . $transaction->stock->gcurrency];
-                        $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
-                        if ($transaction->type == "buy")
-                            $total_transaction_price += $transaction->realPrice;
-                        else
-                            $total_transaction_price -= $transaction->realPrice;
-                    } else {
-                        $transaction->realPrice = $transaction->price;
-                        if ($transaction->type == "buy")
-                            $total_transaction_price += $transaction->realPrice;
-                        else
-                            $total_transaction_price -= $transaction->realPrice;
+                } else {
+                    if ($transaction->stock) {
+                        // add detailed info
+                        $transaction->symbol = $transaction->stock->symbol;
+                        $transaction->company_name = $transaction->stock->company_name;
+                        $transaction->gcurrency = $transaction->stock->gcurrency;
+                        $transaction->data_source = $transaction->stock->data_source;
+                        switch ($transaction->stock->data_source) {
+                            case 'iex':
+                                $iex_data = IEX::getDetails($transaction->stock->symbol);
+                                $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
+                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                                $transaction->institutional_price =
+                                    array_has($iex_data, 'quote.latestPrice') ? round($transaction->stock->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                                break;
+                            case 'asx':
+                                $asx_data = ASX::getDetails($transaction->stock->symbol);
+                                $transaction->latest_price = array_has($asx_data, 'latest_price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
+                                $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? round(array_get($asx_data, 'change_percentage'), 4) : null;
+                                $transaction->institutional_price = array_has($asx_data, 'price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
+                                break;
+                            case 'custom':
+                                $transaction->latest_price = round(CustomStockData::price($transaction->stock->symbol), 3);
+                                $transaction->change_percentage = round(CustomStockData::changePercentage($transaction->stock->symbol), 4);
+                                $transaction->institutional_price = round(CustomStockData::price($transaction->stock->symbol), 3);
+                        }
+                        // add real price and total prices
+                        if ($transaction->stock->gcurrency != "USD") {
+                            $rate = $all_rates['USD' . $transaction->stock->gcurrency];
+                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
+                            if ($transaction->type == "buy")
+                                $total_transaction_price += $transaction->realPrice;
+                            else
+                                $total_transaction_price -= $transaction->realPrice;
+                        } else {
+                            $transaction->realPrice = $transaction->price;
+                            if ($transaction->type == "buy")
+                                $total_transaction_price += $transaction->realPrice;
+                            else
+                                $total_transaction_price -= $transaction->realPrice;
+                        }
                     }
                 }
             }

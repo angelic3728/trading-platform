@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use Carbon\Carbon;
+use Exception;
 
 class ASX
 {
@@ -11,53 +12,71 @@ class ASX
     public function getAvailableSymbols()
     {
         /**
-         * Get all ASX Symbols
+         * Get all Symbols
          */
-        $symbols = $this->makeApiCall('get', 'companies/list-by-exchange', ['ExchangeCode' => 'ASX']);
+        $symbols = $this->makeApiCall('get', 'symbols', ['format' => 'json']);
+
+        // only Get ASX stocks
+        $symbols = $symbols->where('exchange', 'ASX');
 
         /**
          * Map data to individual collections
          */
-        $symbols = $symbols->map(function ($symbol) {
-            return collect([
-                'symbol' => $symbol['symbol'],
-                'company_name' => $symbol['companyName'],
+        $results = [];
+
+        foreach ($symbols as $item) {
+            array_push($results, collect([
+                'symbol' => $item['symbol'],
+                'company_name' => $item['name'],
                 'currency' => 'AUS',
                 'exchange' => 'ASX',
-            ]);
-        });
+            ]));
+        }
 
         /**
          * Return symbols
          */
-        return $symbols;
+        return $results;
     }
 
     public function getDetails($symbol)
     {
         /**
-         * Get all ASX Symbols
+         * Get Detailed ASX Information
          */
-        $details = $this->makeApiCall('get', 'stock-metadata', ['Symbol' => $symbol]);
+        $intro = [];
+        $details = [];
+
+        try {
+            $details = $this->makeApiCall('get', 'quote/' . $symbol, ['format' => 'json']);
+        } catch(Exception $e) {
+            $details = null;
+        }
+
+        try {
+            $intro = $this->makeApiCall('get', 'search', ['query' => $symbol, 'limit' => 1, 'format' => 'json']);
+        } catch(Exception $e) {
+            $intro = null;
+        }
 
         /**
          * Map data to individual collections
          */
+
         $details = collect([
-            'price' => $details['result']['regularMarketPrice'],
-            'change_percentage' => $details['regularMarketChangePercent'],
-            'description' => $details['quoteSourceName'],
-            'exchange' => $details['exchange'],
-            'change_percentage' => $details['regularMarketChangePercent'],
-            'industry' => $details['shortName'],
-            'sector' => '',
+            'price' => $details ? $details[0]['open'] : 0,
+            'change_percentage' => $details ? $details[0]['changesPercentage']*0.01 : 0,
+            'description' => $intro[0]['name'],
+            'exchange' => 'ASX',
+            'industry' => $intro[0]['industry'],
+            'sector' => $intro[0]['sector'],
             'website' => '',
-            'latest_price' => $details['regularMarketOpen'],
-            'previous_close' => $details['regularMarketPreviousClose'],
-            'market_cap' => '',
-            'volume' => $details['regularMarketVolume'],
-            'avg_total_volume' => $details['averageDailyVolume3Month'],
-            'pe_ratio' => '',
+            'latest_price' => $details ? $details[0]['previousClose'] : 0,
+            'previous_close' => $details ? $details[0]['previousClose'] : 0,
+            'market_cap' => $details ? $details[0]['marketCap'] : 0,
+            'volume' => $details ? $details[0]['volume'] : 0,
+            'avg_total_volume' => $details ? $details[0]['avgVolume'] : 0,
+            'pe_ratio' => $details ? $details[0]['pe'] : 0,
         ]);
 
         /**
@@ -69,48 +88,42 @@ class ASX
     public function getChart(string $symbol, string $range = '1m')
     {
 
+        $chartInfo = $this->makeApiCall('GET', 'daily-price/' . $symbol, []);
+
         /**
          * Add interval on url depending on the range
          */
 
         $start_date = '';
-        $end_date = '';
 
 
         switch ($range) {
 
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
-                $end_date = Carbon::now();
                 break;
 
             case '3m':
                 $start_date = Carbon::now()->subMonths(3);
-                $end_date = Carbon::now();
                 break;
 
             case '6m':
                 $start_date = Carbon::now()->subMonths(3);
-                $end_date = Carbon::now();
 
             case 'ytd':
                 $start_date = Carbon::now()->startOfYear();
-                $end_date = Carbon::now();
                 break;
 
             case '1y':
                 $start_date = Carbon::now()->subYears(1);
-                $end_date = Carbon::now();
                 break;
 
             case '2y':
                 $start_date = Carbon::now()->subYears(2);
-                $end_date = Carbon::now();
                 break;
 
             case '5y':
                 $start_date = Carbon::now()->subYears(5);
-                $end_date = Carbon::now();
                 break;
 
             default:
@@ -118,13 +131,26 @@ class ASX
                 break;
         }
 
+        $start_date_str = $start_date->toDateString();
+        /**
+         * News Articles
+         */
+        $results = collect();
 
-        return $this->makeApiCall('GET', 'stock-prices', [
-            'EndDateInclusive' => $start_date,
-            'StartDateInclusive' => $end_date,
-            'Symbol' => $symbol,
-            'OrderBy' => 'Ascending'
-        ]);
+        for ($i = 0; $i < count($chartInfo[0]['historical']); $i++) {
+            if ($chartInfo[0]['historical'][$i]['date'] >= $start_date_str)
+                $results->push($chartInfo[0]['historical'][$i]);
+            else
+                break;
+        }
+
+        /**
+         * Order news articles
+         */
+        $sorted = $results->sortBy('date');
+        $results = $sorted->values()->all();
+
+        return ['results' => $results];
     }
 
     /**

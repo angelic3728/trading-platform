@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use IEX;
-use Intrinio;
+use ASX;
 use Cache;
 use DB;
 use Mail;
@@ -69,9 +69,7 @@ class StockController extends Controller
             default:
                 abort(405);
                 break;
-
         }
-
     }
 
     public function details($symbol)
@@ -109,7 +107,6 @@ class StockController extends Controller
             default:
                 abort(404);
                 break;
-
         }
 
         /**
@@ -119,31 +116,30 @@ class StockController extends Controller
             'success' => true,
             'data' => $stock->only('symbol', 'company_name', 'exchange', 'price', 'institutional_price', 'currency'),
         ]);
-
     }
 
-    public function investments(){
+    public function investments()
+    {
 
         /**
          * Get my investments
          */
         $investments = Transaction::where('user_id', auth()->id())
-                            ->select(DB::raw('sum(shares) as total_shares'), 'stock_id')
-                            ->with('stock')
-                            ->groupBy('stock_id')
-                            ->get();
+            ->select(DB::raw('sum(shares) as total_shares'), 'stock_id')
+            ->with('stock')
+            ->groupBy('stock_id')
+            ->get();
 
 
         /**
          * If there are no investments, return nothing
          */
-        if($investments->isEmpty()){
+        if ($investments->isEmpty()) {
 
             return response()->json([
                 'success' => true,
                 'data' => [],
             ]);
-
         }
 
 
@@ -161,7 +157,6 @@ class StockController extends Controller
              * Return data
              */
             return $item;
-
         });
 
         /**
@@ -170,7 +165,6 @@ class StockController extends Controller
         $investments = $investments->filter(function ($value, $key) {
 
             return $value->total_shares >= 1;
-
         });
 
         /**
@@ -179,7 +173,6 @@ class StockController extends Controller
         $iex_symbols = $investments->filter(function ($item, $key) {
 
             return $item->stock->data_source == 'iex';
-
         });
 
         /**
@@ -188,7 +181,6 @@ class StockController extends Controller
         $iex_symbols = $investments->map(function ($item, $key) {
 
             return $item->stock->symbol;
-
         });
 
         /**
@@ -207,8 +199,8 @@ class StockController extends Controller
             switch ($item->stock->data_source) {
 
                 case 'iex':
-                    $last_price = array_get($iex_data, $item->stock->symbol.'.price', 0);
-                    $change_percentage = array_get($iex_data, $item->stock->symbol.'.quote.changePercent', 0);
+                    $last_price = array_get($iex_data, $item->stock->symbol . '.price', 0);
+                    $change_percentage = array_get($iex_data, $item->stock->symbol . '.quote.changePercent', 0);
                     break;
 
                 case 'custom':
@@ -220,7 +212,6 @@ class StockController extends Controller
                     $last_price = 0;
                     $change_percentage = 0;
                     break;
-
             }
 
             /**
@@ -247,7 +238,6 @@ class StockController extends Controller
                 'institutional_price' => $institutional_price,
                 'value' => $value,
             ]);
-
         });
 
         /**
@@ -257,7 +247,6 @@ class StockController extends Controller
             'success' => true,
             'data' => $investments->values(),
         ]);
-
     }
 
     public function highlights()
@@ -269,7 +258,6 @@ class StockController extends Controller
         $stocks = Cache::remember('stocks:highlighted', 15, function () {
 
             return Stock::where('highlighted', true)->get();
-
         });
 
         /**
@@ -291,9 +279,9 @@ class StockController extends Controller
              */
             switch ($stock['data_source']) {
                 case 'iex':
-                    $stock->put('price', array_get($data, $stock->get('symbol').'.price'));
-                    $stock->put('chart', array_get($data, $stock->get('symbol').'.chart'));
-                    $stock->put('change_percentage', array_get($data, $stock->get('symbol').'.quote.changePercent'));
+                    $stock->put('price', array_get($data, $stock->get('symbol') . '.price'));
+                    $stock->put('chart', array_get($data, $stock->get('symbol') . '.chart'));
+                    $stock->put('change_percentage', array_get($data, $stock->get('symbol') . '.quote.changePercent'));
                     break;
 
                 case 'custom':
@@ -307,14 +295,12 @@ class StockController extends Controller
                     $stock->put('chart', null);
                     $stock->put('change_percentage', null);
                     break;
-
             }
 
             /**
              * Return stock
              */
             return $stock->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'currency');
-
         });
 
         /**
@@ -324,7 +310,6 @@ class StockController extends Controller
             'success' => true,
             'data' => $stocks,
         ]);
-
     }
 
     public function chart($symbol, $range)
@@ -343,6 +328,10 @@ class StockController extends Controller
                 $chart = IEX::getChart($stock->symbol, $range);
                 break;
 
+            case 'asx':
+                $chart = ASX::getChart($stock->symbol, $range);
+                break;
+
             case 'custom':
                 $chart = CustomStockData::chart($stock->symbol, $range);
                 break;
@@ -350,7 +339,6 @@ class StockController extends Controller
             default:
                 abort(404);
                 break;
-
         }
 
         /**
@@ -358,9 +346,8 @@ class StockController extends Controller
          */
         return response()->json([
             'success' => true,
-            'data' => $chart,
+            'data' => array_get($chart, 'results'),
         ]);
-
     }
 
     public function all()
@@ -380,6 +367,5 @@ class StockController extends Controller
             'success' => true,
             'data' => $stocks,
         ]);
-
     }
 }

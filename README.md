@@ -29,7 +29,7 @@ Configure database. First you need to create the tables
 php artisan migrate
 ```
 ### Step 4
-Import the NYSE stocks
+Import the US stocks
 ```
 php artisan iex:import-stocks
 ```
@@ -37,6 +37,11 @@ php artisan iex:import-stocks
 Then import the LSE stocks
 ```
 php artisan lse:import-stocks
+```
+
+Then import the ASX stocks
+```
+php artisan asx:import-stocks
 ```
 
 Then import the Mutual Funds

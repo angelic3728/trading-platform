@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    @if(array_get($data, 'source') == 'iex')
+    @if(array_get($data, 'source') != 'custom')
     <div class="row">
         <div class="col">
             <h2 class="title">Stock Details</h2>
@@ -276,7 +276,7 @@
         $(".chart-content").css("opacity", "0.3");
         $(".news-content").css("opacity", "0.3");
         renderChart('1m');
-        if ("{{array_get($data, 'data_source') == 'iex'}}") {
+        if ("{{array_get($data, 'source')}}" == 'iex') {
             $.ajax({
                 method: 'get',
                 url: '/api/news?symbols=' + symbol + '&&limit=3',
@@ -315,10 +315,12 @@
     });
 
     function renderChart(range) {
+        var data_source = "{{array_get($data, 'source')}}";
         $.ajax({
             url: '/api/stocks/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
+
                 if (res.success && res.data.length != 0) {
                     var times = 1;
                     var currency = "{{ array_get($data, 'gcurrency') }}";
@@ -327,7 +329,7 @@
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {
                         var date = new Date(res.data[i]['date']);
-                        adjustedData[i] = [date.getTime(), Number((res.data[i]['fClose'] * times).toFixed(2))]
+                        adjustedData[i] = [date.getTime(), Number((data_source=='asx'?res.data[i]['adjClose']*times:res.data[i]['fClose'] * times).toFixed(2))]
                     }
                     var options = {
                         series: [{

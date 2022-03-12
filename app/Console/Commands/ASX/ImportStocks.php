@@ -56,7 +56,7 @@ class ImportStocks extends Command
             $stock->company_name = $item['company_name'];
             $stock->link = 'https://finance.yahoo.com/quote/' . $item['symbol'] . '?p=' . $item['symbol'];
             $stock->data_source = 'asx';
-            $stock->currency = $item['currency'];
+            $stock->gcurrency = $item['currency'];
             $stock->exchange = $item['exchange'];
             $stock->save();
         }
