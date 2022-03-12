@@ -127,5 +127,5 @@ dist
 .pnp.*
 
 #composer
-/vendor/
+vendor/
 composer.lock
