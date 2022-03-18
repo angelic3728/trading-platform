@@ -17,10 +17,10 @@ class Stock extends Model
     protected $fillable = [
         'company_name',
         'symbol',
-        'isin',
         'link',
         'exchange',
         'data_source',
+        'discount_percentage',
         'gcurrency',
     ];
 
@@ -97,7 +97,6 @@ class Stock extends Model
      */
     public function getIdentifierAttribute()
     {
-
         switch ($this->exchange) {
 
             case 'LSE':

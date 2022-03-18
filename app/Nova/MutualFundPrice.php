@@ -37,12 +37,11 @@ class MutualFundPrice extends Resource
     public static function label()
     {
 
-        return 'Mutual Fund Prices';
+        return 'Fund Prices';
     }
 
     public static function singularLabel()
     {
-
         return 'Fund Price';
     }
 
@@ -51,7 +50,7 @@ class MutualFundPrice extends Resource
      *
      * @var string
      */
-    public static $group = 'Mutual Funds';
+    public static $group = 'Funds';
 
     /**
      * Get the fields displayed by the resource.

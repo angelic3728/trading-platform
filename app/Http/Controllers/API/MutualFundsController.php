@@ -109,7 +109,7 @@ class MutualFundsController extends Controller
          */
         return response()->json([
             'success' => true,
-            'data' => $mfd->only('symbol', 'company_name', 'price', 'institutional_price', 'currency'),
+            'data' => $mfd->only('symbol', 'company_name', 'price', 'institutional_price', 'gcurrency'),
         ]);
     }
 
@@ -224,7 +224,7 @@ class MutualFundsController extends Controller
              */
             return collect([
                 'symbol' => $item->mfd->symbol,
-                'currency' => $item->mfd->currency,
+                'currency' => $item->mfd->gcurrency,
                 'company_name' => $item->mfd->company_name,
                 'exchange' => $item->mfd->exchange,
                 'last_price' => $last_price,
@@ -296,7 +296,7 @@ class MutualFundsController extends Controller
             /**
              * Return mfd
              */
-            return $mfd->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'currency');
+            return $mfd->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
         });
 
         /**

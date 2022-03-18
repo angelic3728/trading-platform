@@ -8,9 +8,59 @@
     color:lightcoral!important;
 }
 
-@media( min-width: 1629px ) {
-    .profile-greeting {
+.more-info-link {
+    color: red;
+}
+
+.more-info-link:hover {
+    color: #24695c;
+}
+
+.dashboard-content-wrapper {
+    margin-right: 100px;
+    padding-top: 95px;
+}
+
+#ad1_container {
+    height: 110px;
+    background-color: bisque;
+    margin-bottom: 10px;
+    width: calc(100% - 420px);
+    top: 82px;
+    z-index: 1000;
+    position: fixed;
+    margin-left: -27px;
+}
+
+#ad2_container {
+    position: fixed;
+    top: 82px;
+    right: 0px;
+    height: calc(100vh - 91px);
+    width: 130px;
+    background-color: bisque;
+    z-index: 1000;
+    padding: 50px 0px;
+}
+
+@media( max-width: 1629px ) {
+    .card.profile-greeting {
         padding-top: 12px !important;
         padding-bottom: 12px !important;
+    }
+}
+
+@media( max-width: 1200px ) {
+    #ad1_container {
+        display: none!important;
+    }
+
+    #ad2_container {
+        display: none!important;
+    }
+
+    .dashboard-content-wrapper {
+        margin-right: -12px;
+        padding-top:0px;
     }
 }

@@ -3,22 +3,59 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Codenixsv\CoinGeckoApi\CoinGeckoClient;
+use Carbon\Carbon;
 
 class IEX
 {
-
     public function getAvailableSymbols()
     {
         /**
-         * Get all Symbols
+         * Get all Stock Symbols
          */
         $symbols = $this->makeApiCall('get', 'ref-data/symbols');
 
         /**
-         * Only get us sysmbols
+         * Only get us stocks
          */
         $symbols = $symbols->where('region', 'US');
+        $symbols = $symbols->where('type', 'ad');
         $symbols = $symbols->where('type', 'cs');
+        $symbols = $symbols->where('type', 'ps');
+        $symbols = $symbols->where('currency', '!=', 'ISK');
+        $symbols = $symbols->where('currency', '!=', 'MYR');
+        $symbols = $symbols->where('currency', '!=', 'BGN');
+
+        /**
+         * Map data to individual collections
+         */
+        $symbols = $symbols->map(function ($symbol) {
+            return collect([
+                'symbol' => $symbol['symbol'],
+                'company_name' => $symbol['name'],
+                'currency' => $symbol['currency'],
+                'exchange' => $symbol['exchange'],
+            ]);
+        });
+
+        /**
+         * Return symbols
+         */
+        return $symbols;
+    }
+
+    public function getAvailableETFSymbols()
+    {
+        /**
+         * Get all Stock Symbols
+         */
+        $symbols = $this->makeApiCall('get', 'ref-data/symbols');
+
+        /**
+         * Only get us stocks
+         */
+        $symbols = $symbols->where('region', 'US');
+        $symbols = $symbols->where('type', 'et');
         $symbols = $symbols->where('currency', '!=', 'ISK');
         $symbols = $symbols->where('currency', '!=', 'MYR');
         $symbols = $symbols->where('currency', '!=', 'BGN');
@@ -102,6 +139,31 @@ class IEX
         return $symbols;
     }
 
+    public function getAvailableCryptoSymbols()
+    {
+        $client = new CoinGeckoClient();
+        $symbols = $client->coins()->getList();
+        /**
+         * Map data to individual collections
+         */
+
+        $results = [];
+
+        foreach ($symbols as $item) {
+            array_push($results, collect([
+                'symbol' => $item['symbol'],
+                'name' => $item['name'],
+                'coin_id' => $item['id'],
+                'currency' => 'USD',
+                'msymbol' => $item['symbol'].'-usd',
+            ]));
+        }
+        /**
+         * Return symbols
+         */
+        return $results;
+    }
+
     public function getDetails(string $symbol)
     {
         /**
@@ -113,6 +175,12 @@ class IEX
          * Return first symbol
          */
         return $data->first();
+    }
+
+    public function getCDetails(string $coin_id) {
+        $client = new CoinGeckoClient();
+        $result = $client->coins()->getCoin($coin_id, ['tickers' => 'false', 'market_data' => 'true', 'community_data' => 'false', 'developer_data' => 'false', 'sparkline' => 'false']);
+        return $result;
     }
 
     public function getChart(string $symbol, string $range = '1m')
@@ -135,6 +203,49 @@ class IEX
                 return $this->makeApiCall('GET', 'stock/' . $symbol . '/chart/' . $range);
                 break;
         }
+    }
+
+    public function getCChart(string $coin_id, string $range = '1m') {
+        $client = new CoinGeckoClient();
+
+        $start_date = '';
+
+        switch ($range) {
+
+            case '1d':
+                $start_date = Carbon::now()->startOfDay();
+                break;
+
+            case '5d':
+                $start_date = Carbon::now()->subDays(5);
+                break;
+
+            case '1m':
+                $start_date = Carbon::now()->subMonths(1);
+                break;
+
+            case '6m':
+                $start_date = Carbon::now()->subMonths(3);
+
+            case 'ytd':
+                $start_date = Carbon::now()->startOfYear();
+                break;
+
+            case '1y':
+                $start_date = Carbon::now()->subYears(1);
+                break;
+
+            case '5y':
+                $start_date = Carbon::now()->subYears(5);
+                break;
+
+            default:
+                return [];
+                break;
+        }
+
+        $result = $client->coins()->getMarketChartRange($coin_id, 'usd', $start_date->timestamp, Carbon::now()->timestamp);
+        return $result['prices'];
     }
 
     public function getRecentNews(array $symbols, int $limit)
@@ -204,18 +315,18 @@ class IEX
 
     public function getRates($currency_str)
     {
-        $rates = $this->makeApiCall('get', '/stable/fx/latest', ['symbols'=>$currency_str]);
+        $rates = $this->makeApiCall('get', '/stable/fx/latest', ['symbols' => $currency_str]);
         /**
          * Map data to individual collections
          */
 
-         $result = Array();
+        $result = array();
 
         $rates = $rates->map(function ($symbol) {
-            return [$symbol['symbol']=>$symbol['rate']];
+            return [$symbol['symbol'] => $symbol['rate']];
         });
 
-        foreach($rates as $rate) {
+        foreach ($rates as $rate) {
             array_push($result, $rate);
         }
 

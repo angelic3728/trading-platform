@@ -124,8 +124,8 @@ ul {
 }
 
 a {
-    color: #24695c;
     text-decoration: none;
+    font-weight: 600;
 }
 a:hover {
     text-decoration: none;

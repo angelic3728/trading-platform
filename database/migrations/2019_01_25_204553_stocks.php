@@ -17,14 +17,10 @@ class Stocks extends Migration
             $table->increments('id');
             $table->string('symbol');
             $table->string('company_name');
-            $table->string('company_exchange')->nullable();
-            $table->string('company_website')->nullable();
-            $table->string('company_industry')->nullable();
-            $table->string('company_sector')->nullable();
-            $table->text('company_description')->nullable();
             $table->string('link')->nullable();
             $table->string('data_source');
-            $table->string('isin')->nullable();
+            $table->string('exchange');
+            $table->decimal('discount_percentage', 8, 2)->default(3);
             $table->string('gcurrency');
             $table->boolean('highlighted')->default(false);
             $table->timestamps();

@@ -3,38 +3,38 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Number;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 
-class MutualFund extends Resource
+class CryptoCurrency extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\MutualFund';
+    public static $model = 'App\CryptoCurrency';
 
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'Funds';
+    public static $group = 'Cryptocurrencies';
 
     /**
-     * Get the value that should be displayed to represent the resource.
+     * The single value that should be used to represent the resource when being displayed.
      *
-     * @return string
+     * @var string
      */
     public function title()
     {
-        return $this->company_name . ' (' . $this->symbol . ')';
+        return $this->name . ' (' . $this->symbol . ')';
     }
 
     /**
@@ -45,18 +45,18 @@ class MutualFund extends Resource
     public static $search = [
         'id',
         'symbol',
-        'company_name',
+        'name',
     ];
 
     public static function label()
     {
 
-        return 'Funds';
+        return 'Cryptocurrencies';
     }
 
     public static function singularLabel()
     {
-        return 'Fund';
+        return 'Cryptocurrency';
     }
 
     /**
@@ -74,45 +74,33 @@ class MutualFund extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Text::make('Company Name')
+            Text::make('Crypto Name', 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
             Select::make('Data Source', 'data_source')->options([
+                'gecko' => 'CoinGecko',
                 'custom' => 'Custom',
             ])
                 ->hideFromIndex()
-                ->rules('required'),
-
-            Select::make('Exchange')->options([
-                'ASE' => 'ASE',
-                'NAS' => 'NAS',
-                'NYS' => 'NYS',
-                'OTC' => 'OTC',
-                'PSE' => 'PSE',
-            ])
-                ->displayUsingLabels()
                 ->rules('required'),
 
             Number::make('Discount Percentage')
                 ->step(0.001)
                 ->sortable(),
 
-            Select::make('Currency', 'gcurrency')->options([
-                'USD' => 'USD',
-                'GBP' => 'GBP',
-                'EUR' => 'EUR',
-            ]),
-
             Text::make('Link')
                 ->rules('required', 'max:255')
-                ->help('Enter an link where users can find more details about this stock')
+                ->help('Enter an link where users can find more details about this cryptocurrency.')
                 ->hideFromIndex(),
+
+            Boolean::make('Highlighted')
+                ->rules('required'),
 
             DateTime::make('Created At')
                 ->exceptOnForms(),
 
-            HasMany::make('MutualFundPrices'),
+            HasMany::make('CryptoCurrencyPrices'),
         ];
     }
 

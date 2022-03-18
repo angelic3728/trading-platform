@@ -11,6 +11,7 @@
         "php": "^7.1.3",
         "64robots/nova-fields": "^0.7.3",
         "bugsnag/bugsnag-laravel": "^2.0",
+        "codenix-sv/coingecko-api": "^1.0",
         "epartment/nova-dependency-container": "1.1.2",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",

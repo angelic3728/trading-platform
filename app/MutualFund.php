@@ -14,6 +14,7 @@ class MutualFund extends Model
         'symbol',
         'link',
         'data_source',
+        'discount_percentage',
         'gcurrency'
     ];
 
@@ -23,6 +24,14 @@ class MutualFund extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get the stock prices.
+     */
+    public function mutualFundPrices()
+    {
+        return $this->hasMany('App\MutualFundPrice');
+    }
 
     /**
      * Formats price
@@ -72,7 +81,6 @@ class MutualFund extends Model
      */
     public function institutionalPrice($last_price)
     {
-
         return $last_price - ($last_price * ($this->discount_percentage / 100));
     }
 

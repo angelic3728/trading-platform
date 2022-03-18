@@ -277,10 +277,7 @@
                 },
                 y: {
                     formatter: function(val) {
-                        if (currency == "GBP")
-                            return formatPrice(val / 100, currency)
-                        else
-                            return formatPrice(val, currency)
+                        return formatPrice(val, currency)
                     }
                 }
             },
@@ -369,21 +366,34 @@
         $('#search_btn').click();
     }
 
+    // format Price and Percentage functions
     function formatPrice(price, currency) {
         switch (currency) {
-            case 'USD':
+            case "USD":
                 return "$" + Number(price).toFixed(2);
                 break;
 
-            case 'GBP':
-                return Number((price * 100)).toFixed(2) + 'p';
+            case "GBP":
+                return Number(price * 100).toFixed(2) + "p";
+                break;
+
+            case "EUR":
+                return Number(price.toFixed(2)) + "€";
+                break;
+
+            case "AUD":
+                return "A$" + Number(price.toFixed(2)) + "€";
+                break;
+
+            case "CAD":
+                return "C$" + Number(price.toFixed(2));
                 break;
 
             default:
                 return price;
                 break;
         }
-    };
+    }
 
     function formatPercentage(percentage) {
         return (Number(percentage) * 100).toFixed(2) + "%";

@@ -192,6 +192,7 @@ return [
         App\Providers\ASXServiceProvider::class,
         App\Providers\CustomStockDataServiceProvider::class,
         App\Providers\CustomFundDataServiceProvider::class,
+        App\Providers\CustomCryptoDataServiceProvider::class,
 
     ],
 
@@ -207,7 +208,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -228,6 +228,7 @@ return [
         'ASX' => App\Facades\ASX::class,
         'CustomStockData' => App\Facades\CustomStockData::class,
         'CustomFundData' => App\Facades\CustomFundData::class,
+        'CustomCryptoData' => App\Facades\CustomCryptoData::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
@@ -245,7 +246,5 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
     ],
-
 ];

@@ -11,15 +11,21 @@
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/scrollable.css')}}">
 @endpush
 @section('content')
-@yield('breadcrumb-list')
 <!-- Container-fluid starts-->
 <div class="container-fluid dashboard-default-sec">
-    <div class="row">
+    <div class="row dashboard-content-wrapper">
         <div class="col-xl-12">
             <div class="row">
+                <div class="col-xl-12">
+                    <div class="d-flex justify-content-center align-items-center" id="ad1_container">
+                        <a href="https://bannerboo.com/" target="_blank">
+                            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+                        </a>
+                    </div>
+                </div>
                 <div class="col-xl-5 box-col-12 des-xl-100">
                     <div class="row">
-                        <div class="col-xl-12 col-md-6 box-col-6 des-xl-50">
+                        <div class="col-xl-12 col-md-6 box-col-6">
                             <div class="card profile-greeting p-t-25 p-b-25">
                                 <div class="card-header">
                                     <div class="header-top">
@@ -52,7 +58,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
+                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 rate-sec">
                             <div class="card income-card card-primary  p-t-10 p-b-10">
                                 <div class="card-body text-center">
                                     <div class="round-box">
@@ -60,12 +66,12 @@
                                             <i class="fa fa-money fs-4"></i>
                                         </a>
                                     </div>
-                                    <h5>$ {{$total_transaction_price}}</h5>
+                                    <h5>$ <span class="counter">{{$total_transaction_price}}</span></h5>
                                     <p>Total Portfolio Value</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
+                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 rate-sec">
                             <div class="card income-card card-secondary p-t-10 p-b-10">
                                 <div class="card-body text-center">
                                     <div class="round-box">
@@ -73,7 +79,22 @@
                                             <i class="fa fa-credit-card-alt fs-4"></i>
                                         </a>
                                     </div>
-                                    <h5>{{ auth()->user()->getBalance() }}</h5>
+                                    <h5>
+                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'USD')
+                                        <span class="f-w-800">$</span>
+                                        @endif
+                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'AUD')
+                                        <span class="f-w-800">A$</span>
+                                        @endif
+                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'GBP')
+                                        <span class="f-w-800">£</span>
+                                        @endif
+                                        @if(auth()->user()->getBalance())
+                                        <span class="counter">{{ auth()->user()->getBalance()->amount }}</span>
+                                        @else
+                                        <span>0</span>
+                                        @endif
+                                    </h5>
                                     <p>Your Account Balance</p>
                                 </div>
                             </div>
@@ -96,7 +117,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="mfd_chart_tab" data-bs-toggle="tab" href="#mfd_chart" role="tab" aria-controls="mfd-chart" aria-selected="true">
-                                            <i class="fa fa-cloud"></i>Mutual Funds
+                                            <i class="fa fa-cloud"></i>Funds
                                         </a>
                                         <div class="material-border"></div>
                                     </li>
@@ -113,6 +134,23 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+                <div class="scrollbar-margins large-margin scroll-demo p-0" style="height: 100%;">
+                    <ul>
+                        <li>
+                            <a href="https://bannerboo.com/" target="_blank">
+                                <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                            </a>
+                        </li>
+                        <li class="mt-3">
+                            <a href="https://bannerboo.com/" target="_blank">
+                                <img src="{{asset('assets/images/pros/vertical2.png')}}" class="img-fluid" alt="">
+                            </a>
+                        </li>
+                    </ul>                
+                </div>
+                <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
             </div>
         </div>
         <div class="col-xl-12">
@@ -133,95 +171,97 @@
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="mfd_tab" data-bs-toggle="tab" href="#mfd_portfolio" role="tab" aria-controls="mfd-portfolio" aria-selected="true">
-                                                    <i class="fa fa-cloud"></i>Mutual Funds
+                                                    <i class="fa fa-cloud"></i>Funds
                                                 </a>
                                                 <div class="material-border"></div>
                                             </li>
                                         </ul>
                                         <div class="tab-content" id="portfolio_content">
                                             <div class="tab-pane fade active show" id="stock_portfolio" role="tabpanel" aria-labelledby="stock-portfolio">
-                                                <div class="scroll-bar-wrap">
-                                                    <div class="both-side-scroll scroll-demo p-0">
-                                                        <div class="horz-scroll-content">
-                                                            <table class="table table-striped table-bordered" style="min-width: 1200px;">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="text-center">Symbol</th>
-                                                                        <th class="text-center">Company Name</th>
-                                                                        <th class="text-center">Last Price</th>
-                                                                        <th class="text-center">Change Percentage</th>
-                                                                        <th class="text-center">Institutional Price</th>
-                                                                        <th class="text-center">Shares</th>
-                                                                        <th class="text-center">Value</th>
-                                                                        <th class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach($transactions as $transaction)
-                                                                    @if($transaction->is_fund == 0)
-                                                                    <tr>
-                                                                        <td class="text-center">{{$transaction->symbol}}</td>
-                                                                        <td class="text-center">{{$transaction->company_name}}</td>
-                                                                        <td class="text-center fw-bold">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
-                                                                        <td class="text-center">{{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}</td>
-                                                                        <td class="text-center fw-bold">{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                        <td class="text-center">{{$transaction->shares}}</td>
-                                                                        <td class="text-center">{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
-                                                                        <td class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">
-                                                                            <div>
-                                                                                <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Buy</button>
-                                                                                <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Sell</button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    @endif
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                <div class="vertical-scroll scroll-demo p-0">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-responsive table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Company</th>
+                                                                    <th>Last Price</th>
+                                                                    <th>Change</th>
+                                                                    <th>Institutional Price</th>
+                                                                    <th>Shares</th>
+                                                                    <th>Value</th>
+                                                                    <th class="text-center table-secondary" style="right: 0px; min-width:140px;">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($transactions as $transaction)
+                                                                @if($transaction->is_fund == 0)
+                                                                <tr>
+                                                                    <td class="d-flex flex-column">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <small>{{$transaction->company_name}}</small>
+                                                                    </td>
+                                                                    <td>{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td>
+                                                                        <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                            {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                    <td>{{$transaction->shares}}</td>
+                                                                    <td>{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
+                                                                    <td class="text-center table-secondary" style="right: 0px; min-width:140px;">
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                    </td>
+                                                                </tr>
+                                                                @endif
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="mfd_portfolio" role="tabpanel" aria-labelledby="mfd-portfolio">
-                                                <div class="scroll-bar-wrap">
-                                                    <div class="both-side-scroll scroll-demo p-0">
-                                                        <div class="horz-scroll-content">
-                                                            <table class="table table-striped table-bordered" style="min-width: 1200px;">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="text-center">Symbol</th>
-                                                                        <th class="text-center">Company Name</th>
-                                                                        <th class="text-center">Last Price</th>
-                                                                        <th class="text-center">Change Percentage</th>
-                                                                        <th class="text-center">Institutional Price</th>
-                                                                        <th class="text-center">Shares</th>
-                                                                        <th class="text-center">Value</th>
-                                                                        <th class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach($transactions as $transaction)
-                                                                    @if($transaction->is_fund == 1)
-                                                                    <tr>
-                                                                        <td class="text-center">{{ $transaction->symbol }}</td>
-                                                                        <td class="text-center">{{ $transaction->company_name }}</td>
-                                                                        <td class="text-center fw-bold">{{ ($transaction->latest_price)?$transaction->mutualFund->formatPrice($transaction->latest_price):"-"}}</td>
-                                                                        <td class="text-center">{{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}</td>
-                                                                        <td class="text-center fw-bold">{{ ($transaction->institutional_price) ? $transaction->mutualFund->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                        <td class="text-center">{{ $transaction->shares }}</td>
-                                                                        <td class="text-center">{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
-                                                                        <td class="text-center position-sticky table-secondary" style="right: 0px; width:150px;">
-                                                                            <div>
-                                                                                <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Buy</button>
-                                                                                <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Sell</button>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                    @endif
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                <div class="vertical-scroll scroll-demo p-0">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-responsive table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Company</th>
+                                                                    <th>Last Price</th>
+                                                                    <th>Change</th>
+                                                                    <th>Institutional Price</th>
+                                                                    <th>Shares</th>
+                                                                    <th>Value</th>
+                                                                    <th class="text-center table-secondary" style="right: 0px; width:140px;">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($transactions as $transaction)
+                                                                @if($transaction->is_fund == 1)
+                                                                <tr>
+                                                                    <td class="d-flex flex-column">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <small>{{$transaction->company_name}}</small>
+                                                                    </td>
+                                                                    <td>{{ ($transaction->latest_price)?$transaction->mutualFund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td>
+                                                                        <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                            {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->mutualFund->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                    <td>{{ $transaction->shares }}</td>
+                                                                    <td>{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
+                                                                    <td class="text-center table-secondary" style="right: 0px; width:140px;">
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Sell</button>
+                                                                    </td>
+                                                                </tr>
+                                                                @endif
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
@@ -287,7 +327,7 @@
                 </div>
                 <div class="col-xl-4 box-col-12 des-xl-100">
                     <div class="row">
-                        <div class="col-xl-12 box-col-6 des-xl-50">
+                        <div class="col-xl-12 box-col-6">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="header-top d-sm-flex align-items-center">
@@ -305,7 +345,7 @@
         </div>
         <div class="col-xl-12 box-col-12 des-xl-100">
             <div class="row">
-                <div class="col-xl-4 col-50 box-col-6 des-xl-50">
+                <div class="col-xl-6 box-col-12 des-xl-100">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-top d-sm-flex align-items-center">
@@ -314,94 +354,70 @@
                             <a class="btn btn-outline-success btn-xs" href="{{ route('xtbs') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                            <div class="scroll-bar-wrap">
-                                <div class="horizontal-scroll scroll-demo p-0">
-                                    <div class="horz-scroll-content">
-                                        <table class="table table-striped table-bordered" style="min-width: 1200px;">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">ASX CODE</th>
-                                                    <th class="text-center">BOND ISSUER</th>
-                                                    <th class="text-center">MATURITY DATE</th>
-                                                    <th class="text-center">COUPON TYPE</th>
-                                                    <th class="text-center">NEXT EX.DATE</th>
-                                                    <th class="text-center">COUPON P.A</th>
-                                                    <th class="text-center">XTB PRICE</th>
-                                                    <th class="text-center">YTM</th>
-                                                    <th class="text-center">RUNNING CURRENT YIELD</th>
-                                                    <th class="text-center">TRADING MARGIN</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($xtbs as $xtb)
-                                                <tr>
-                                                    <td class="text-center text-nowrap text-secondary">{{ $xtb->asx_code }}</td>
-                                                    <td class="text-center text-nowrap"><a href="https://xtbs.com.au/xtbs-profile/{{ $xtb->asx_code }}" target="_blank">{{ $xtb->bond_issuer }}</a></td>
-                                                    <td class="text-center">{{ $xtb->maturity_date }}</td>
-                                                    <td class="text-center text-nowrap text-secondary">{{ ($xtb->coupon_type == "")?$xtb->coupon_type:"-" }}</td>
-                                                    <td class="text-center text-center text-nowrap text-secondary">{{ $xtb->next_ex_date }}</td>
-                                                    <td class="text-center text-nowrap text-info">{{ ($xtb->coupon_pa && $xtb->coupon_pa != "")?$xtb->coupon_pa:"-" }}</td>
-                                                    <td class="text-center text-nowrap text-success fw-bold">{{ "$".$xtb->xtb_price }}</td>
-                                                    <td class="text-center text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
-                                                    <td class="text-center text-nowrap text-dark">{{ $xtb->current_yield."%" }}</td>
-                                                    <td class="text-center text-nowrap text-danger">{{ ($xtb->trading_margin !="")?$xtb->trading_margin."%":"-" }}</td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div class="vertical-scroll scroll-demo p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-responsive table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">CODE</th>
+                                                <th class="text-center">COUPON P.A</th>
+                                                <th class="text-center">PRICE</th>
+                                                <th class="text-center">YTM</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($xtbs as $xtb)
+                                            <tr>
+                                                <td class="text-center text-nowrap text-secondary">{{ $xtb->asx_code }}</td>
+                                                <td class="text-center text-nowrap text-info">{{ ($xtb->coupon_pa && $xtb->coupon_pa != "")?$xtb->coupon_pa:"-" }}</td>
+                                                <td class="text-center text-nowrap text-success fw-bold">{{ "$".$xtb->xtb_price }}</td>
+                                                <td class="text-center text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-50 box-col-6 des-xl-50">
+                <div class="col-xl-6 box-col-12 des-xl-100">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-top d-sm-flex align-items-center">
-                                <h5>Recent Account Activity</h5>
+                                <h5>Recent Activity</h5>
                             </div>
                             <a class="btn btn-outline-success btn-xs" href="{{ route('transactions') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                            <div class="scroll-bar-wrap">
-                                <div class="horizontal-scroll scroll-demo p-0">
-                                    <div class="horz-scroll-content">
-                                        <table class="table table-striped table-bordered" style="min-width: 1200px;">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Symbol</th>
-                                                    <th class="text-center">Type</th>
-                                                    <th class="text-center">Company Name</th>
-                                                    <th class="text-center">Price</th>
-                                                    <th class="text-center">Shares</th>
-                                                    <th class="text-center">Date</th>
-                                                    <th class="text-center">Market</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($transactions->take(5) as $transaction)
-                                                <tr>
-                                                    <td class="text-center">{{ $transaction->symbol }}</td>
-                                                    <td class="text-center">{{ $transaction->type }}</td>
-                                                    <td class="text-center">
-                                                        <small>{{ $transaction->company_name }}</small>
-                                                    </td>
-                                                    <td class="text-center">{{ $transaction->is_fund=="1"?$transaction->mutualFund->formatPrice($transaction->price):$transaction->stock->formatPrice($transaction->price) }}</td>
-                                                    <td class="text-center">{{ $transaction->shares }}</td>
-                                                    <td class="text-center">{{ $transaction->created_at }}</td>
-                                                    <td class="text-center">{{ $transaction->is_fund=="1"?"Mutual Fund":"Stock" }}</td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div class="vertical-scroll scroll-demo p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-responsive table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Symbol</th>
+                                                <th class="text-center">Type</th>
+                                                <th class="text-center">Price</th>
+                                                <th class="text-center">Shares</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($transactions->take(5) as $transaction)
+                                            <tr>
+                                                <td class="text-center">{{ $transaction->symbol }}</td>
+                                                <td class="text-center">{{ $transaction->type }}</td>
+                                                <td class="text-center">{{ $transaction->is_fund=="1"?$transaction->mutualFund->formatPrice($transaction->price):$transaction->stock->formatPrice($transaction->price) }}</td>
+                                                <td class="text-center">{{ $transaction->shares }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 box-col-6 des-xl-50">
+                <div class="col-xl-6 box-col-12 des-xl-100">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-top d-sm-flex align-items-center">
@@ -410,36 +426,68 @@
                             <a class="btn btn-outline-success btn-xs" href="{{ route('documents.index') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                            <div class="scroll-bar-wrap">
-                                <div class="horizontal-scroll scroll-demo p-0">
-                                    <div class="horz-scroll-content">
-                                        <table class="table table-striped table-bordered" style="min-width: 1200px;">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">Type</th>
-                                                    <th class="text-center">Title</th>
-                                                    <th class="text-center">Description</th>
-                                                    <th class="text-center">Provided by</th>
-                                                    <th class="text-center">Date</th>
-                                                    <th class="text-center">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($documents as $document)
-                                                <tr>
-                                                    <td class="text-center">{{ $document->type }}</td>
-                                                    <td class="text-center">{{ $document->title }}</td>
-                                                    <td class="text-center">{{ $document->description }}</td>
-                                                    <td class="text-center">{{ $document->provider->first_name }} {{ $document->provider->last_name }}</td>
-                                                    <td class="text-center">{{ $document->created_at }}</td>
-                                                    <td class="text-center">
-                                                        <a href="{{ route('documents.download', ['id' => $document->id]) }}" target="_blank">Download</a>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div class="vertical-scroll scroll-demo p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-responsive table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Type</th>
+                                                <th class="text-center">Title</th>
+                                                <th class="text-center">Provided by</th>
+                                                <th class="text-center">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($documents as $document)
+                                            <tr>
+                                                <td class="text-center">{{ $document->type }}</td>
+                                                <td class="text-center">{{ $document->title }}</td>
+                                                <td class="text-center">{{ $document->provider->first_name }} {{ $document->provider->last_name }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('documents.download', ['id' => $document->id]) }}" target="_blank">Download</a>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 box-col-12 des-xl-100">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-top d-sm-flex align-items-center">
+                                <h5>Recent Document</h5>
+                            </div>
+                            <a class="btn btn-outline-success btn-xs" href="{{ route('documents.index') }}">see more</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="vertical-scroll scroll-demo p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-responsive table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Type</th>
+                                                <th class="text-center">Title</th>
+                                                <th class="text-center">Provided by</th>
+                                                <th class="text-center">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($documents as $document)
+                                            <tr>
+                                                <td class="text-center">{{ $document->type }}</td>
+                                                <td class="text-center">{{ $document->title }}</td>
+                                                <td class="text-center">{{ $document->provider->first_name }} {{ $document->provider->last_name }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('documents.download', ['id' => $document->id]) }}" target="_blank">Download</a>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -453,6 +501,9 @@
 </div>
 <!-- Container-fluid Ends-->
 @push('scripts')
+<script>
+    var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'is_fund' => $transaction->is_fund, 'type' => $transaction->type];}) -> toJson() !!};
+</script>
 <script src="{{asset('assets/js/chart/chartist/chartist.js')}}"></script>
 <script src="{{asset('assets/js/chart/chartist/chartist-plugin-tooltip.js')}}"></script>
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
@@ -473,337 +524,7 @@
 <script src="{{asset('assets/js/datepicker/date-picker/datepicker.js')}}"></script>
 <script src="{{asset('assets/js/datepicker/date-picker/datepicker.en.js')}}"></script>
 <script src="{{asset('assets/js/datepicker/date-picker/datepicker.custom.js')}}"></script>
-<script>
-    $(document).ready(function() {
-        var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'is_fund' => $transaction->is_fund, 'type' => $transaction->type];}) -> toJson() !!};
-        var monthProfits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-        for (var i = 0; i < chartData.length; i++) {
-            var current_date = new Date();
-            var action_date = new Date(chartData[i]['created_at']);
-            if (action_date.getFullYear() == current_date.getFullYear()) {
-                if (chartData[i]['type'] == 'buy') {
-                    monthProfits[Number(action_date.getMonth())] = Number((monthProfits[Number(action_date.getMonth())] + Number(chartData[i]['realPrice'])).toFixed(2));
-                } else {
-                    monthProfits[Number(action_date.getMonth())] = Number((monthProfits[Number(action_date.getMonth())] - Number(chartData[i]['realPrice'])).toFixed(2));
-                }
-            }
-
-        };
-
-        var stockData = $.grep(chartData, function(v) {
-            return v.is_fund == 0;
-        });
-        var mfdData = $.grep(chartData, function(v) {
-            return v.is_fund == 1;
-        });
-
-        stockData = stockData.reverse();
-        mfdData = mfdData.reverse();
-
-        adjustedStockData = [];
-        adjustedMfdData = [];
-        total1 = 0;
-        total2 = 0;
-
-        for (var i = 0; i < stockData.length; i++) {
-            total1 = (stockData[i]['type'] == 'buy') ? total1 + Number(stockData[i]['realPrice']) : total1 - Number(stockData[i]['realPrice']);
-            adjustedStockData[i] = [stockData[i]['created_at'], Number(total1.toFixed())];
-        }
-
-        for (var i = 0; i < mfdData.length; i++) {
-            total2 = (mfdData[i]['type'] == 'buy') ? total2 + Number(mfdData[i]['realPrice']) : total2 - number(mfdData[i]['realPrice']);
-            adjustedMfdData[i] = [mfdData[i]['created_at'], Number(total2.toFixed())];
-        }
-
-        renderChart(adjustedStockData, '#chart-timeline-dashbord1');
-        renderChart(adjustedMfdData, '#chart-timeline-dashbord2');
-        renderBarChart(monthProfits, '#month_profit_dash');
-    });
-
-    function renderChart(adjustedData, obj) {
-        var options = {
-            series: [{
-                name: "Total Price",
-                data: adjustedData
-            }],
-            chart: {
-                id: 'area-datetime',
-                type: 'area',
-                height: 425,
-                zoom: {
-                    autoScaleYaxis: true
-                },
-                toolbar: {
-                    show: false
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            markers: {
-                size: 0,
-                style: 'hollow',
-            },
-            xaxis: {
-                type: 'datetime',
-                min: adjustedData[0]['created_at'],
-                tickAmount: 6,
-                axisTicks: {
-                    show: true,
-                },
-                axisBorder: {
-                    show: true
-                },
-            },
-            yaxis: {
-                formatter: function(val) {
-                    return val.toFixed(2);
-                }
-            },
-            tooltip: {
-                x: {
-                    format: 'yyyy-MM-dd'
-                },
-                y: {
-                    formatter: function(val) {
-                        return '$' + val;
-                    }
-                }
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 100]
-                }
-            },
-            responsive: [{
-                    breakpoint: 1366,
-                    options: {
-                        chart: {
-                            height: 350
-                        }
-                    }
-                },
-                {
-                    breakpoint: 1238,
-                    options: {
-                        chart: {
-                            height: 300
-                        },
-                        grid: {
-                            padding: {
-                                bottom: 5,
-                            },
-                        }
-                    }
-                },
-                {
-                    breakpoint: 992,
-                    options: {
-                        chart: {
-                            height: 300
-                        }
-                    }
-                },
-                {
-                    breakpoint: 551,
-                    options: {
-                        grid: {
-                            padding: {
-                                bottom: 10,
-                            },
-                        }
-                    }
-                },
-                {
-                    breakpoint: 535,
-                    options: {
-                        chart: {
-                            height: 250
-                        }
-
-                    }
-                }
-            ],
-
-            colors: [vihoAdminConfig.primary],
-        };
-        var charttimeline = new ApexCharts(document.querySelector(obj), options);
-        charttimeline.render();
-    }
-
-    function renderBarChart(data, obj) {
-        var options = {
-            chart: {
-                height: 350,
-                type: 'bar',
-                toolbar: {
-                    show: false
-                }
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    endingShape: 'rounded',
-                    columnWidth: '55%',
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            series: [{
-                name: 'Monthly Payment',
-                data: data
-            }],
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            },
-            yaxis: {
-                formatter: function(val) {
-                    return val.toFixed(2);
-                }
-            },
-            fill: {
-                opacity: 1
-
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return "$ " + val
-                    }
-                }
-            },
-            colors: [vihoAdminConfig.secondary]
-        }
-
-        var barChart = new ApexCharts(
-            document.querySelector(obj),
-            options
-        );
-
-        barChart.render();
-    }
-
-    function confirmTrade(obj, type, symbol, price, institutional_price, current_shares, is_fund) {
-        var shares_amount = $("#shares_amount").val();
-        var csrf_token = $('meta[name="csrf-token"]').attr('content');
-
-        if (Number(shares_amount) == 0) {
-            $(".alert-wrapper").html('<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">The shares must be at least 1.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>');
-        } else if (type.toLowerCase() == 'sell' && Number(shares_amount) > current_shares)
-            $(".alert-wrapper").html('<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">The shares you want to sell must be equal or less than your current shares.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>');
-
-        else {
-            $(obj).attr('onclick', '');
-            $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
-            var url = is_fund == 0 ? '/api/stocks/' + symbol + '/' + type.toLowerCase() : '/api/mfds/' + symbol + '/' + type.toLowerCase();
-            $.ajax({
-                    method: 'post',
-                    url: url,
-                    data: {
-                        shares: shares_amount,
-                        price: price,
-                        institutional_price: institutional_price,
-                        _token: csrf_token
-                    },
-                })
-                .then(response => {
-                    $(obj).attr('onclick', 'buyShares(this)');
-                    $(obj).html(type.toLowerCase() == 'buy' ? 'BUY' : 'SELL');
-                    if (response.success) {
-                        $.notify('<i class="fa fa-star-o"></i>Successfully confirmed!', {
-                            type: 'theme',
-                            allow_dismiss: true,
-                            delay: 2000,
-                            showProgressbar: false,
-                            timer: 1000
-                        });
-                    } else {
-                        $.notify('<i class="fa fa-bell-o"></i>', {
-                            type: 'theme',
-                            allow_dismiss: true,
-                            delay: 2000,
-                            showProgressbar: false,
-                            timer: 1000
-                        });
-                    }
-                })
-        }
-    }
-
-    function openTradeModel(type, symbol, company_name, price, institutional_price, currency, shares, is_fund, exchange) {
-        $("#shares_amount").val("");
-        if (type == "buy") {
-            $('#modal_title').text('Buy shares from ' + symbol);
-            $('#trade_type').text('buy');
-            $('#trade_btn').text("BUY");
-            $('#trade_btn').removeClass('btn-danger');
-            $('#trade_btn').addClass('btn-primary');
-        } else {
-            $('#modal_title').text('Sell shares from ' + symbol);
-            $('#trade_type').text('sell');
-            $('#trade_btn').text("SELL");
-            $('#trade_btn').removeClass('btn-primary');
-            $('#trade_btn').addClass('btn-danger');
-        }
-
-        $('#trade_symbol').text(symbol);
-        $('#trade_company').text(company_name);
-        $('#trade_price').text(formatPrice(Number(price), currency));
-        $('#trade_institutional_price').text(formatPrice(Number(institutional_price), currency));
-
-        if (exchange.toLowerCase() == 'xnys')
-            $('#trade_is_xnys').css('display', 'none');
-        else
-            $('#trade_is_xnys').css('display', 'block');
-
-        $('#shares-label').text('Shares (Current Shares: ' + shares + ")");
-        $('#trade_btn').attr('onclick', 'confirmTrade(this, "' + type + '", "' + symbol + '", ' + price + ', ' + institutional_price + ', ' + shares + ', ' + is_fund + ')');
-        $('#tradeModal').modal('show');
-    }
-
-    // format Price and Percentage functions
-    function formatPrice(price, currency) {
-        switch (currency) {
-            case "USD":
-                return "$" + Number(price).toFixed(2);
-                break;
-
-            case "GBP":
-                return Number(price * 100).toFixed(2) + "p";
-                break;
-
-            case "EUR":
-                return Number(price.toFixed(2)) + "€";
-                break;
-
-            case "AUD":
-                return "A$" + Number(price.toFixed(2)) + "€";
-                break;
-
-            case "CAD":
-                return "C$" + Number(price.toFixed(2));
-                break;
-
-            default:
-                return price;
-                break;
-        }
-    }
-
-    function formatPercentage(percentage) {
-        return (Number(percentage) * 100).toFixed(2) + "%";
-    }
-</script>
+<script src="{{asset('assets/js/pages/common.js')}}"></script>
+<script src="{{asset('assets/js/pages/dashboard/custom.js')}}"></script>
 @endpush
 @endsection

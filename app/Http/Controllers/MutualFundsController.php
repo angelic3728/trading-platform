@@ -140,8 +140,8 @@ class MutualFundsController extends Controller
                     'symbol' => $fund->symbol,
                     'company_name' => $fund->company_name,
                     'currency' => $fund->gcurrency,
-                    'price' => CustomFundData::price($fund->identifier),
-                    'change_percentage' => CustomFundData::changePercentage($fund->identifier),
+                    'price' => CustomFundData::price($fund->symbol),
+                    'change_percentage' => CustomFundData::changePercentage($fund->symbol),
                     'link' => $fund->link,
                     'exchange' => $fund->exchange,
                 ];

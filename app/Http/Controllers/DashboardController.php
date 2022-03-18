@@ -105,7 +105,7 @@ class DashboardController extends Controller
                                 $asx_data = ASX::getDetails($transaction->stock->symbol);
                                 $transaction->latest_price = array_has($asx_data, 'latest_price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
                                 $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? round(array_get($asx_data, 'change_percentage'), 4) : null;
-                                $transaction->institutional_price = array_has($asx_data, 'price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
+                                $transaction->institutional_price = array_has($asx_data, 'price') ? round($transaction->stock->institutionalPrice(array_get($asx_data, 'price')), 3) : null;
                                 break;
                             case 'custom':
                                 $transaction->latest_price = round(CustomStockData::price($transaction->stock->symbol), 3);

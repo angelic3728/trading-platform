@@ -3,26 +3,16 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\Password;
-use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\File;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasOne;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\HasMany;
 
 use Epartment\NovaDependencyContainer\HasDependencies;
-use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 
 class Stock extends Resource
 {
@@ -96,6 +86,10 @@ class Stock extends Resource
             ])
                 ->displayUsingLabels()
                 ->rules('required'),
+
+            Number::make('Discount Percentage')
+            ->step(0.001)
+            ->sortable(),
 
             Text::make('Currency', 'gcurrency')->sortable(),
 

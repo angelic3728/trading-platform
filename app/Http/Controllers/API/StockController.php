@@ -114,7 +114,7 @@ class StockController extends Controller
          */
         return response()->json([
             'success' => true,
-            'data' => $stock->only('symbol', 'company_name', 'exchange', 'price', 'institutional_price', 'currency'),
+            'data' => $stock->only('symbol', 'company_name', 'exchange', 'price', 'institutional_price', 'gcurrency'),
         ]);
     }
 
@@ -229,7 +229,7 @@ class StockController extends Controller
              */
             return collect([
                 'symbol' => $item->stock->symbol,
-                'currency' => $item->stock->currency,
+                'currency' => $item->stock->gcurrency,
                 'company_name' => $item->stock->company_name,
                 'exchange' => $item->stock->exchange,
                 'last_price' => $last_price,
@@ -300,7 +300,7 @@ class StockController extends Controller
             /**
              * Return stock
              */
-            return $stock->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'currency');
+            return $stock->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
         });
 
         /**

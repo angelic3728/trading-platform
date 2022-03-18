@@ -110,9 +110,7 @@ class User extends Authenticatable
          * If the value is empty, return default
          */
         if(empty($this->balance)){
-
-            return '$0.00';
-
+            return null;
         }
 
         /**
@@ -120,20 +118,8 @@ class User extends Authenticatable
          */
         $balance = json_decode($this->balance);
 
-        /**
-         * Determine how to return the balance
-         */
-        switch ($balance->currency) {
-
-            case 'USD':
-                return '$'.number_format($balance->amount, 2);
-                break;
-
-            case 'GBP':
-                return '£'.number_format($balance->amount, 2);
-                break;
-
-        }
+        return $balance;
+        
 
     }
 

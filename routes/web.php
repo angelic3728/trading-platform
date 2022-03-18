@@ -69,6 +69,12 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('mfds/{symbol}', 'MutualFundsController@show')->name('mfds.show');
 
     /**
+     * Cryptocurrencies
+     */
+    Route::get('cryptos/search', 'CryptosController@index')->name('cryptos.search');
+    Route::get('cryptos/{symbol}', 'CryptosController@show')->name('cryptos.show');
+
+    /**
      * Recent News
      */
     Route::get('news', 'NewsController@overview')->name('news.overview');
@@ -101,13 +107,21 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('stocks/{symbol}/{action}', 'StockController@trade');
 
         /**
-         * Get mutual funds stocks
+         * Get mutual funds
          */
         Route::get('mfds/investments', 'MutualFundsController@investments');
         Route::get('mfds/highlights', 'MutualFundsController@highlights');
         Route::get('mfds/all', 'MutualFundsController@all');
         Route::get('mfds/chart/{symbol}/{range}', 'MutualFundsController@chart');
         Route::get('mfds/{symbol}', 'MutualFundsController@details');
+
+
+        // Get cryptocurrencies
+        Route::get('cryptos/investments', 'CryptosController@investments');
+        Route::get('cryptos/highlights', 'CryptosController@highlights');
+        Route::get('cryptos/all', 'CryptosController@all');
+        Route::get('cryptos/chart/{symbol}/{range}', 'CryptosController@chart');
+        Route::get('cryptos/{symbol}', 'CryptosController@details');
 
         /**
          * Trading

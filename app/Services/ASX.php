@@ -12,12 +12,9 @@ class ASX
     public function getAvailableSymbols()
     {
         /**
-         * Get all Symbols
+         * Get all asx Symbols
          */
-        $symbols = $this->makeApiCall('get', 'symbols', ['format' => 'json']);
-
-        // only Get ASX stocks
-        $symbols = $symbols->where('exchange', 'ASX');
+        $symbols = $this->makeApiCall('get', 'search', ['limit' => 10000, 'exchange' => 'ASX', 'country' => 'AU', 'format' => 'json']);
 
         /**
          * Map data to individual collections
@@ -28,8 +25,35 @@ class ASX
             array_push($results, collect([
                 'symbol' => $item['symbol'],
                 'company_name' => $item['name'],
-                'currency' => 'AUS',
-                'exchange' => 'ASX',
+                'currency' => $item['currency'],
+                'exchange' => $item['stockExchange'],
+            ]));
+        }
+
+        /**
+         * Return symbols
+         */
+        return $results;
+    }
+
+    public function getAvailableMFDSymbols()
+    {
+        /**
+         * Get all asx Symbols
+         */
+        $symbols = $this->makeApiCall('get', 'search', ['limit' => 10000, 'exchange' => 'MUTUAL_FUND', 'country' => 'AU', 'format' => 'json']);
+
+        /**
+         * Map data to individual collections
+         */
+        $results = [];
+
+        foreach ($symbols as $item) {
+            array_push($results, collect([
+                'symbol' => $item['symbol'],
+                'company_name' => $item['name'],
+                'currency' => $item['currency'],
+                'exchange' => $item['stockExchange'],
             ]));
         }
 

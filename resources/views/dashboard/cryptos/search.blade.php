@@ -2,20 +2,16 @@
 
 @section('title', 'Trade Now')
 
-@push('css')
-<!-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}"> -->
-@endpush
-
 @section('content')
 <div class="col-sm-12">
     @if(!request()->filled('page') && !request()->filled('q'))
     <div class="card">
         <div class="card-header">
             <div class="header-top">
-                <h5>Highlighted Stocks</h5>
+                <h5>Highlighted Cryptocurrencies</h5>
             </div>
         </div>
-        <div class="card-body col-sm-12 stock-contents">
+        <div class="card-body col-sm-12 crypto-contents">
             <div class="loader-box justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
                 <div class="loader-19"></div>
             </div>
@@ -24,17 +20,17 @@
                     <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
-                                <div id="chart-timeline-dashboard1" style="min-height: 120px;">
+                                <div id="chart-timeline-dashboard1" style="min-height: 285px;">
                                 </div>
                             </div>
                             <div class="d-flex-column p-2">
-                                <a href="" id="h_stock_link1">
-                                    <h6 id="h_stock_title1" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
+                                <a href="" id="h_crypto_link1">
+                                    <h6 id="h_crypto_title1" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
                                 </a>
                                 <div class="center-content">
                                     <p class="d-sm-flex align-items-end">
-                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_stock_price1"></span>
-                                        <span class="" id="current_stock_percentage1"></span>
+                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_crypto_price1"></span>
+                                        <span class="" id="current_crypto_percentage1"></span>
                                     </p>
                                 </div>
                             </div>
@@ -45,17 +41,17 @@
                     <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
-                                <div id="chart-timeline-dashboard2" style="min-height: 120px;">
+                                <div id="chart-timeline-dashboard2" style="min-height: 285px;">
                                 </div>
                             </div>
                             <div class="d-flex-column p-2">
-                                <a href="" id="h_stock_link2">
-                                    <h6 id="h_stock_title2" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
+                                <a href="" id="h_crypto_link2">
+                                    <h6 id="h_crypto_title2" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
                                 </a>
                                 <div class="center-content">
                                     <p class="d-sm-flex align-items-end">
-                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_stock_price2"></span>
-                                        <span class="" id="current_stock_percentage2"></span>
+                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_crypto_price2"></span>
+                                        <span class="" id="current_crypto_percentage2"></span>
                                     </p>
                                 </div>
                             </div>
@@ -66,17 +62,17 @@
                     <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
-                                <div id="chart-timeline-dashboard3" style="min-height: 120px;">
+                                <div id="chart-timeline-dashboard3" style="min-height: 285px;">
                                 </div>
                             </div>
                             <div class="d-flex-column p-2">
-                                <a href="" id="h_stock_link3">
-                                    <h6 id="h_stock_title3" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
+                                <a href="" id="h_crypto_link3">
+                                    <h6 id="h_crypto_title3" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
                                 </a>
                                 <div class="center-content">
                                     <p class="d-sm-flex align-items-end">
-                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_stock_price3"></span>
-                                        <span class="" id="current_stock_percentage3"></span>
+                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_crypto_price3"></span>
+                                        <span class="" id="current_crypto_percentage3"></span>
                                     </p>
                                 </div>
                             </div>
@@ -87,17 +83,17 @@
                     <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
                             <div class="chart-content">
-                                <div id="chart-timeline-dashboard4" style="min-height: 120px;">
+                                <div id="chart-timeline-dashboard4" style="min-height: 285px;">
                                 </div>
                             </div>
                             <div class="d-flex-column p-2">
-                                <a href="" id="h_stock_link4">
-                                    <h6 href="#" id="h_stock_title4" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
+                                <a href="" id="h_crypto_link4">
+                                    <h6 href="#" id="h_crypto_title4" class="fs-20" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></h6>
                                 </a>
                                 <div class="center-content">
                                     <p class="d-sm-flex align-items-end">
-                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_stock_price4"></span>
-                                        <span class="" id="current_stock_percentage4"></span>
+                                        <span class="font-primary m-r-10 f-16 f-w-700" id="current_crypto_price4"></span>
+                                        <span class="" id="current_crypto_percentage4"></span>
                                     </p>
                                 </div>
                             </div>
@@ -113,30 +109,15 @@
             <div class="row align-items-center">
                 <div class="col">
                     @if(request()->filled('q') || request()->filled('ex'))
-                    <h4 class="mb-0">Results ({{ $stocks->total() }})</h4>
+                    <h4 class="mb-0">Results ({{ $cryptos->total() }})</h4>
                     @else
-                    <h4 class="mb-0">All Stocks ({{ $stocks->total() }})</h4>
+                    <h4 class="mb-0">All Cryptocurrencies ({{ $cryptos->total() }})</h4>
                     @endif
                 </div>
                 <div class="col-auto d-flex justify-content-between">
-                    <select class="form-control form-control-primary btn-square" name="select" style="max-width: 200px;" onchange="exchangeOption(this)">
-                        @if(!isset(request()->ex) || request()->ex == "all")
-                        <option value="all" selected>All</option>
-                        @else
-                        <option value="all">All</option>
-                        @endif
-                        @foreach($exchanges as $exchange)
-                        @if(request()->ex == $exchange->exchange)
-                        <option value="{{$exchange->exchange}}" selected>{{$exchange->exchange}}</option>
-                        @else
-                        <option value="{{$exchange->exchange}}">{{$exchange->exchange}}</option>
-                        @endif
-                        @endforeach
-                    </select>
-                    <form action="{{ route('stocks.search') }}" class="ms-3" style="min-width: 200px;">
+                    <form action="{{ route('cryptos.search') }}" class="ms-3" style="min-width: 200px;">
                         <div class="search d-flex">
                             <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request()->q }}">
-                            <input id="ex" type="hidden" class="form-control" placeholder="Search" name="ex" value="{{ request()->ex }}">
                             <button type="submit" id="search_btn" class="btn btn-iconsolid" href="javascript:void(0)"><i class="fa fa-search"></i></button>
                         </div>
                     </form>
@@ -150,29 +131,25 @@
                         <thead class="thead-light">
                             <tr>
                                 <th scope="col">Symbol</th>
-                                <th scope="col">Company Name</th>
-                                <th scope="col">Exchange</th>
-                                <th scope="col">Currency</th>
+                                <th scope="col">Cryptocurrency Name</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($stocks as $stock)
+                            @foreach($cryptos as $crypto)
                             <tr>
-                                <td width="10%">{{ $stock->symbol }}</td>
-                                <td>{{ $stock->company_name }}</td>
-                                <td>{{ $stock->exchange }}</td>
-                                <td>{{ $stock->currency }}</td>
-                                <td class="text-right" nowrap>
-                                    <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('stocks.show', ['symbol' => $stock->symbol]) }}">See More</a>
+                                <td width="10%">{{ $crypto->symbol }}</td>
+                                <td>{{ $crypto->name }}</td>
+                                <td width="10%" class="text-right" nowrap>
+                                    <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('cryptos.show', ['symbol' => $crypto->symbol]) }}">See More</a>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    @if($stocks->isEmpty())
+                    @if($cryptos->isEmpty())
                     <div class="p-10 d-flex justify-content-center">
-                        There are no stocks that match your search result
+                        There are no cryptos that match your search result
                     </div>
                     @endif
                 </div>
@@ -180,7 +157,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-end pb-3">
-        {{ $stocks->appends(request()->query())->links() }}
+        {{ $cryptos->appends(request()->query())->links() }}
     </div>
 </div>
 @push('scripts')
@@ -190,43 +167,64 @@
 <script>
     $(document).ready(function() {
         $(".loader-box").css({
-            'height': $('.stock-contents').innerHeight() + "px"
+            'height': $('.crypto-contents').innerHeight() + "px"
         });
-        $(".stock-contents").css("opacity", "0.3");
+        $(".crypto-contents").css("opacity", "0.3");
         $.ajax({
             /* the route pointing to the post function */
-            url: '/api/stocks/highlights',
+            url: '/api/cryptos/highlights',
             type: 'get',
             /* remind that 'data' is the response of the AjaxController */
             success: function(res) {
                 if (res.success) {
-                    for (var i = 0; i < res.data.length; i++) {
-                        var adjustedData = [];
-                        var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
-                        var times = res.data[i]['gcurrency'] === "GBP" ? 100 : 1;
-                        if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
-                            for (var j = 0; j < res.data[i]['chart'].length; j++) {
-                                var stock = res.data[i]['chart'][j];
-                                var date = new Date(stock['date']);
-                                adjustedData[j] = [date.getTime(), Number((stock['fClose'] * times).toFixed(2))]
+                    if (res.data.length != 0)
+                        for (var i = 0; i < res.data.length; i++) {
+                            var adjustedData = [];
+                            var displayData = [res.data[i]['name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
+                            if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
+                                for (var j = 0; j < res.data[i]['chart'].length; j++) {
+                                    var crypto = res.data[i]['chart'][j];
+                                    var date = new Date(crypto[0]);
+                                    adjustedData[j] = [date.getTime(), Number((crypto[1] * 1).toFixed(2))]
+                                }
+                                renderChart(adjustedData, (i + 1), res.data[i]['gcurrency'], displayData);
+                            } else {
+                                $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
+                                    type: 'theme',
+                                    allow_dismiss: true,
+                                    delay: 2000,
+                                    showProgressbar: false,
+                                    timer: 4000
+                                });
+
+                                $("#chart-timeline-dashboard" + (i + 1)).text('No Chart Data!');
+                                $("#h_crypto_title" + index).html(displayData[0]);
+                                $("#h_crypto_title" + index).attr('title', displayData[0]);
+                                $("#h_crypto_link" + index).attr('href', '/cryptos/' + displayData[3]);
+                                $("#h_crypto_title" + index).tooltip();
+                                $("#current_crypto_price" + index).html(formatPrice(displayData[1], currency));
+                                $("#current_crypto_percentage" + index).html(formatPercentage(displayData[2]));
+                                if (displayData[2] >= 0)
+                                    $("#current_crypto_percentage" + index).addClass("font-primary");
+                                else
+                                    $("#current_crypto_percentage" + index).addClass("font-danger");
                             }
-                            renderChart(adjustedData, (i + 1), res.data[i]['gcurrency'], displayData, res.data.length);
-                        } else {
-                            $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
-                                type: 'theme',
-                                allow_dismiss: true,
-                                delay: 2000,
-                                showProgressbar: false,
-                                timer: 4000
-                            });
+                            if (i == res.data.length - 1) {
+                                $(".crypto-contents").css("opacity", "1");
+                                $(".loader-box").css('display', 'none');
+                            }
                         }
+                    else {
+                        $(".crypto-contents").css("opacity", "1");
+                        $(".loader-box").css('display', 'none');
+                        $('.crypto-contents .row').html('<div class="col-sm-12 d-flex justify-content-center p-12"><h5>No Highlighted CryptoCurrency!</h5></div>');
                     }
                 }
             }
         });
     });
 
-    function renderChart(adjustedData, index, currency, displayData, counts) {
+    function renderChart(adjustedData, index, currency, displayData) {
         var options = {
             series: [{
                 name: "Closing Price",
@@ -271,14 +269,11 @@
             },
             tooltip: {
                 x: {
-                    format: 'yyyy-MM-dd'
+                    format: 'yyyy-MM-dd HH:mm'
                 },
                 y: {
                     formatter: function(val) {
-                        if (currency == "GBP")
-                            return formatPrice(val / 100, currency)
-                        else
-                            return formatPrice(val, currency)
+                        return '$'+val;
                     }
                 }
             },
@@ -345,26 +340,16 @@
         };
         var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard" + index), options);
         charttimeline.render();
-        $("#h_stock_title" + index).html(displayData[0]);
-        $("#h_stock_title" + index).attr('title', displayData[0]);
-        $("#h_stock_link" + index).attr('href', '/stocks/' + displayData[3]);
-        $("#h_stock_title" + index).tooltip();
-        $("#current_stock_price" + index).html(formatPrice(displayData[1], currency));
-        $("#current_stock_percentage" + index).html(formatPercentage(displayData[2]));
+        $("#h_crypto_title" + index).html(displayData[0]);
+        $("#h_crypto_title" + index).attr('title', displayData[0]);
+        $("#h_crypto_link" + index).attr('href', '/cryptos/' + displayData[3]);
+        $("#h_crypto_title" + index).tooltip();
+        $("#current_crypto_price" + index).html(formatPrice(displayData[1], currency));
+        $("#current_crypto_percentage" + index).html(formatPercentage(displayData[2]));
         if (displayData[2] >= 0)
-            $("#current_stock_percentage" + index).addClass("font-primary");
+            $("#current_crypto_percentage" + index).addClass("font-primary");
         else
-            $("#current_stock_percentage" + index).addClass("font-danger");
-        if (index == counts) {
-            $(".stock-contents").css("opacity", "1");
-            $(".loader-box").css('display', 'none');
-        }
-    }
-
-    function exchangeOption(obj) {
-        var exchange = obj.value;
-        $('#ex').attr('value', exchange);
-        $('#search_btn').click();
+            $("#current_crypto_percentage" + index).addClass("font-danger");
     }
 
     // format Price and Percentage functions
@@ -397,7 +382,7 @@
     }
 
     function formatPercentage(percentage) {
-        return (Number(percentage) * 100).toFixed(2) + "%";
+        return Number(percentage).toFixed(2) + "%";
     }
 </script>
 @endpush

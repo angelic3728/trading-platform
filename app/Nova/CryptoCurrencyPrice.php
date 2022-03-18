@@ -3,39 +3,34 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Select;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\HasMany;
 
-class MutualFund extends Resource
+class CryptoCurrencyPrice extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\MutualFund';
+    public static $model = 'App\CryptoCurrencyPrice';
 
     /**
      * The logical group associated with the resource.
      *
      * @var string
      */
-    public static $group = 'Funds';
+    public static $group = 'Cryptocurrencies';
 
     /**
-     * Get the value that should be displayed to represent the resource.
+     * The single value that should be used to represent the resource when being displayed.
      *
-     * @return string
+     * @var string
      */
-    public function title()
-    {
-        return $this->company_name . ' (' . $this->symbol . ')';
-    }
+    public static $title = 'date';
 
     /**
      * The columns that should be searched.
@@ -43,20 +38,18 @@ class MutualFund extends Resource
      * @var array
      */
     public static $search = [
-        'id',
-        'symbol',
-        'company_name',
+        'id', 'date', 'price',
     ];
 
     public static function label()
     {
 
-        return 'Funds';
+        return 'Cryptocurrency Prices';
     }
 
     public static function singularLabel()
     {
-        return 'Fund';
+        return 'Cryptocurrency Price';
     }
 
     /**
@@ -70,49 +63,22 @@ class MutualFund extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Symbol')
-                ->sortable()
-                ->rules('required', 'max:255'),
+            BelongsTo::make('CryptoCurrency')
+                ->searchable()
+                ->onlyOnIndex(),
 
-            Text::make('Company Name')
-                ->sortable()
-                ->rules('required', 'max:255'),
-
-            Select::make('Data Source', 'data_source')->options([
-                'custom' => 'Custom',
-            ])
-                ->hideFromIndex()
+            Select::make('Cryptocurrency', 'crypto_currency_id')->options($this->customCryptocurrencies())
+                ->onlyOnForms()
                 ->rules('required'),
 
-            Select::make('Exchange')->options([
-                'ASE' => 'ASE',
-                'NAS' => 'NAS',
-                'NYS' => 'NYS',
-                'OTC' => 'OTC',
-                'PSE' => 'PSE',
-            ])
-                ->displayUsingLabels()
+            Date::make('Date')
+                ->sortable()
                 ->rules('required'),
 
-            Number::make('Discount Percentage')
-                ->step(0.001)
-                ->sortable(),
-
-            Select::make('Currency', 'gcurrency')->options([
-                'USD' => 'USD',
-                'GBP' => 'GBP',
-                'EUR' => 'EUR',
-            ]),
-
-            Text::make('Link')
-                ->rules('required', 'max:255')
-                ->help('Enter an link where users can find more details about this stock')
-                ->hideFromIndex(),
-
-            DateTime::make('Created At')
-                ->exceptOnForms(),
-
-            HasMany::make('MutualFundPrices'),
+            Number::make('Price($)', 'price')
+                ->sortable()
+                ->step(0.00001)
+                ->rules('required'),
         ];
     }
 
@@ -158,5 +124,17 @@ class MutualFund extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    private function customCryptocurrencies()
+    {
+
+        return \App\CryptoCurrency::query()
+            ->where('data_source', 'custom')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->id => $item->name];
+            });
+
     }
 }
