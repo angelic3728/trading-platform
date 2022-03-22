@@ -8,7 +8,12 @@
 
 @section('content')
 
-<div class="col-sm-12">
+<div class="col-sm-12 dashboard-content-wrapper">
+    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+        <a href="https://bannerboo.com/" target="_blank">
+            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+        </a>
+    </div>
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h5>Documents</h5>
@@ -44,6 +49,16 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
     </div>
     <div class="modal fade" id="documentUploadModal" tabindex="-1" role="dialog" aria-labelledby="Buy Shares Modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -95,6 +110,16 @@
             $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
         }
     }
+
+    function hide_ad() {
+        $("#ad1_container").removeClass("d-flex");
+        $("#ad1_container").addClass("d-none");
+        $("#ad2_container").removeClass("d-flex");
+        $("#ad2_container").addClass("d-none");
+        $(".dashboard-content-wrapper").css("padding-right", "0px");
+        $(".dashboard-content-wrapper").css("padding-top", "0px");
+    }
+
     if ("{{Session::has('uploaded')}}")
         $.notify('<i class="fa fa-bell-o"></i>{{ Session::get("uploaded") }}', {
             type: 'theme',

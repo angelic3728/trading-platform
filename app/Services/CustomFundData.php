@@ -1,8 +1,8 @@
 <?php
 namespace App\Services;
 
-use App\MutualFund;
-use App\MutualFundPrice;
+use App\Fund;
+use App\FundPrice;
 
 use Carbon\Carbon;
 
@@ -21,15 +21,15 @@ class CustomFundData
         /**
          * Find Fund
          */
-        $fund = MutualFund::query()
+        $fund = Fund::query()
             ->where('symbol', $symbol)
             ->first();
 
         /**
-         * Return Mutual Fund Price
+         * Return Fund Price
          */
-        return MutualFundPrice::query()
-            ->where('mutual_fund_id', $fund->id)
+        return FundPrice::query()
+            ->where('fund_id', $fund->id)
             ->latest()
             ->first()
             ->price;
@@ -37,7 +37,7 @@ class CustomFundData
     }
 
     /**
-     * Returns change percentage for mutual fund
+     * Returns change percentage for fund
      * @param  string $symbol
      * @return mixed
      */
@@ -45,25 +45,25 @@ class CustomFundData
     {
 
         /**
-         * Find Mutual Fund
+         * Find Fund
          */
-        $fund = MutualFund::query()
+        $fund = Fund::query()
             ->where('symbol', $symbol)
             ->first();
 
         /**
          * Get Yesterdays Price
          */
-        $fund_price_yesterday = MutualFundPrice::query()
-            ->where('mutual_fund_id', $fund->id)
+        $fund_price_yesterday = FundPrice::query()
+            ->where('fund_id', $fund->id)
             ->where('date', Carbon::yesterday())
             ->first();
 
         /**
          * Get Todays Price
          */
-        $fund_price_today = MutualFundPrice::query()
-            ->where('mutual_fund_id', $fund->id)
+        $fund_price_today = FundPrice::query()
+            ->where('fund_id', $fund->id)
             ->where('date', Carbon::today())
             ->first();
 
@@ -138,17 +138,17 @@ class CustomFundData
         }
 
         /**
-         * Find Mutual Fund
+         * Find Fund
          */
-        $fund = MutualFund::query()
+        $fund = Fund::query()
             ->where('symbol', $symbol)
             ->first();
 
         /**
-         * Get all mutual fund prices between those dates
+         * Get all fund prices between those dates
          */
-        $prices = MutualFundPrice::query()
-            ->where('mutual_fund_id', $fund->id)
+        $prices = FundPrice::query()
+            ->where('fund_id', $fund->id)
             ->whereBetween('date', [$start_date, $end_date])
             ->orderBy('date', 'asc')
             ->get()

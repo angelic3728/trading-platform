@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use ASX;
 
 use App\Stock;
-use App\MutualFund;
+use App\Fund;
 
 class ImportStocks extends Command
 {
@@ -63,10 +63,10 @@ class ImportStocks extends Command
 
         $funds = ASX::getAvailableMFDSymbols();
         /**
-         * Loop through mutual fund symbols and insert them
+         * Loop through fund symbols and insert them
          */
         foreach ($funds as $item) {
-            $fund = new MutualFund();
+            $fund = new Fund();
             $fund->symbol = $item['symbol'];
             $fund->company_name = $item['company_name'];
             $fund->link = 'https://finance.yahoo.com/quote/' . $item['symbol'] . '?p=' . $item['symbol'];

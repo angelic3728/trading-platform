@@ -17,6 +17,7 @@ class NewsController extends Controller
          * Get Symbols
          */
         $symbols = explode(',', $request->symbols);
+
         /**
          * Get recent news
          */

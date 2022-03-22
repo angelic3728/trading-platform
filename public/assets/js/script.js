@@ -325,3 +325,371 @@ $(".mode").on("click", function() {
     var color = $(this).attr("data-attr");
     localStorage.setItem("body", "dark-only");
 });
+
+$(document).ready(function() {
+    //search bar function
+    var all_stocks = [];
+    var all_funds = [];
+    var all_cryptos = [];
+    var total_items = [];
+
+    $.ajax({
+        method: "get",
+        url: "/api/stocks/all",
+        success: function(res) {
+            all_stocks = res.data;
+            total_items = total_items.concat(all_stocks);
+        }
+    });
+
+    $.ajax({
+        method: "get",
+        url: "/api/funds/all",
+        success: function(res) {
+            all_funds = res.data;
+            total_items = total_items.concat(all_funds);
+        }
+    });
+
+    $.ajax({
+        method: "get",
+        url: "/api/cryptos/all",
+        success: function(res) {
+            debugger;
+            all_cryptos = res.data;
+            total_items = total_items.concat(all_cryptos);
+        }
+    });
+
+    $("#search_stocks").on("input", function() {
+        $(".search-results").empty();
+        var search_query = this.value;
+        var search_regex = new RegExp(search_query, "i");
+        if (search_query != "") {
+            $(".search-results").removeClass("d-none");
+            $(".search-results").addClass("d-flex");
+            var filtered = $.grep(total_items, function(item) {
+                if (item.wherefrom == "cryptos")
+                    return (
+                        item.symbol.match(search_regex) ||
+                        item.name.match(search_regex)
+                    );
+                else
+                    item.symbol.match(search_regex) ||
+                        item.company_name.match(search_regex);
+            });
+            if (filtered.length == 0) {
+                $(".search-results").append(
+                    '<span class="text-secondary">No results.</span>'
+                );
+            } else {
+                var results = filtered;
+                if (filtered.length > 10) var results = filtered.slice(0, 10);
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].wherefrom != "cryptos")
+                        $(".search-results").append(
+                            '<a style="width:max-content; padding:10px 0px;" class="text-secondary single-stock-link" href="/' +
+                                results[i].wherefrom +
+                                "/" +
+                                results[i].symbol +
+                                '">' +
+                                results[i].symbol +
+                                " - <span>" +
+                                results[i].company_name +
+                                "</span></a>"
+                        );
+                    else
+                        $(".search-results").append(
+                            '<a style="width:max-content; padding:10px 0px;" class="text-secondary single-stock-link" href="/' +
+                                results[i].wherefrom +
+                                "/" +
+                                results[i].symbol +
+                                '">' +
+                                results[i].symbol +
+                                " - <span>" +
+                                results[i].name +
+                                "</span></a>"
+                        );
+                }
+            }
+        } else {
+            $(".search-results").removeClass("d-flex");
+            $(".search-results").addClass("d-none");
+            $(".search-results").append("<span>No Stocks</span>");
+        }
+    });
+
+    $("#search_switch").on("click", function() {
+        var flag = $(this)[0].checked;
+        if (flag) {
+            $("#search_stocks").attr("placeholder", "Search Stocks");
+            search_fund = false;
+        } else {
+            $("#search_stocks").attr("placeholder", "Search Mutual Funds");
+            search_fund = true;
+        }
+    });
+
+    // add ticker feeds
+
+    for (var i = 0; i < ticker_data.length; i++) {
+        var ticker_item = $("<li>");
+        if (ticker_data[i]["wherefrom"] == "stock") {
+            var item_content = $("<a>")
+                .appendTo(ticker_item)
+                .attr("href", "/stocks/" + ticker_data[i]["symbol"]);
+            $("<h6>")
+                .appendTo(item_content)
+                .css({ "margin-bottom": "5px", "font-size": "14px" })
+                .text(ticker_data[i]["company_name"]);
+            var info_wrapper = $("<div>")
+                .appendTo(item_content)
+                .attr("class", "d-flex");
+            var ticker_wrapper = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex flex-column");
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .text(ticker_data[i]["price"])
+                .css({ "font-size": "12px" });
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .attr(
+                    "class",
+                    ticker_data[i]["change_percentage"] > 0
+                        ? "text-success"
+                        : "text-danger"
+                )
+                .text(
+                    (ticker_data[i]["change_percentage"] * 100).toFixed(2) + "%"
+                );
+            var chart_con = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex")
+                .css("top", "-30px");
+            $("<div>")
+                .appendTo(chart_con)
+                .attr("id", "chart_wrapper_" + i);
+            var chartData = ticker_data[i]["chart"];
+            var adjustedData = [];
+            for (var j = 0; j < chartData.length; j++) {
+                var date = new Date(chartData[j]["date"]);
+                adjustedData[j] = [
+                    date.getTime(),
+                    Number((chartData[j]["fClose"] * 1).toFixed(2))
+                ];
+            }
+            ticker_item.appendTo(".news-ticker-h");
+            renderChart(
+                adjustedData,
+                "#chart_wrapper_" + i,
+                "stock"
+            );
+        } else if (ticker_data[i]["wherefrom"] == "fund") {
+            var item_content = $("<a>")
+                .appendTo(ticker_item)
+                .attr("href", "/mfds/" + ticker_data[i]["symbol"]);
+            $("<h6>")
+                .appendTo(item_content)
+                .css({ "margin-bottom": "5px", "font-size": "14px" })
+                .text(ticker_data[i]["company_name"]);
+            var info_wrapper = $("<div>")
+                .appendTo(item_content)
+                .attr("class", "d-flex");
+            var ticker_wrapper = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex flex-column");
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .text(ticker_data[i]["price"])
+                .css({ "font-size": "12px" });
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .attr(
+                    "class",
+                    ticker_data[i]["change_percentage"] > 0
+                        ? "text-success"
+                        : "text-danger"
+                )
+                .text(
+                    (ticker_data[i]["change_percentage"] * 100).toFixed(2) + "%"
+                );
+            var chart_con = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex")
+                .css("top", "-30px");
+            $("<div>")
+                .appendTo(chart_con)
+                .attr("id", "chart_wrapper_" + i);
+            var chartData = ticker_data[i]["chart"];
+            if (chartData && chartData.length != 0) {
+                var adjustedData = [];
+                for (var j = 0; j < chartData.length; j++) {
+                    var date = new Date(chartData[j]["date"]);
+                    adjustedData[j] = [
+                        date.getTime(),
+                        Number((chartData[j]["fClose"] * 1).toFixed(2))
+                    ];
+                }
+                ticker_item.appendTo(".news-ticker-h");
+                renderChart(
+                    adjustedData,
+                    "#chart_wrapper_" + i,
+                    "fund"
+                );
+            } else {
+                ticker_item.appendTo(".news-ticker-h");
+                $("#chart_wrapper_" + i).append('<span class="p-3">No Chart Data!</span>');
+            }
+        } else if (ticker_data[i]["wherefrom"] == "crypto") {
+            var item_content = $("<a>")
+                .appendTo(ticker_item)
+                .attr("href", "/cryptos/" + ticker_data[i]["symbol"]);
+            $("<h6>")
+                .appendTo(item_content)
+                .css({ "margin-bottom": "5px", "font-size": "14px" })
+                .text(ticker_data[i]["name"]);
+            var info_wrapper = $("<div>")
+                .appendTo(item_content)
+                .attr("class", "d-flex");
+            var ticker_wrapper = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex flex-column");
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .text(ticker_data[i]["price"])
+                .css({ "font-size": "12px" });
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .attr(
+                    "class",
+                    ticker_data[i]["change_percentage"] > 0
+                        ? "text-success"
+                        : "text-danger"
+                )
+                .text(
+                    (ticker_data[i]["change_percentage"] * 100).toFixed(2) + "%"
+                );
+            var chart_con = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex")
+                .css("top", "-25px");
+            $("<div>")
+                .appendTo(chart_con)
+                .attr("id", "chart_wrapper_" + i);
+            var chartData = ticker_data[i]["chart"];
+            if (chartData && chartData.length != 0) {
+                var adjustedData = [];
+                for (var j = 0; j < chartData.length; j++) {
+                    var date = new Date(chartData[j][0]);
+                        var unit_price = 0;
+                        if (Number(chartData[j][1] * 1) > 10) {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(2))
+                        } else if (Number(chartData[j][1] * 1) > 1) {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(3))
+                        } else if (Number(chartData[j][1] * 1) > 0.1) {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(4))
+                        } else if (Number(chartData[j][1] * 1) > 0.01) {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(5))
+                        } else if (Number(chartData[j][1] * 1) > 0.001) {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(6))
+                        } else if (Number(chartData[j][1] * 1) > 0.0001) {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(7))
+                        } else {
+                            unit_price = Number((chartData[j][1] * 1).toFixed(8))
+                        }
+                        adjustedData[j] = [date.getTime(), unit_price]
+                }
+                ticker_item.appendTo(".news-ticker-h");
+                renderChart(
+                    adjustedData,
+                    "#chart_wrapper_" + i,
+                    "crypto"
+                );
+            } else {
+                ticker_item.appendTo(".news-ticker-h");
+                $("#chart_wrapper_" + i).append('<span class="p-3">No Chart Data!</span>');
+            }
+        }
+    }
+
+    function renderChart(adjustedData, widget, wherefrom) {
+        var options = {
+            series: [
+                {
+                    name: "Closing Price",
+                    data: adjustedData
+                }
+            ],
+            stroke: {
+                show: true,
+                width: 1
+            },
+            grid: {
+                show: false
+            },
+            chart: {
+                id: "area-datetime",
+                type: "area",
+                height: 110,
+                width: 150,
+                zoom: {
+                    enabled: false
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+                style: "hollow"
+            },
+            xaxis: {
+                type: "datetime",
+                min: adjustedData[0][0],
+                tickAmount: 6,
+                axisTicks: {
+                    show: false
+                },
+                axisBorder: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                }
+            },
+            yaxis: {
+                labels: {
+                    show: false
+                },
+                tickerAmount: 3
+            },
+            tooltip: {
+                enabled: false
+            },
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                    stops: [0, 100]
+                }
+            },
+            colors: ["#24695c"]
+        };
+
+        if (wherefrom == "stock") options["colors"] = [appConfig.primary];
+        else if (wherefrom == "fund") options["colors"] = [appConfig.fund];
+        else if (wherefrom == "crypto") options["colors"] = [appConfig.crypto];
+
+        var charttimeline = new ApexCharts(
+            document.querySelector(widget),
+            options
+        );
+        charttimeline.render();
+    }
+});

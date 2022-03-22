@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\MutualFund;
+use App\Fund;
 
 use IEX;
 use CustomFundData;
 
-class MutualFundsController extends Controller
+class FundsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,8 +26,8 @@ class MutualFundsController extends Controller
         /**
          * Get Funds
          */
-        $mfds = ($request->ex == "" || $request->ex == "all") ?
-            MutualFund::query()
+        $funds = ($request->ex == "" || $request->ex == "all") ?
+            Fund::query()
             ->when($request->q, function ($query) use ($request) {
                 return $query->where(function ($query) use ($request) {
                     $query->where('symbol', 'LIKE', "%$request->q%")
@@ -37,7 +37,7 @@ class MutualFundsController extends Controller
             ->orderBy('symbol', 'asc')
             ->paginate(25)
             :
-            MutualFund::where('exchange', $request->ex)
+            Fund::where('exchange', $request->ex)
             ->when($request->q, function ($query) use ($request) {
                 return $query->where(function ($query) use ($request) {
                     $query->where('symbol', 'LIKE', "%$request->q%")
@@ -47,7 +47,7 @@ class MutualFundsController extends Controller
             ->orderBy('symbol', 'asc')
             ->paginate(25);
 
-        $exchanges = MutualFund::select("exchange")
+        $exchanges = Fund::select("exchange")
             ->groupBy("exchange")
             ->get();
 
@@ -55,8 +55,8 @@ class MutualFundsController extends Controller
         /**
          * Return view
          */
-        return view('dashboard.mfds.search', [
-            'mfds' => $mfds,
+        return view('dashboard.funds.search', [
+            'funds' => $funds,
             'exchanges' => $exchanges,
             'account_manager' => $account_manager,
         ]);
@@ -97,7 +97,7 @@ class MutualFundsController extends Controller
         /**
          * Get Stock
          */
-        $fund = MutualFund::where('symbol', $symbol)->firstOrFail();
+        $fund = Fund::where('symbol', $symbol)->firstOrFail();
 
         /**
          * Prepare Data
@@ -154,7 +154,7 @@ class MutualFundsController extends Controller
         /**
          * Return view
          */
-        return view('dashboard.mfds.details', [
+        return view('dashboard.funds.details', [
             'data' => $data,
             'account_manager' => $account_manager
         ]);

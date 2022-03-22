@@ -135,31 +135,31 @@ class StockController extends Controller
                 break;
 
             case 'asx':
-                $iex_data = ASX::getDetails($stock->symbol);
+                $asx_data = ASX::getDetails($stock->symbol);
                 $data = [
                     'source' => 'asx',
                     'symbol' => $stock->symbol,
                     'company_name' => $stock->company_name,
                     'currency' => $stock->gcurrency,
-                    'price' => array_get($iex_data, 'price'),
-                    'change_percentage' => array_get($iex_data, 'change_percentage'),
+                    'price' => array_get($asx_data, 'price'),
+                    'change_percentage' => array_get($asx_data, 'change_percentage'),
                     'link' => $stock->link,
                     'exchange' => $stock->exchange,
                     'company' => [
-                        'description' => array_get($iex_data, 'description'),
-                        'exchange' => array_get($iex_data, 'exchange'),
-                        'industry' => array_get($iex_data, 'industry'),
-                        'sector' => array_get($iex_data, 'sector'),
-                        'website' => array_get($iex_data, 'website'),
+                        'description' => array_get($asx_data, 'description'),
+                        'exchange' => array_get($asx_data, 'exchange'),
+                        'industry' => array_get($asx_data, 'industry'),
+                        'sector' => array_get($asx_data, 'sector'),
+                        'website' => array_get($asx_data, 'website'),
                     ],
                     'numbers' => [
-                        'latest_price' => array_has($iex_data, 'latest_price') ? $stock->formatPrice(array_get($iex_data, 'latest_price')) : null,
-                        'previous_close' => array_has($iex_data, 'previous_close') ? $stock->formatPrice(array_get($iex_data, 'previous_close')) : null,
-                        'institutional_price' => array_has($iex_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($iex_data, 'price'))) : null,
-                        'market_cap' => array_has($iex_data, 'market_cap') ? $stock->formatPrice(array_get($iex_data, 'market_cap'), 0) : null,
-                        'volume' => array_has($iex_data, 'volume') ? number_format(array_get($iex_data, 'volume')) : null,
-                        'avg_total_volume' => array_has($iex_data, 'avg_total_volume') ? number_format(array_get($iex_data, 'avg_total_volume')) : null,
-                        'pe_ratio' => array_has($iex_data, 'pe_ratio') ? number_format(array_get($iex_data, 'pe_ratio'), 2) : null,
+                        'latest_price' => array_has($asx_data, 'latest_price') ? $stock->formatPrice(array_get($asx_data, 'latest_price')) : null,
+                        'previous_close' => array_has($asx_data, 'previous_close') ? $stock->formatPrice(array_get($asx_data, 'previous_close')) : null,
+                        'institutional_price' => array_has($asx_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($asx_data, 'price'))) : null,
+                        'market_cap' => array_has($asx_data, 'market_cap') ? $stock->formatPrice(array_get($asx_data, 'market_cap'), 0) : null,
+                        'volume' => array_has($asx_data, 'volume') ? number_format(array_get($asx_data, 'volume')) : null,
+                        'avg_total_volume' => array_has($asx_data, 'avg_total_volume') ? number_format(array_get($asx_data, 'avg_total_volume')) : null,
+                        'pe_ratio' => array_has($asx_data, 'pe_ratio') ? number_format(array_get($asx_data, 'pe_ratio'), 2) : null,
                     ],
                 ];
                 break;

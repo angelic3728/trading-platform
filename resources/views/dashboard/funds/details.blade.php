@@ -7,7 +7,22 @@
 @endpush
 
 @section('content')
-<div class="container stock-details">
+<div class="container stock-details dashboard-content-wrapper">
+    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+        <a href="https://bannerboo.com/" target="_blank">
+            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+        </a>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
+    </div>
     <div class="row">
         <div class="col">
             <div class="card income-card">
@@ -222,7 +237,7 @@
 
     function renderChart(range) {
         $.ajax({
-            url: '/api/mfds/chart/{{ array_get($data, "symbol") }}/' + range,
+            url: '/api/funds/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
                 if (res.success && res.data.length != 0) {
@@ -341,7 +356,7 @@
                             }
                         ],
 
-                        colors: [vihoAdminConfig.primary],
+                        colors: [appConfig.fund],
                     };
                     $("#chart-timeline-dashboard").empty();
                     var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
@@ -373,7 +388,7 @@
             $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
             $.ajax({
                     method: 'post',
-                    url: '/api/mfds/{{array_get($data, "symbol")}}/buy',
+                    url: '/api/funds/{{array_get($data, "symbol")}}/buy',
                     data: {
                         shares: shares_amount,
                         price: "{{array_get($data, 'price')}}",
@@ -427,24 +442,46 @@
         ].join(' : ');
     };
 
+    // format Price and Percentage functions
     function formatPrice(price, currency) {
         switch (currency) {
-            case 'USD':
+            case "USD":
                 return "$" + Number(price).toFixed(2);
                 break;
 
-            case 'GBP':
-                return Number((price * 100)).toFixed(2) + 'p';
+            case "GBP":
+                return Number(price * 100).toFixed(2) + "p";
+                break;
+
+            case "EUR":
+                return Number(price).toFixed(2) + "€";
+                break;
+
+            case "AUD":
+                return "A$" + Number(price).toFixed(2);
+                break;
+
+            case "CAD":
+                return "C$" + Number(price).toFixed(2);
                 break;
 
             default:
                 return price;
                 break;
         }
-    };
+    }
 
     function formatPercentage(percentage) {
         return (Number(percentage) * 100).toFixed(2) + "%";
+    }
+
+    function hide_ad() {
+        $("#ad1_container").removeClass("d-flex");
+        $("#ad1_container").addClass("d-none");
+        $("#ad2_container").removeClass("d-flex");
+        $("#ad2_container").addClass("d-none");
+        $(".dashboard-content-wrapper").css("padding-right", "0px");
+        $(".dashboard-content-wrapper").css("padding-top", "0px");
     }
 
     $("#current_stock_price").html(formatPrice("{{ array_get($data, 'price') }}", "{{ array_get($data, 'currency') }}"));

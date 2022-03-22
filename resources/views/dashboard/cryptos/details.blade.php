@@ -7,7 +7,22 @@
 @endpush
 
 @section('content')
-<div class="container stock-details">
+<div class="container stock-details dashboard-content-wrapper">
+    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+        <a href="https://bannerboo.com/" target="_blank">
+            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+        </a>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
+    </div>
     <div class="row">
         <div class="col">
             <div class="card income-card">
@@ -77,7 +92,7 @@
                                 <div class="col-sm-6">
                                     <div class="detail">
                                         <strong>Latest Price</strong>
-                                        <span>{{ array_get($data, 'price', '-') }}</span>
+                                        <span>{{ '$'.array_get($data, 'price', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Market Cap</strong>
@@ -338,7 +353,7 @@
                             }
                         ],
 
-                        colors: [vihoAdminConfig.primary],
+                        colors: [appConfig.crypto],
                     };
                     $("#chart-timeline-dashboard").empty();
                     var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
@@ -370,7 +385,7 @@
             $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
             $.ajax({
                     method: 'post',
-                    url: '/api/mfds/{{array_get($data, "symbol")}}/buy',
+                    url: '/api/cryptos/{{array_get($data, "symbol")}}/buy',
                     data: {
                         shares: shares_amount,
                         price: "{{array_get($data, 'price')}}",
@@ -426,6 +441,15 @@
 
     function formatPercentage(percentage) {
         return Number(percentage).toFixed(2) + "%";
+    }
+
+    function hide_ad() {
+        $("#ad1_container").removeClass("d-flex");
+        $("#ad1_container").addClass("d-none");
+        $("#ad2_container").removeClass("d-flex");
+        $("#ad2_container").addClass("d-none");
+        $(".dashboard-content-wrapper").css("padding-right", "0px");
+        $(".dashboard-content-wrapper").css("padding-top", "0px");
     }
 
     $("#current_crypto_price").html("$" + "{{ array_get($data, 'price') }}");

@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/prism.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vector-map.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/scrollable.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/owlcarousel.css')}}">
 @endpush
 @section('content')
 <!-- Container-fluid starts-->
@@ -95,7 +96,7 @@
                                         <span>0</span>
                                         @endif
                                     </h5>
-                                    <p>Your Account Balance</p>
+                                    <p>Cash On Account</p>
                                 </div>
                             </div>
                         </div>
@@ -116,8 +117,14 @@
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="mfd_chart_tab" data-bs-toggle="tab" href="#mfd_chart" role="tab" aria-controls="mfd-chart" aria-selected="true">
+                                        <a class="nav-link" id="fund_chart_tab" data-bs-toggle="tab" href="#fund_chart" role="tab" aria-controls="fund-chart" aria-selected="true">
                                             <i class="fa fa-cloud"></i>Funds
+                                        </a>
+                                        <div class="material-border"></div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="crypto_chart_tab" data-bs-toggle="tab" href="#crypto_chart" role="tab" aria-controls="crypto-chart" aria-selected="true">
+                                            <i class="fa fa-cloud"></i>Cryptos
                                         </a>
                                         <div class="material-border"></div>
                                     </li>
@@ -126,8 +133,11 @@
                                     <div class="tab-pane fade active show" id="stock_chart" role="tabpanel" aria-labelledby="stock-chart">
                                         <div id="chart-timeline-dashbord1"></div>
                                     </div>
-                                    <div class="tab-pane fade" id="mfd_chart" role="tabpanel" aria-labelledby="mutualfund-chart">
+                                    <div class="tab-pane fade" id="fund_chart" role="tabpanel" aria-labelledby="fund-chart">
                                         <div id="chart-timeline-dashbord2"></div>
+                                    </div>
+                                    <div class="tab-pane fade" id="crypto_chart" role="tabpanel" aria-labelledby="crypto-chart">
+                                        <div id="chart-timeline-dashbord3"></div>
                                     </div>
                                 </div>
                             </div>
@@ -136,20 +146,13 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center" id="ad2_container">
-                <div class="scrollbar-margins large-margin scroll-demo p-0" style="height: 100%;">
-                    <ul>
-                        <li>
-                            <a href="https://bannerboo.com/" target="_blank">
-                                <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
-                            </a>
-                        </li>
-                        <li class="mt-3">
-                            <a href="https://bannerboo.com/" target="_blank">
-                                <img src="{{asset('assets/images/pros/vertical2.png')}}" class="img-fluid" alt="">
-                            </a>
-                        </li>
-                    </ul>                
-                </div>
+                <ul>
+                    <li>
+                        <a href="https://bannerboo.com/" target="_blank">
+                            <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                        </a>
+                    </li>
+                </ul>
                 <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
             </div>
         </div>
@@ -170,8 +173,14 @@
                                                 <div class="material-border"></div>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="mfd_tab" data-bs-toggle="tab" href="#mfd_portfolio" role="tab" aria-controls="mfd-portfolio" aria-selected="true">
+                                                <a class="nav-link" id="fund_tab" data-bs-toggle="tab" href="#fund_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true">
                                                     <i class="fa fa-cloud"></i>Funds
+                                                </a>
+                                                <div class="material-border"></div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="crypto_tab" data-bs-toggle="tab" href="#crypto_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true">
+                                                    <i class="fa fa-coin"></i>Cryptos
                                                 </a>
                                                 <div class="material-border"></div>
                                             </li>
@@ -193,35 +202,39 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                @if(count($transactions) != 0)
                                                                 @foreach($transactions as $transaction)
-                                                                @if($transaction->is_fund == 0)
-                                                                <tr>
-                                                                    <td class="d-flex flex-column">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small>{{$transaction->company_name}}</small>
-                                                                    </td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
-                                                                    <td>
-                                                                        <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                            {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                    <td>{{$transaction->shares}}</td>
-                                                                    <td>{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
-                                                                    <td class="text-center table-secondary" style="right: 0px; min-width:140px;">
-                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Buy</button>
-                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->stock->exchange}}')">Sell</button>
-                                                                    </td>
-                                                                </tr>
+                                                                @if($transaction->wherefrom == 0)
+                                                                    <tr>
+                                                                        <td class="d-flex flex-column">
+                                                                            <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                            <small>{{$transaction->company_name}}</small>
+                                                                        </td>
+                                                                        <td>{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                        <td>
+                                                                            <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                                {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                            </span>
+                                                                        </td>
+                                                                        <td>{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                        <td>{{$transaction->shares}}</td>
+                                                                        <td>{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
+                                                                        <td class="text-center table-secondary" style="right: 0px; min-width:140px;">
+                                                                            <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
+                                                                            <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                        </td>
+                                                                    </tr>
                                                                 @endif
                                                                 @endforeach
+                                                                @else
+                                                                    <tr><td colspan="7" class="text-center">No Data!</td></tr>
+                                                                @endif
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="mfd_portfolio" role="tabpanel" aria-labelledby="mfd-portfolio">
+                                            <div class="tab-pane fade" id="fund_portfolio" role="tabpanel" aria-labelledby="fund-portfolio">
                                                 <div class="vertical-scroll scroll-demo p-0">
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered table-responsive table-responsive-sm">
@@ -237,29 +250,81 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
+                                                                @if(count($transactions) != 0)
                                                                 @foreach($transactions as $transaction)
-                                                                @if($transaction->is_fund == 1)
+                                                                @if($transaction->wherefrom == 1)
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
                                                                         <span class="f-w-600">{{$transaction->symbol}}</span>
                                                                         <small>{{$transaction->company_name}}</small>
                                                                     </td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->mutualFund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td>{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
                                                                     <td>
                                                                         <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
                                                                             {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
                                                                         </span>
                                                                     </td>
-                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->mutualFund->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->fund->formatPrice($transaction->institutional_price):"-"}}</td>
                                                                     <td>{{ $transaction->shares }}</td>
                                                                     <td>{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; width:140px;">
-                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Buy</button>
-                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->is_fund}}', '{{$transaction->mutualFund->exchange}}')">Sell</button>
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
                                                                     </td>
                                                                 </tr>
                                                                 @endif
                                                                 @endforeach
+                                                                @else
+                                                                    <tr><td colspan="7" class="text-center">No Data!</td></tr>
+                                                                @endif
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="crypto_portfolio" role="tabpanel" aria-labelledby="crypto-portfolio">
+                                                <div class="vertical-scroll scroll-demo p-0">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-responsive table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Company</th>
+                                                                    <th>Last Price</th>
+                                                                    <th>Change</th>
+                                                                    <th>Institutional Price</th>
+                                                                    <th>Amount</th>
+                                                                    <th>Value</th>
+                                                                    <th class="text-center table-secondary" style="right: 0px; width:140px;">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if(count($transactions) != 0)
+                                                                @foreach($transactions as $transaction)
+                                                                @if($transaction->wherefrom == 2)
+                                                                <tr>
+                                                                    <td class="d-flex flex-column">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <small>{{$transaction->name}}</small>
+                                                                    </td>
+                                                                    <td>{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td>
+                                                                        <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                            {{ ($transaction->change_percentage)?(($transaction->change_percentage)."%"):"-"}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->institutional_price:"-"}}</td>
+                                                                    <td>{{ $transaction->shares }}</td>
+                                                                    <td>{{ ($transaction->latest_price)?round($transaction->price*$transaction->shares, 2):"-" }}</td>
+                                                                    <td class="text-center table-secondary" style="right: 0px; width:140px;">
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
+                                                                    </td>
+                                                                </tr>
+                                                                @endif
+                                                                @endforeach
+                                                                @else
+                                                                    <tr><td colspan="7" class="text-center">No Data!</td></tr>
+                                                                @endif
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -366,6 +431,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @if(count($xtbs) != 0)
                                             @foreach($xtbs as $xtb)
                                             <tr>
                                                 <td class="text-center text-nowrap text-secondary">{{ $xtb->asx_code }}</td>
@@ -374,6 +440,9 @@
                                                 <td class="text-center text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
                                             </tr>
                                             @endforeach
+                                            @else
+                                            <tr><td colspan="4" class="text-center">No Data!</td></tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -402,14 +471,97 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @if(count($transactions) != 0)
                                             @foreach($transactions->take(5) as $transaction)
                                             <tr>
                                                 <td class="text-center">{{ $transaction->symbol }}</td>
                                                 <td class="text-center">{{ $transaction->type }}</td>
-                                                <td class="text-center">{{ $transaction->is_fund=="1"?$transaction->mutualFund->formatPrice($transaction->price):$transaction->stock->formatPrice($transaction->price) }}</td>
+                                                <td class="text-center">{{ $transaction->wherefrom=="0"?$transaction->stock->formatPrice($transaction->price):($transaction->wherefrom=="1"?$transaction->fund->formatPrice($transaction->price):$transaction->crypto->formatPrice($transaction->price))}}</td>
                                                 <td class="text-center">{{ $transaction->shares }}</td>
                                             </tr>
                                             @endforeach
+                                            @else
+                                            <tr><td colspan="4" class="text-center">No Data!</td></tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12 box-col-12 des-xl-100">
+                    <div class="card">
+                        <div class="card-header pb-1">
+                            <div class="header-top">
+                                <h5>Highlighted Stocks, Funds and Cryptos</h5>
+                            </div>
+                        </div>
+                        <div class="card-body col-sm-12">
+                            <div class="owl-carousel owl-theme" id="owl-carousel-14">
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="stock_carousel">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="fund_carousel">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="crypto_carousel">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6 box-col-12 des-xl-100">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-top d-sm-flex align-items-center">
+                                <h5>Recent Document</h5>
+                            </div>
+                            <a class="btn btn-outline-success btn-xs" href="{{ route('documents.index') }}">see more</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="vertical-scroll scroll-demo p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-responsive table-responsive-sm">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Type</th>
+                                                <th class="text-center">Title</th>
+                                                <th class="text-center">Provided by</th>
+                                                <th class="text-center">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(count($documents) != 0)
+                                            @foreach($documents as $document)
+                                            <tr>
+                                                <td class="text-center">{{ $document->type }}</td>
+                                                <td class="text-center">{{ $document->title }}</td>
+                                                <td class="text-center">{{ $document->provider->first_name }} {{ $document->provider->last_name }}</td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('documents.download', ['id' => $document->id]) }}" target="_blank">Download</a>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                            @else
+                                            <tr><td colspan="4" class="text-center">No Data!</td></tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -438,6 +590,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @if(count($documents) != 0)
                                             @foreach($documents as $document)
                                             <tr>
                                                 <td class="text-center">{{ $document->type }}</td>
@@ -448,6 +601,9 @@
                                                 </td>
                                             </tr>
                                             @endforeach
+                                            @else
+                                            <tr><td colspan="4" class="text-center">No Data!</td></tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -455,39 +611,81 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-6 box-col-12 des-xl-100">
-                    <div class="card">
+                <div class="col-xl-12 box-col-12 des-xl-100">
+                    <div class="card news-container">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-top d-sm-flex align-items-center">
-                                <h5>Recent Document</h5>
+                                <h5>Recent News</h5>
                             </div>
-                            <a class="btn btn-outline-success btn-xs" href="{{ route('documents.index') }}">see more</a>
+                            <a href="/news?symbols={{implode(',', $news_symbols)}}" class="btn btn-outline-success btn-xs">See More</a>
                         </div>
-                        <div class="card-body p-0">
-                            <div class="vertical-scroll scroll-demo p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-responsive table-responsive-sm">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">Type</th>
-                                                <th class="text-center">Title</th>
-                                                <th class="text-center">Provided by</th>
-                                                <th class="text-center">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($documents as $document)
-                                            <tr>
-                                                <td class="text-center">{{ $document->type }}</td>
-                                                <td class="text-center">{{ $document->title }}</td>
-                                                <td class="text-center">{{ $document->provider->first_name }} {{ $document->provider->last_name }}</td>
-                                                <td class="text-center">
-                                                    <a href="{{ route('documents.download', ['id' => $document->id]) }}" target="_blank">Download</a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                        <div class="card-body">
+                            <div class="loader-box news-loader justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex; height:initial;">
+                                <div class="loader-19"></div>
+                            </div>
+                            <div class="row news-content" style="min-height: 440px;">
+                                <div class="col-xl-3 col-md-6 news-0" style="display: none;">
+                                    <a href="" class="news-link-0" target="_blank">
+                                        <div class="prooduct-details-box">
+                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                                <img class="align-self-center img-fluid news-img-0" src="" style="max-height: 180px;" alt="#">
+                                                <div class="media-body">
+                                                    <p class="news-date-0 text-dark mb-0"></p>
+                                                    <h6 class="news-headline-0"></h6>
+                                                    <div class="summary news-summary-0"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xl-3 col-md-6 news-1" style="display: none;">
+                                    <a href="" class="news-link-1" target="_blank">
+                                        <div class="prooduct-details-box">
+                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                                <img class="align-self-center img-fluid news-img-1" src="" style="max-height: 180px;" alt="#">
+                                                <div class="media-body">
+                                                    <p class="news-date-1 text-dark mb-0"></p>
+                                                    <h6 class="news-headline-1"></h6>
+                                                    <div class="summary news-summary-1"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xl-3 col-md-6 news-2" style="display: none;">
+                                    <a href="" class="news-link-2" target="_blank">
+                                        <div class="prooduct-details-box">
+                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                                <img class="align-self-center img-fluid news-img-2" src="" style="max-height: 180px;" alt="#">
+                                                <div class="media-body">
+                                                    <p class="news-date-2 text-dark mb-0"></p>
+                                                    <h6 class="news-headline-2"></h6>
+                                                    <div class="summary news-summary-2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xl-3 col-md-6 news-3" style="display: none;">
+                                    <a href="" class="news-link-3" target="_blank">
+                                        <div class="prooduct-details-box">
+                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                                <img class="align-self-center img-fluid news-img-3" src="" style="max-height: 180px;" alt="#">
+                                                <div class="media-body">
+                                                    <p class="news-date-3 text-dark mb-0"></p>
+                                                    <h6 class="news-headline-3"></h6>
+                                                    <div class="summary news-summary-3"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row no-news" style="display: none;">
+                                <div class="col-sm-12">
+                                    <div class="alert alert-light dark alert-dismissible fade show" id="zero_shares_alert" role="alert">
+                                        There are no recent news.
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -502,12 +700,14 @@
 <!-- Container-fluid Ends-->
 @push('scripts')
 <script>
-    var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'is_fund' => $transaction->is_fund, 'type' => $transaction->type];}) -> toJson() !!};
+    var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'wherefrom' => $transaction->wherefrom, 'type' => $transaction->type];}) -> toJson() !!};
+    var all_highlights = {!!json_encode($all_highlights) !!};
+    var news_symbols = {!!json_encode($news_symbols) !!};
 </script>
 <script src="{{asset('assets/js/chart/chartist/chartist.js')}}"></script>
 <script src="{{asset('assets/js/chart/chartist/chartist-plugin-tooltip.js')}}"></script>
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
-<script src="{{asset('assets/js/chart/apex-chart/stock-prices.js')}}"></script>
+<!-- <script src="{{asset('assets/js/chart/apex-chart/stock-prices.js')}}"></script> -->
 <script src="{{asset('assets/js/prism/prism.min.js')}}"></script>
 <script src="{{asset('assets/js/clipboard/clipboard.min.js')}}"></script>
 <script src="{{asset('assets/js/counter/jquery.waypoints.min.js')}}"></script>
@@ -521,10 +721,7 @@
 <script src="{{asset('assets/js/scrollable/scrollable-custom.js')}}"></script>
 <script src="{{asset('assets/js/dashboard/default.js')}}"></script>
 <script src="{{asset('assets/js/notify/index.js')}}"></script>
-<script src="{{asset('assets/js/datepicker/date-picker/datepicker.js')}}"></script>
-<script src="{{asset('assets/js/datepicker/date-picker/datepicker.en.js')}}"></script>
-<script src="{{asset('assets/js/datepicker/date-picker/datepicker.custom.js')}}"></script>
-<script src="{{asset('assets/js/pages/common.js')}}"></script>
+<script src="{{asset('assets/js/owlcarousel/owl.carousel.js')}}"></script>
 <script src="{{asset('assets/js/pages/dashboard/custom.js')}}"></script>
 @endpush
 @endsection

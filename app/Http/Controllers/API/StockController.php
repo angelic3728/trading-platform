@@ -249,15 +249,15 @@ class StockController extends Controller
         ]);
     }
 
-    public function highlights()
+    public static function highlights($cnt=4)
     {
 
         /**
          * Get highlighted stocks and cache them for an hour
          */
-        $stocks = Cache::remember('stocks:highlighted', 15, function () {
+        $stocks = Cache::remember('stocks:highlighted', 15, function () use ($cnt) {
 
-            return Stock::where('highlighted', true)->get();
+            return Stock::where('highlighted', true)->take($cnt)->get();
         });
 
         /**
@@ -273,7 +273,7 @@ class StockController extends Controller
              * Make collection of stock
              */
             $stock = collect($stock);
-
+            $stock->put('wherefrom', 'stock');
             /**
              * Add extra fields before returning it
              */
@@ -282,6 +282,14 @@ class StockController extends Controller
                     $stock->put('price', array_get($data, $stock->get('symbol') . '.price'));
                     $stock->put('chart', array_get($data, $stock->get('symbol') . '.chart'));
                     $stock->put('change_percentage', array_get($data, $stock->get('symbol') . '.quote.changePercent'));
+                    break;
+
+                case 'asx':
+                    $asx_data = ASX::getDetails($stock->get('symbol'));
+                    $asx_chart = ASX::getChart($stock->get('symbol'), '1m');
+                    $stock->put('price', array_get($asx_data, 'price'));
+                    $stock->put('chart', $asx_chart);
+                    $stock->put('change_percentage', array_get($asx_data, 'price'));
                     break;
 
                 case 'custom':
@@ -300,7 +308,7 @@ class StockController extends Controller
             /**
              * Return stock
              */
-            return $stock->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
+            return $stock->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
         });
 
         /**
@@ -322,6 +330,9 @@ class StockController extends Controller
         /**
          * Check the data source and get the chart data
          */
+
+        $chart = [];
+
         switch ($stock->data_source) {
 
             case 'iex':
@@ -346,7 +357,7 @@ class StockController extends Controller
          */
         return response()->json([
             'success' => true,
-            'data' => array_get($chart, 'results'),
+            'data' => $chart,
         ]);
     }
 
@@ -359,6 +370,10 @@ class StockController extends Controller
         $stocks = Cache::remember('stocks:all', 60, function () {
             return Stock::select('symbol', 'company_name', 'exchange')->get();
         });
+
+        foreach($stocks as $stock) {
+            $stock['wherefrom'] = 'stocks';
+        }
 
         /**
          * Return Json

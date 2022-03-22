@@ -262,26 +262,26 @@ var options = {
   annotations: {
       yaxis: [{
           y: 50,
-          borderColor: vihoAdminConfig.primary,
+          borderColor: appConfig.stock,
           label: {
               show: true,
               text: 'Support',
               style: {
                   color: "#fff",
-                  background: vihoAdminConfig.primary
+                  background: appConfig.stock
               }
           }
       }],
       xaxis: [{
           x: new Date('15 Nov 2012').getTime(),
-          borderColor: vihoAdminConfig.primary,
+          borderColor: appConfig.stock,
           yAxisIndex: 50,          
           label: {
               show: false,
               text: '$859,432',
               style: {
                   color: "#fff",
-                  background: vihoAdminConfig.primary
+                  background: appConfig.stock
               }
           },
       }]
@@ -367,7 +367,7 @@ var options = {
     }
 }],
   
-  colors: [vihoAdminConfig.primary],
+  colors: [appConfig.stock],
 };
 var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashbord"), options);
 charttimeline.render();
@@ -399,7 +399,7 @@ var options17 = {
           }
       }
   },
-  colors: [vihoAdminConfig.primary, vihoAdminConfig.secondary, vihoAdminConfig.primary, vihoAdminConfig.secondary],
+  colors: [appConfig.stock, appConfig.secondary, appConfig.stock, appConfig.secondary],
   labels: ['Total order', 'Total product', 'Quantity', 'Page views'],
   legend: {
       show: true,
@@ -482,7 +482,7 @@ var options21 = {
           enabled: false,
       },
   },
-  colors: [vihoAdminConfig.secondary],
+  colors: [appConfig.secondary],
   responsive: [
     {
       breakpoint:1365,
@@ -570,15 +570,15 @@ var options54 = {
       },
   },
   colors: [
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary,
-      vihoAdminConfig.primary
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock,
+      appConfig.stock
   ],
   legend: {
       show: false
@@ -602,7 +602,7 @@ var options55 = {
       }, {
           x: "Apr",
           y: 3000,
-          fillColor: vihoAdminConfig.secondary,
+          fillColor: appConfig.secondary,
       }, {
           x: "May",
           y: 1800
@@ -615,7 +615,7 @@ var options55 = {
       }, {
           x: "Sep",
           y: 1500,
-          fillColor: vihoAdminConfig.secondary,
+          fillColor: appConfig.secondary,
       }, {
           x: "Oct",
           y: 2000
@@ -667,7 +667,7 @@ var options55 = {
           show: false,
       }
   },
-  colors: [vihoAdminConfig.primary]
+  colors: [appConfig.stock]
 };
 var chart55 = new ApexCharts(document.querySelector("#user-activation-dash-2"), options55);
 chart55.render();

@@ -12,18 +12,18 @@ use DB;
 use Mail;
 use CustomFundData;
 
-use App\MutualFund;
+use App\Fund;
 use App\Transaction;
 
-class MutualFundsController extends Controller
+class FundsController extends Controller
 {
     public function trade(Request $request, $symbol, $action)
     {
 
         /**
-         * Get Mutual Fund
+         * Get Fund
          */
-        $mfd = MutualFund::where('symbol', $symbol)->firstOrFail();
+        $fund = Fund::where('symbol', $symbol)->firstOrFail();
 
         /**
          * Validate request
@@ -45,7 +45,7 @@ class MutualFundsController extends Controller
                 $data = [
                     'action' => $action,
                     'user' => auth()->user(),
-                    'mfd' => $mfd,
+                    'fund' => $fund,
                     'price' => $request->price,
                     'institutional_price' => $request->institutional_price,
                     'shares' => $request->shares,
@@ -76,27 +76,27 @@ class MutualFundsController extends Controller
     {
 
         /**
-         * Get Mutual Fund
+         * Get Fund
          */
-        $mfd = MutualFund::where('symbol', $symbol)->firstOrFail();
+        $fund = Fund::where('symbol', $symbol)->firstOrFail();
 
         /**
          * Prepare Data
          */
-        switch ($mfd->data_source) {
+        switch ($fund->data_source) {
 
             case 'iex':
 
                 /**
                  * Get IEX Data
                  */
-                $iex_data = IEX::getDetails($mfd->symbol);
+                $iex_data = IEX::getDetails($fund->symbol);
 
                 /**
                  * Put Price
                  */
-                $mfd->price = array_has($iex_data, 'price') ? array_get($iex_data, 'price') : null;
-                $mfd->institutional_price = array_has($iex_data, 'price') ? $mfd->institutionalPrice($mfd->price) : null;
+                $fund->price = array_has($iex_data, 'price') ? array_get($iex_data, 'price') : null;
+                $fund->institutional_price = array_has($iex_data, 'price') ? $fund->institutionalPrice($fund->price) : null;
                 break;
 
             default:
@@ -109,7 +109,7 @@ class MutualFundsController extends Controller
          */
         return response()->json([
             'success' => true,
-            'data' => $mfd->only('symbol', 'company_name', 'price', 'institutional_price', 'gcurrency'),
+            'data' => $fund->only('symbol', 'company_name', 'price', 'institutional_price', 'gcurrency'),
         ]);
     }
 
@@ -120,9 +120,9 @@ class MutualFundsController extends Controller
          * Get my investments
          */
         $investments = Transaction::where('user_id', auth()->id())
-            ->select(DB::raw('sum(shares) as total_shares'), 'mfd_id')
-            ->with('mfd')
-            ->groupBy('mfd_id')
+            ->select(DB::raw('sum(shares) as total_shares'), 'fund_id')
+            ->with('fund')
+            ->groupBy('fund_id')
             ->get();
 
 
@@ -167,7 +167,7 @@ class MutualFundsController extends Controller
          */
         $iex_symbols = $investments->filter(function ($item, $key) {
 
-            return $item->mfd->data_source == 'iex';
+            return $item->fund->data_source == 'iex';
         });
 
         /**
@@ -175,11 +175,11 @@ class MutualFundsController extends Controller
          */
         $iex_symbols = $investments->map(function ($item, $key) {
 
-            return $item->mfd->symbol;
+            return $item->fund->symbol;
         });
 
         /**
-         * IEX prices for iex mfds
+         * IEX prices for iex funds
          */
         $iex_data = $iex_symbols->isNotEmpty() ? IEX::getBatchData($iex_symbols->toArray(), ['price', 'quote']) : null;
 
@@ -191,16 +191,16 @@ class MutualFundsController extends Controller
             /**
              * Get latest price based on data source
              */
-            switch ($item->mfd->data_source) {
+            switch ($item->fund->data_source) {
 
                 case 'iex':
-                    $last_price = array_get($iex_data, $item->mfd->symbol . '.price', 0);
-                    $change_percentage = array_get($iex_data, $item->mfd->symbol . '.quote.changePercent', 0);
+                    $last_price = array_get($iex_data, $item->fund->symbol . '.price', 0);
+                    $change_percentage = array_get($iex_data, $item->fund->symbol . '.quote.changePercent', 0);
                     break;
 
                 case 'custom':
-                    $last_price =  CustomFundData::price($item->mfd->symbol);
-                    $change_percentage = CustomFundData::changePercentage($item->mfd->symbol);
+                    $last_price =  CustomFundData::price($item->fund->symbol);
+                    $change_percentage = CustomFundData::changePercentage($item->fund->symbol);
                     break;
 
                 default:
@@ -212,7 +212,7 @@ class MutualFundsController extends Controller
             /**
              * Institutional Price
              */
-            $institutional_price = $item->mfd->institutionalPrice($last_price);
+            $institutional_price = $item->fund->institutionalPrice($last_price);
 
             /**
              * Value of investment
@@ -223,10 +223,10 @@ class MutualFundsController extends Controller
              * Return data
              */
             return collect([
-                'symbol' => $item->mfd->symbol,
-                'currency' => $item->mfd->gcurrency,
-                'company_name' => $item->mfd->company_name,
-                'exchange' => $item->mfd->exchange,
+                'symbol' => $item->fund->symbol,
+                'currency' => $item->fund->gcurrency,
+                'company_name' => $item->fund->company_name,
+                'exchange' => $item->fund->exchange,
                 'last_price' => $last_price,
                 'change_percentage' => $change_percentage,
                 'shares' => $item->total_shares,
@@ -244,59 +244,68 @@ class MutualFundsController extends Controller
         ]);
     }
 
-    public function highlights()
+    public static function highlights($cnt=4)
     {
 
         /**
-         * Get highlighted mfds and cache them for an hour
+         * Get highlighted funds and cache them for an hour
          */
-        $mfds = Cache::remember('funds:highlighted', 1, function () {
-            return MutualFund::where('highlighted', true)->get();
+        $funds = Cache::remember('funds:highlighted', 15, function () use ($cnt) {
+            return Fund::where('highlighted', true)->take($cnt)->get();
         });
 
         /**
          * Get Prices and Chart from IEX
          */
-        $data = IEX::getBatchData($mfds->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
+        $data = IEX::getBatchData($funds->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
 
         /**
-         * For each mfd, add the price
+         * For each fund, add the price
          */
-        $mfds = $mfds->map(function ($mfd) use ($data) {
+        $funds = $funds->map(function ($fund) use ($data) {
 
             /**
-             * Make collection of mfd
+             * Make collection of fund
              */
-            $mfd = collect($mfd);
-
+            $fund = collect($fund);
+            $fund->put('wherefrom', 'fund');
             /**
              * Add extra fields before returning it
              */
-            switch ($mfd['data_source']) {
+            switch ($fund['data_source']) {
 
                 case 'iex':
-                    $mfd->put('price', array_get($data, $mfd->get('symbol') . '.price'));
-                    $mfd->put('chart', array_get($data, $mfd->get('symbol') . '.chart'));
-                    $mfd->put('change_percentage', array_get($data, $mfd->get('symbol') . '.quote.changePercent'));
+                    $fund->put('price', array_get($data, $fund->get('symbol') . '.price'));
+                    $fund->put('chart', array_get($data, $fund->get('symbol') . '.chart'));
+                    $fund->put('change_percentage', array_get($data, $fund->get('symbol') . '.quote.changePercent'));
                     break;
 
+                case 'asx':
+                    case 'asx':
+                        $asx_data = ASX::getDetails($fund->get('symbol'));
+                        $asx_chart = ASX::getChart($fund->get('symbol'), '1m');
+                        $fund->put('price', array_get($asx_data, 'price'));
+                        $fund->put('chart', $asx_chart);
+                        $fund->put('change_percentage', array_get($asx_data, 'price'));
+                        break;
+
                 case 'custom':
-                    $mfd->put('price', CustomFundData::price($mfd->get('symbol')));
-                    $mfd->put('chart', CustomFundData::chart($mfd->get('symbol')));
-                    $mfd->put('change_percentage', CustomFundData::changePercentage($mfd->get('symbol')));
+                    $fund->put('price', CustomFundData::price($fund->get('symbol')));
+                    $fund->put('chart', CustomFundData::chart($fund->get('symbol')));
+                    $fund->put('change_percentage', CustomFundData::changePercentage($fund->get('symbol')));
                     break;
 
                 default:
-                    $mfd->put('price', null);
-                    $mfd->put('chart', null);
-                    $mfd->put('change_percentage', null);
+                    $fund->put('price', null);
+                    $fund->put('chart', null);
+                    $fund->put('change_percentage', null);
                     break;
             }
 
             /**
-             * Return mfd
+             * Return fund
              */
-            return $mfd->only('symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
+            return $fund->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
         });
 
         /**
@@ -304,28 +313,28 @@ class MutualFundsController extends Controller
          */
         return response()->json([
             'success' => true,
-            'data' => $mfds,
+            'data' => $funds,
         ]);
     }
 
     public function chart($symbol, $range)
     {
         /**
-         * Get Mutual Fund
+         * Get Fund
          */
-        $mfd = MutualFund::where('symbol', $symbol)->firstOrFail();
+        $fund = Fund::where('symbol', $symbol)->firstOrFail();
 
         /**
          * Check the data source and get the chart data
          */
-        switch ($mfd->data_source) {
+        switch ($fund->data_source) {
 
             case 'iex':
-                $chart = IEX::getChart($mfd->symbol, $range);
+                $chart = IEX::getChart($fund->symbol, $range);
                 break;
 
             case 'custom':
-                $chart = CustomFundData::chart($mfd->symbol, $range);
+                $chart = CustomFundData::chart($fund->symbol, $range);
                 break;
 
             default:
@@ -346,19 +355,23 @@ class MutualFundsController extends Controller
     {
 
         /**
-         * Get all mfds and cache for an hour
+         * Get all funds and cache for an hour
          */
-        $mfds = Cache::remember('mfds:all', 60, function () {
+        $funds = Cache::remember('funds:all', 60, function () {
 
-            return MutualFund::select('symbol', 'company_name')->get();
+            return Fund::select('symbol', 'company_name')->get();
         });
+
+        foreach($funds as $fund) {
+            $fund['wherefrom'] = 'funds';
+        }
 
         /**
          * Return Json
          */
         return response()->json([
             'success' => true,
-            'data' => $mfds,
+            'data' => $funds,
         ]);
     }
 }

@@ -1,11 +1,13 @@
 var primary = localStorage.getItem("primary") || '#24695c';
 var secondary = localStorage.getItem("secondary") || '#ba895d';
 
-window.vihoAdminConfig = {
+window.appConfig = {
 	// Theme Primary Color
 	primary: primary,
 	// theme secondary color
 	secondary: secondary,
+    fund: '#0d6efd',
+    crypto: '#ff3131',
 };
 localStorage.clear();
 

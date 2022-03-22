@@ -35,6 +35,16 @@ class CryptoCurrency extends Model
     }
 
     /**
+     * Formats price
+     *
+     * @return string price
+     */
+    public function formatPrice($price, $decimals = 2)
+    {
+        return '$'.number_format($price, $decimals);;
+    }
+
+    /**
      * Calculate institutional price
      *
      * price - discount (discounts are in percentages)

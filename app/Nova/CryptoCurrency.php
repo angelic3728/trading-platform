@@ -97,6 +97,9 @@ class CryptoCurrency extends Resource
             Boolean::make('Highlighted')
                 ->rules('required'),
 
+            Boolean::make('Widget')
+                ->rules('required'),
+
             DateTime::make('Created At')
                 ->exceptOnForms(),
 

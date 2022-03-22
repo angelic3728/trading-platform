@@ -57,12 +57,12 @@ class Xtbs extends Resource
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Date::make('MATURITY DATE')->format('DD.MM.YYYY'),
+            Date::make('MATURITY DATE')->format('YYYY-MM-DD'),
 
             Text::make('COUPON TYPE')
                 ->sortable(),
 
-            Date::make('NEXT.EX.DATE', 'next_ex_date')->format('DD.MM.YYYY'),
+            Date::make('NEXT.EX.DATE', 'next_ex_date')->format('YYYY-MM-DD'),
 
             Text::make('COUPON P.A', 'coupon_pa')
                 ->sortable()

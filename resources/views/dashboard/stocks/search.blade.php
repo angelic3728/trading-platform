@@ -7,7 +7,12 @@
 @endpush
 
 @section('content')
-<div class="col-sm-12">
+<div class="col-sm-12 dashboard-content-wrapper">
+    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+        <a href="https://bannerboo.com/" target="_blank">
+            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+        </a>
+    </div>
     @if(!request()->filled('page') && !request()->filled('q'))
     <div class="card">
         <div class="card-header">
@@ -108,6 +113,16 @@
         </div>
     </div>
     @endif
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
+    </div>
     <div class="card mb-3">
         <div class="card-header">
             <div class="row align-items-center">
@@ -184,221 +199,6 @@
     </div>
 </div>
 @push('scripts')
-<script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
-<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
-<script>
-    $(document).ready(function() {
-        $(".loader-box").css({
-            'height': $('.stock-contents').innerHeight() + "px"
-        });
-        $(".stock-contents").css("opacity", "0.3");
-        $.ajax({
-            /* the route pointing to the post function */
-            url: '/api/stocks/highlights',
-            type: 'get',
-            /* remind that 'data' is the response of the AjaxController */
-            success: function(res) {
-                if (res.success) {
-                    for (var i = 0; i < res.data.length; i++) {
-                        var adjustedData = [];
-                        var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
-                        var times = res.data[i]['gcurrency'] === "GBP" ? 100 : 1;
-                        if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
-                            for (var j = 0; j < res.data[i]['chart'].length; j++) {
-                                var stock = res.data[i]['chart'][j];
-                                var date = new Date(stock['date']);
-                                adjustedData[j] = [date.getTime(), Number((stock['fClose'] * times).toFixed(2))]
-                            }
-                            renderChart(adjustedData, (i + 1), res.data[i]['gcurrency'], displayData, res.data.length);
-                        } else {
-                            $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
-                                type: 'theme',
-                                allow_dismiss: true,
-                                delay: 2000,
-                                showProgressbar: false,
-                                timer: 4000
-                            });
-                        }
-                    }
-                }
-            }
-        });
-    });
-
-    function renderChart(adjustedData, index, currency, displayData, counts) {
-        var options = {
-            series: [{
-                name: "Closing Price",
-                data: adjustedData
-            }],
-            chart: {
-                id: 'area-datetime',
-                type: 'area',
-                height: 200,
-                zoom: {
-                    autoScaleYaxis: false
-                },
-                toolbar: {
-                    show: false
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            markers: {
-                size: 0,
-                style: 'hollow',
-            },
-            xaxis: {
-                type: 'datetime',
-                min: adjustedData[0][0],
-                tickAmount: 6,
-                axisTicks: {
-                    show: false,
-                },
-                axisBorder: {
-                    show: false
-                },
-                labels: {
-                    show: false
-                }
-            },
-            yaxis: {
-                labels: {
-                    show: false
-                }
-            },
-            tooltip: {
-                x: {
-                    format: 'yyyy-MM-dd'
-                },
-                y: {
-                    formatter: function(val) {
-                        if (currency == "GBP")
-                            return formatPrice(val / 100, currency)
-                        else
-                            return formatPrice(val, currency)
-                    }
-                }
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 100]
-                }
-            },
-            responsive: [{
-                    breakpoint: 1366,
-                    options: {
-                        chart: {
-                            height: 180
-                        }
-                    }
-                },
-                {
-                    breakpoint: 1238,
-                    options: {
-                        chart: {
-                            height: 160
-                        },
-                        grid: {
-                            padding: {
-                                bottom: 5,
-                            },
-                        }
-                    }
-                },
-                {
-                    breakpoint: 992,
-                    options: {
-                        chart: {
-                            height: 140
-                        }
-                    }
-                },
-                {
-                    breakpoint: 551,
-                    options: {
-                        grid: {
-                            padding: {
-                                bottom: 10,
-                            },
-                        }
-                    }
-                },
-                {
-                    breakpoint: 535,
-                    options: {
-                        chart: {
-                            height: 120
-                        }
-
-                    }
-                }
-            ],
-
-            colors: [vihoAdminConfig.primary],
-        };
-        var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard" + index), options);
-        charttimeline.render();
-        $("#h_stock_title" + index).html(displayData[0]);
-        $("#h_stock_title" + index).attr('title', displayData[0]);
-        $("#h_stock_link" + index).attr('href', '/stocks/' + displayData[3]);
-        $("#h_stock_title" + index).tooltip();
-        $("#current_stock_price" + index).html(formatPrice(displayData[1], currency));
-        $("#current_stock_percentage" + index).html(formatPercentage(displayData[2]));
-        if (displayData[2] >= 0)
-            $("#current_stock_percentage" + index).addClass("font-primary");
-        else
-            $("#current_stock_percentage" + index).addClass("font-danger");
-        if (index == counts) {
-            $(".stock-contents").css("opacity", "1");
-            $(".loader-box").css('display', 'none');
-        }
-    }
-
-    function exchangeOption(obj) {
-        var exchange = obj.value;
-        $('#ex').attr('value', exchange);
-        $('#search_btn').click();
-    }
-
-    // format Price and Percentage functions
-    function formatPrice(price, currency) {
-        switch (currency) {
-            case "USD":
-                return "$" + Number(price).toFixed(2);
-                break;
-
-            case "GBP":
-                return Number(price * 100).toFixed(2) + "p";
-                break;
-
-            case "EUR":
-                return Number(price.toFixed(2)) + "€";
-                break;
-
-            case "AUD":
-                return "A$" + Number(price.toFixed(2)) + "€";
-                break;
-
-            case "CAD":
-                return "C$" + Number(price.toFixed(2));
-                break;
-
-            default:
-                return price;
-                break;
-        }
-    }
-
-    function formatPercentage(percentage) {
-        return (Number(percentage) * 100).toFixed(2) + "%";
-    }
-</script>
+<script src="{{asset('assets/js/pages/stocks/custom.js')}}"></script>
 @endpush
 @endsection

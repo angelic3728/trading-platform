@@ -30,14 +30,18 @@ class AppServiceProvider extends ServiceProvider
          */
         View::composer([
             'dashboard.overview',
+            'dashboard.xtbs.all',
             'dashboard.documents.all',
             'dashboard.stocks.search',
             'dashboard.stocks.details',
-            'dashboard.mfds.search',
-            'dashboard.mfds.details',
+            'dashboard.funds.search',
+            'dashboard.funds.details',
+            'dashboard.cryptos.search',
+            'dashboard.cryptos.details',
             'dashboard.transactions.all',
             'dashboard.news',
-        ], 'App\Http\View\Composers\WidgetStocksComposer');
+            'dashboard.settings',
+        ], 'App\Http\View\Composers\WidgetItemsComposer');
 
     }
 

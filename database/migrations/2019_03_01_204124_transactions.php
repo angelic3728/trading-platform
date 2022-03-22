@@ -17,15 +17,17 @@ class Transactions extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('stock_id')->nullable();
-            $table->unsignedInteger('mutual_fund_id')->nullable();
+            $table->unsignedInteger('fund_id')->nullable();
+            $table->unsignedInteger('crypto_id')->nullable();
             $table->enum('type', ['buy', 'sell']);
             $table->decimal('price', 8, 2);
-            $table->integer('shares');
-            $table->boolean('is_fund')->default(false);
+            $table->decimal('shares', 8, 2);
+            $table->tinyInteger('wherefrom')->default(0);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('stock_id')->references('id')->on('stocks');
-            $table->foreign('mutual_fund_id')->references('id')->on('mutual_funds');
+            $table->foreign('fund_id')->references('id')->on('funds');
+            $table->foreign('crypto_id')->references('id')->on('crypto_currencies');
         });
     }
 

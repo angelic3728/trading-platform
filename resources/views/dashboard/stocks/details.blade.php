@@ -7,7 +7,12 @@
 @endpush
 
 @section('content')
-<div class="container stock-details">
+<div class="container stock-details dashboard-content-wrapper">
+    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+        <a href="https://bannerboo.com/" target="_blank">
+            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+        </a>
+    </div>
     <div class="row">
         <div class="col">
             <div class="card income-card">
@@ -23,7 +28,7 @@
                                     @else
                                     <span class="font-danger" id="current_stock_percentage"></span>
                                     @endif
-                                    @if(array_get($data, 'exchange') == 'LSE')
+                                    @if(array_get($data, 'exchange') != 'XNYS')
                                     <i class="fa fa-info-circle" style="color: #3458ff; padding: 4px; font-size: 18px;" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top" title="This stock has no real time pricing at the moment. All prices are based on the last closing price.">
                                     </i>
                                     @endif
@@ -60,6 +65,16 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
     </div>
     <div class="modal fade" id="buySharesModal" tabindex="-1" role="dialog" aria-labelledby="Document Modal Label" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -320,16 +335,16 @@
             url: '/api/stocks/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
-
-                if (res.success && res.data.length != 0) {
+                debugger;
+                if (res.success && res.data && res.data.length != 0) {
                     var times = 1;
                     var currency = "{{ array_get($data, 'gcurrency') }}";
-                    if ("{{array_get($data, 'exchange') == 'XLON'}}")
+                    if (currency == 'gbp')
                         times = 100;
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {
                         var date = new Date(res.data[i]['date']);
-                        adjustedData[i] = [date.getTime(), Number((data_source=='asx'?res.data[i]['adjClose']*times:res.data[i]['fClose'] * times).toFixed(2))]
+                        adjustedData[i] = [date.getTime(), Number((data_source == 'asx' ? res.data[i]['adjClose'] * times : res.data[i]['fClose'] * times).toFixed(2))]
                     }
                     var options = {
                         series: [{
@@ -437,7 +452,7 @@
                             }
                         ],
 
-                        colors: [vihoAdminConfig.primary],
+                        colors: [appConfig.primary],
                     };
                     $("#chart-timeline-dashboard").empty();
                     var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
@@ -523,24 +538,46 @@
         ].join(' : ');
     };
 
+    // format Price and Percentage functions
     function formatPrice(price, currency) {
         switch (currency) {
-            case 'USD':
+            case "USD":
                 return "$" + Number(price).toFixed(2);
                 break;
 
-            case 'GBP':
-                return Number((price * 100)).toFixed(2) + 'p';
+            case "GBP":
+                return Number(price * 100).toFixed(2) + "p";
+                break;
+
+            case "EUR":
+                return Number(price).toFixed(2) + "€";
+                break;
+
+            case "AUD":
+                return "A$" + Number(price).toFixed(2);
+                break;
+
+            case "CAD":
+                return "C$" + Number(price).toFixed(2);
                 break;
 
             default:
                 return price;
                 break;
         }
-    };
+    }
 
     function formatPercentage(percentage) {
         return (Number(percentage) * 100).toFixed(2) + "%";
+    }
+
+    function hide_ad() {
+        $("#ad1_container").removeClass("d-flex");
+        $("#ad1_container").addClass("d-none");
+        $("#ad2_container").removeClass("d-flex");
+        $("#ad2_container").addClass("d-none");
+        $(".dashboard-content-wrapper").css("padding-right", "0px");
+        $(".dashboard-content-wrapper").css("padding-top", "0px");
     }
 
     $("#current_stock_price").html(formatPrice("{{ array_get($data, 'price') }}", "{{ array_get($data, 'currency') }}"));

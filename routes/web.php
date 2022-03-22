@@ -63,10 +63,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('stocks/{symbol}', 'StockController@show')->name('stocks.show');
 
     /**
-     * Mutual Funds
+     * FundsControllerFunds
      */
-    Route::get('mfds/search', 'MutualFundsController@index')->name('mfds.search');
-    Route::get('mfds/{symbol}', 'MutualFundsController@show')->name('mfds.show');
+    Route::get('funds/search', 'FundsController@index')->name('funds.search');
+    Route::get('funds/{symbol}', 'FundsController@show')->name('funds.show');
 
     /**
      * Cryptocurrencies
@@ -107,13 +107,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('stocks/{symbol}/{action}', 'StockController@trade');
 
         /**
-         * Get mutual funds
+         * Get funds
          */
-        Route::get('mfds/investments', 'MutualFundsController@investments');
-        Route::get('mfds/highlights', 'MutualFundsController@highlights');
-        Route::get('mfds/all', 'MutualFundsController@all');
-        Route::get('mfds/chart/{symbol}/{range}', 'MutualFundsController@chart');
-        Route::get('mfds/{symbol}', 'MutualFundsController@details');
+        Route::get('funds/investments', 'FundsController@investments');
+        Route::get('funds/highlights', 'FundsController@highlights');
+        Route::get('funds/all', 'FundsController@all');
+        Route::get('funds/chart/{symbol}/{range}', 'FundsController@chart');
+        Route::get('funds/{symbol}', 'FundsController@details');
 
 
         // Get cryptocurrencies
@@ -126,7 +126,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         /**
          * Trading
          */
-        Route::post('mstocks/{symbol}/{action}', 'MutualFundsController@trade');
+        Route::post('mstocks/{symbol}/{action}', 'FundsController@trade');
 
         /**
          * Documents

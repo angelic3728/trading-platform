@@ -69,6 +69,9 @@
     }
     localStorage.setItem('page-wrapper', 'page-wrapper compact-wrapper');
     localStorage.setItem('page-body-wrapper', 'sidebar-icon');
+
+    // ticker data
+    var ticker_data = {!! $widget_items !!};
   </script>
 
   @includeIf('layouts.partials.js')

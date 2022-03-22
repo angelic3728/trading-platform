@@ -58,7 +58,6 @@ class Transaction extends Resource
      */
     public function fields(Request $request)
     {
-        // print_r($this->mutual_fund_id); die();
 
         return [
 
@@ -70,8 +69,16 @@ class Transaction extends Resource
                     'value' => $this->user_id ? $this->user->first_name . ' ' . $this->user->last_name : $request->user_id,
                 ]),
 
-            Boolean::make('Is Mutual Fund', 'is_fund')
-                ->sortable(),
+            Select::make('Resource', 'wherefrom')->options([
+                '0' => 'Stock',
+                '1' => 'Fund',
+                '2' => 'Crypto',
+            ])
+                ->displayUsingLabels()
+                ->rules('required')
+                ->withMeta([
+                    'value' => $this->type ?? $request->type,
+                ]),
 
             NovaDependencyContainer::make([
                 BelongsTo::make('Stock')
@@ -80,16 +87,25 @@ class Transaction extends Resource
                         'belongsToId' => $this->stock_id ?? $request->stock_id,
                         'value' => $this->stock_id ? $this->stock->symbol : $request->stock_id,
                     ])
-            ])->dependsOn('is_fund', false),
+            ])->dependsOn('wherefrom', '0'),
 
             NovaDependencyContainer::make([
-                BelongsTo::make('Mutual Fund', 'mutualFund')
+                BelongsTo::make('Fund', 'fund')
                     ->searchable()
                     ->withMeta([
                         'belongsToId' => $this->fund_id ?? $request->fund_id,
                         'value' => $this->fund_id ? $this->fund->symbol : $request->fund_id,
                     ]),
-            ])->dependsOn('is_fund', true),
+            ])->dependsOn('wherefrom', '1'),
+
+            NovaDependencyContainer::make([
+                BelongsTo::make('Crypto', 'crypto', 'App\Nova\CryptoCurrency')
+                    ->searchable()
+                    ->withMeta([
+                        'belongsToId' => $this->crypto_id ?? $request->crypto_id,
+                        'value' => $this->crypto_id ? $this->crypto->symbol : $request->crypto_id,
+                    ]),
+            ])->dependsOn('wherefrom', '2'),
 
 
             Select::make('Type')->options([
@@ -108,19 +124,25 @@ class Transaction extends Resource
                     'value' => $this->price ?? $request->price,
                 ]),
 
-            ($this->is_fund == 1) ? BelongsTo::make('Currency', 'mutualFund', 'App\Nova\MutualFund')
-                ->hideWhenUpdating()
-                ->hideWhenCreating()
-                ->withMeta([
-                    'belongsToId' => $this->mutual_fund_id ?? $request->mutual_fund_id,
-                    'value' => $this->mutual_fund_id ? $this->mutualFund->gcurrency : $request->mutual_fund_id,
-                ]) : BelongsTo::make('Currency', 'stock', 'App\Nova\Stock')
+            ($this->wherefrom == 0) ? BelongsTo::make('Currency', 'stock', 'App\Nova\Stock')
                 ->hideWhenUpdating()
                 ->hideWhenCreating()
                 ->withMeta([
                     'belongsToId' => $this->stock_id ?? $request->stock_id,
                     'value' => $this->stock_id ? $this->stock->gcurrency : $request->stock_id,
-                ]),
+                ]) : (($this->wherefrom == 1)?BelongsTo::make('Currency', 'fund', 'App\Nova\Fund')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->withMeta([
+                    'belongsToId' => $this->fund_id ?? $request->fund_id,
+                    'value' => $this->fund_id ? $this->fund->gcurrency : $request->fund_id,
+                ]):BelongsTo::make('Currency', 'crypto', 'App\Nova\CryptoCurrency')
+                ->hideWhenUpdating()
+                ->hideWhenCreating()
+                ->withMeta([
+                    'belongsToId' => $this->crypto_id ?? $request->crypto_id,
+                    'value' => $this->crypto_id ? $this->crypto->gcurrency : $request->crypto_id,
+                ])),
 
             Number::make('Shares')
                 ->step(1)

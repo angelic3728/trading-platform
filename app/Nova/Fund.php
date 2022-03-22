@@ -6,19 +6,19 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Number;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 
-class MutualFund extends Resource
+class Fund extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\MutualFund';
+    public static $model = 'App\Fund';
 
     /**
      * The logical group associated with the resource.
@@ -109,10 +109,17 @@ class MutualFund extends Resource
                 ->help('Enter an link where users can find more details about this stock')
                 ->hideFromIndex(),
 
+            Boolean::make('Highlighted')
+                ->rules('required')
+                ->sortable(),
+
+            Boolean::make('Widget')
+                ->rules('required'),
+
             DateTime::make('Created At')
                 ->exceptOnForms(),
 
-            HasMany::make('MutualFundPrices'),
+            HasMany::make('FundPrices'),
         ];
     }
 

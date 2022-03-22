@@ -57,10 +57,10 @@
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('stocks.search') ? 'active' : '' }}" href="{{ route('stocks.search') }}"><i data-feather="bar-chart"></i><span>All Stocks</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('mfds.search') ? 'active' : '' }}" href="{{ route('mfds.search') }}"><i data-feather="bar-chart"></i><span>All Funds</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('funds.search') ? 'active' : '' }}" href="{{ route('funds.search') }}"><i data-feather="bar-chart"></i><span>All Funds</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i data-feather="bar-chart"></i><span>All Cryptocurrencies</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i data-feather="bar-chart"></i><span>All Crypto</span></a>
                     </li>
                 </ul>
             </div>

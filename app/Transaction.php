@@ -34,17 +34,22 @@ class Transaction extends Model
     }
 
     /**
-     * Get the mutual fund of the transaction
+     * Get the fund of the transaction
      */
 
-    public function mutualFund()
+    public function fund()
     {
-        return $this->belongsTo('App\MutualFund');
+        return $this->belongsTo('App\Fund');
+    }
+
+    public function crypto()
+    {
+        return $this->belongsTo('App\CryptoCurrency');
     }
 
     public function formatPrice($price, $decimals = 2)
     {
-        $currency = $this->is_fund == 0 ? $this->stock->symbol : $this->mutualFund->currency;
+        $currency = $this->wherefrom == 0 ? $this->stock->gcurrency : ($this->wherefrom == 1 ? $this->fund->gcurrency:$this->crypto->gcurrency);
         switch ($currency) {
             case 'USD':
                 return '$' . number_format($price, $decimals);

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 
 use IEX;
 use Cache;
-use DB;
 use Mail;
 use CustomCryptoData;
 
@@ -70,30 +69,48 @@ class CryptosController extends Controller
         }
     }
 
-    public function highlights()
+    public static function highlights($cnt=4)
     {
 
         /**
          * Get highlighted cryptos and cache them for an hour
          */
-        $cryptos = Cache::remember('cryptos:highlighted', 15, function () {
-            return CryptoCurrency::where('highlighted', true)->take(4)->get();
+        $cryptos = Cache::remember('cryptos:highlighted', 15, function () use ($cnt) {
+            return CryptoCurrency::where('highlighted', true)->take($cnt)->get();
         });
 
         $results = [];
 
         if (count($cryptos) != 0)
             foreach ($cryptos as $crypto) {
-                $detail = IEX::getCDetails($crypto->coin_id);
-                $chart = IEX::getCChart($crypto->coin_id, '5d');
+                switch ($crypto['data_source']) {
+                    case 'gecko':
+                        $detail = IEX::getCDetails($crypto->coin_id);
+                        $chart = IEX::getCChart($crypto->coin_id, '5d');
 
-                array_push($results, collect([
-                    'symbol' => array_get($detail, 'symbol'),
-                    'name' => array_get($detail, 'name'),
-                    'price' => array_get($detail, 'market_data.current_price.usd'),
-                    'change_percentage' => array_get($detail, 'market_data.price_change_percentage_24h'),
-                    'chart' => $chart,
-                ]));
+                        array_push($results, collect([
+                            'wherefrom' => 'crypto',
+                            'symbol' => array_get($detail, 'symbol'),
+                            'name' => array_get($detail, 'name'),
+                            'price' => array_get($detail, 'market_data.current_price.usd'),
+                            'change_percentage' => array_get($detail, 'market_data.price_change_percentage_24h'),
+                            'chart' => $chart,
+                        ]));
+                        break;
+                    case 'custom':
+                        $price = CustomStockData::price($crypto['symbol']);
+                        $chart = CustomStockData::price($crypto['symbol'], '5d');
+                        $change_percentage = CustomStockData::changePercentage($crypto['symbol']);
+
+                        array_push($results, collect([
+                            'wherefrom' => 'crypto',
+                            'symbol' => $crypto['symbol'],
+                            'name' => $crypto['name'],
+                            'price' => $price,
+                            'change_percentage' => $change_percentage,
+                            'chart' => $chart,
+                        ]));
+                }
             }
 
         /**
@@ -108,7 +125,7 @@ class CryptosController extends Controller
     public function chart($symbol, $range)
     {
         /**
-         * Get Mutual Fund
+         * Get Fund
          */
         $crypto = CryptoCurrency::where('symbol', $symbol)->firstOrFail();
 
@@ -146,9 +163,12 @@ class CryptosController extends Controller
          * Get all cryptos and cache for an hour
          */
         $cryptos = Cache::remember('cryptos:all', 60, function () {
-
             return CryptoCurrency::select('symbol', 'name')->get();
         });
+
+        foreach($cryptos as $crypto) {
+            $crypto['wherefrom'] = 'cryptos';
+        }
 
         /**
          * Return Json

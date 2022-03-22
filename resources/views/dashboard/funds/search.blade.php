@@ -7,7 +7,22 @@
 @endpush
 
 @section('content')
-<div class="col-sm-12">
+<div class="col-sm-12 dashboard-content-wrapper">
+    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+        <a href="https://bannerboo.com/" target="_blank">
+            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+        </a>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
+    </div>
     @if(!request()->filled('page') && !request()->filled('q'))
     <div class="card">
         <div class="card-header">
@@ -113,9 +128,9 @@
             <div class="row align-items-center">
                 <div class="col">
                     @if(request()->filled('q') || request()->filled('ex'))
-                    <h4 class="mb-0">Results ({{ $mfds->total() }})</h4>
+                    <h4 class="mb-0">Results ({{ $funds->total() }})</h4>
                     @else
-                    <h4 class="mb-0">All Mutual Funds ({{ $mfds->total() }})</h4>
+                    <h4 class="mb-0">All Mutual Funds ({{ $funds->total() }})</h4>
                     @endif
                 </div>
                 <div class="col-auto d-flex justify-content-between">
@@ -133,7 +148,7 @@
                         @endif
                         @endforeach
                     </select>
-                    <form action="{{ route('mfds.search') }}" class="ms-3" style="min-width: 200px;">
+                    <form action="{{ route('funds.search') }}" class="ms-3" style="min-width: 200px;">
                         <div class="search d-flex">
                             <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request()->q }}">
                             <input id="ex" type="hidden" class="form-control" placeholder="Search" name="ex" value="{{ request()->ex }}">
@@ -156,19 +171,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($mfds as $mfd)
+                            @foreach($funds as $fund)
                             <tr>
-                                <td width="10%">{{ $mfd->symbol }}</td>
-                                <td>{{ $mfd->company_name }}</td>
-                                <td>{{ $mfd->exchange }}</td>
+                                <td width="10%">{{ $fund->symbol }}</td>
+                                <td>{{ $fund->company_name }}</td>
+                                <td>{{ $fund->exchange }}</td>
                                 <td class="text-right" nowrap>
-                                    <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('mfds.show', ['symbol' => $mfd->symbol]) }}">See More</a>
+                                    <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('funds.show', ['symbol' => $fund->symbol]) }}">See More</a>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
-                    @if($mfds->isEmpty())
+                    @if($funds->isEmpty())
                     <div class="p-10 d-flex justify-content-center">
                         There are no mutual funds that match your search result
                     </div>
@@ -178,226 +193,13 @@
         </div>
     </div>
     <div class="d-flex justify-content-end pb-3">
-        {{ $mfds->appends(request()->query())->links() }}
+        {{ $funds->appends(request()->query())->links() }}
     </div>
 </div>
 @push('scripts')
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('assets/js/tooltip-init.js')}}"></script>
-<script>
-    $(document).ready(function() {
-        $(".loader-box").css({
-            'height': $('.fund-contents').innerHeight() + "px"
-        });
-        $(".fund-contents").css("opacity", "0.3");
-        $.ajax({
-            /* the route pointing to the post function */
-            url: '/api/mfds/highlights',
-            type: 'get',
-            /* remind that 'data' is the response of the AjaxController */
-            success: function(res) {
-                if (res.success) {
-                    for (var i = 0; i < res.data.length; i++) {
-                        var adjustedData = [];
-                        var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
-                        debugger;
-                        if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
-                            for (var j = 0; j < res.data[i]['chart'].length; j++) {
-                                var stock = res.data[i]['chart'][j];
-                                var date = new Date(stock['date']);
-                                adjustedData[j] = [date.getTime(), Number((stock['fClose']).toFixed(2))]
-                            }
-                            renderChart(adjustedData, (i + 1), 'USD', displayData, res.data.length);
-                        } else {
-                            if (i == res.data.length - 1) {
-                                $(".fund-contents").css("opacity", "1");
-                                $(".loader-box").css('display', 'none');
-                            }
-                            $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
-                                type: 'theme',
-                                allow_dismiss: true,
-                                delay: 2000,
-                                showProgressbar: false,
-                                timer: 4000
-                            });
-                        }
-                    }
-                }
-            }
-        });
-    });
-
-    function renderChart(adjustedData, index, currency, displayData, counts) {
-        var options = {
-            series: [{
-                name: "Closing Price",
-                data: adjustedData
-            }],
-            chart: {
-                id: 'area-datetime',
-                type: 'area',
-                height: 200,
-                zoom: {
-                    autoScaleYaxis: false
-                },
-                toolbar: {
-                    show: false
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            markers: {
-                size: 0,
-                style: 'hollow',
-            },
-            xaxis: {
-                type: 'datetime',
-                min: adjustedData[0][0],
-                tickAmount: 6,
-                axisTicks: {
-                    show: false,
-                },
-                axisBorder: {
-                    show: false
-                },
-                labels: {
-                    show: false
-                }
-            },
-            yaxis: {
-                labels: {
-                    show: false
-                }
-            },
-            tooltip: {
-                x: {
-                    format: 'yyyy-MM-dd'
-                },
-                y: {
-                    formatter: function(val) {
-                        return formatPrice(val, currency)
-                    }
-                }
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.7,
-                    opacityTo: 0.9,
-                    stops: [0, 100]
-                }
-            },
-            responsive: [{
-                    breakpoint: 1366,
-                    options: {
-                        chart: {
-                            height: 180
-                        }
-                    }
-                },
-                {
-                    breakpoint: 1238,
-                    options: {
-                        chart: {
-                            height: 160
-                        },
-                        grid: {
-                            padding: {
-                                bottom: 5,
-                            },
-                        }
-                    }
-                },
-                {
-                    breakpoint: 992,
-                    options: {
-                        chart: {
-                            height: 140
-                        }
-                    }
-                },
-                {
-                    breakpoint: 551,
-                    options: {
-                        grid: {
-                            padding: {
-                                bottom: 10,
-                            },
-                        }
-                    }
-                },
-                {
-                    breakpoint: 535,
-                    options: {
-                        chart: {
-                            height: 120
-                        }
-
-                    }
-                }
-            ],
-
-            colors: [vihoAdminConfig.primary],
-        };
-        var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard" + index), options);
-        charttimeline.render();
-        $("#h_stock_title" + index).html(displayData[0]);
-        $("#h_stock_title" + index).attr('title', displayData[0]);
-        $("#h_stock_link" + index).attr('href', '/mfds/' + displayData[3]);
-        $("#h_stock_title" + index).tooltip();
-        $("#current_stock_price" + index).html(formatPrice(displayData[1], currency));
-        $("#current_stock_percentage" + index).html(formatPercentage(displayData[2]));
-        if (displayData[2] >= 0)
-            $("#current_stock_percentage" + index).addClass("font-primary");
-        else
-            $("#current_stock_percentage" + index).addClass("font-danger");
-        if (index == counts) {
-            $(".fund-contents").css("opacity", "1");
-            $(".loader-box").css('display', 'none');
-        }
-    }
-
-    function exchangeOption(obj) {
-        var exchange = obj.value;
-        $('#ex').attr('value', exchange);
-        $('#search_btn').click();
-    }
-
-    // format Price and Percentage functions
-    function formatPrice(price, currency) {
-        switch (currency) {
-            case "USD":
-                return "$" + Number(price).toFixed(2);
-                break;
-
-            case "GBP":
-                return Number(price * 100).toFixed(2) + "p";
-                break;
-
-            case "EUR":
-                return Number(price.toFixed(2)) + "€";
-                break;
-
-            case "AUD":
-                return "A$" + Number(price.toFixed(2)) + "€";
-                break;
-
-            case "CAD":
-                return "C$" + Number(price.toFixed(2));
-                break;
-
-            default:
-                return price;
-                break;
-        }
-    }
-
-    function formatPercentage(percentage) {
-        return (Number(percentage) * 100).toFixed(2) + "%";
-    }
-</script>
+<script src="{{asset('assets/js/pages/funds/custom.js')}}"></script>
 @endpush
 @endsection

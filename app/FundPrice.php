@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MutualFundPrice extends Model
+class FundPrice extends Model
 {
     /**
-     * Get the mutualFund of the price
+     * Get the fund of the price
      */
-    public function mutualFund()
+    public function fund()
     {
-        return $this->belongsTo('App\MutualFund');
+        return $this->belongsTo('App\Fund');
     }
 
     /**

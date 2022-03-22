@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMutualFundsTable extends Migration
+class CreateFundsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMutualFundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mutual_funds', function (Blueprint $table) {
+        Schema::create('funds', function (Blueprint $table) {
             $table->increments('id');
             $table->string('symbol');
             $table->string('company_name');
@@ -23,6 +23,7 @@ class CreateMutualFundsTable extends Migration
             $table->decimal('discount_percentage', 8, 2)->default(3);
             $table->string('gcurrency');
             $table->boolean('highlighted')->default(false);
+            $table->boolean('widget')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -35,6 +36,6 @@ class CreateMutualFundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mutual_funds');
+        Schema::dropIfExists('funds');
     }
 }

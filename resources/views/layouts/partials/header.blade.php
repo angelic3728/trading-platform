@@ -5,7 +5,7 @@
       <div class="dark-logo-wrapper"><a href="#"><img class="img-fluid" src="{{asset('assets/images/logo/dark-logo.png')}}" alt=""></a></div>
       <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"> </i></div>
     </div>
-    <div class="d-flex col">
+    <div class="d-flex col header-wrapper">
       <div class="left-menu-header" style="padding: 24px 10px;">
         <ul style="width: 210px;">
           <li>
@@ -20,7 +20,12 @@
           </li>
         </ul>
       </div>
-      <div class="nav-ticker col p-0"></div>
+      <div class="nav-ticker col p-0">
+        <div id="ticker-wrapper" class="ticker-wrapper-h">
+          <ul class="news-ticker-h">
+          </ul>
+        </div>
+      </div>
       <div class="nav-right pull-right right-menu p-0">
         <ul class="nav-menus" style="width: 230px;">
           <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a></li>

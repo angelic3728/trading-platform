@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Illuminate\Http\Request;
 
+use App\Stock;
+use App\Transaction;
 use App\Xtbs;
 
 use IEX;
@@ -12,7 +13,10 @@ use ASX;
 use CustomStockData;
 use CustomFundData;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+
+use App\Http\Controllers\API\StockController;
+use App\Http\Controllers\API\FundsController;
+use App\Http\Controllers\API\CryptosController;
 
 class DashboardController extends Controller
 {
@@ -35,58 +39,22 @@ class DashboardController extends Controller
         if (count($transactions) != 0) {
             // get available currencies
             foreach ($transactions as $transaction) {
-                if ($transaction->is_fund == 1) {
-                    if ($transaction->mutualFund && $transaction->mutualFund->gcurrency != "USD" && !in_array("USD" . $transaction->mutualFund->gcurrency, $used_currencies)) {
-                        array_push($used_currencies, "USD" . $transaction->mutualFund->gcurrency);
-                    }
-                } else {
+                if ($transaction->wherefrom == 0) {
                     if ($transaction->stock && $transaction->stock->gcurrency != "USD" && !in_array("USD" . $transaction->stock->gcurrency, $used_currencies)) {
                         array_push($used_currencies, "USD" . $transaction->stock->gcurrency);
+                    }
+                } else if ($transaction->wherefrom == 1) {
+                    if ($transaction->fund && $transaction->fund->gcurrency != "USD" && !in_array("USD" . $transaction->fund->gcurrency, $used_currencies)) {
+                        array_push($used_currencies, "USD" . $transaction->fund->gcurrency);
                     }
                 }
             }
 
             $currency_str = implode(",", $used_currencies);
-            $all_rates = IEX::getRates($currency_str);            
+            $all_rates = IEX::getRates($currency_str);
 
             foreach ($transactions as $transaction) {
-                if ($transaction->is_fund == 1) {
-                    if ($transaction->mutualFund) {
-                        // add detailed info
-                        $transaction->symbol = $transaction->mutualFund->symbol;
-                        $transaction->company_name = $transaction->mutualFund->company_name;
-                        $transaction->gcurrency = $transaction->mutualFund->gcurrency;
-                        $transaction->data_source = $transaction->mutualFund->data_source;
-                        switch ($transaction->mutualFund->data_source) {
-                            case 'iex':
-                                $iex_data = IEX::getDetails($transaction->mutualFund->symbol);
-                                $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
-                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
-                                $transaction->institutional_price =
-                                    array_has($iex_data, 'quote.latestPrice') ? round($transaction->mutualFund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
-                                break;
-                            case 'custom':
-                                $transaction->latest_price = round(CustomFundData::price($transaction->mutualFund->symbol), 3);
-                                $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->mutualFund->symbol), 4);
-                                $transaction->institutional_price = round(CustomFundData::price($transaction->mutualFund->symbol), 3);
-                        }
-                        // add real price and total prices
-                        if ($transaction->mutualFund->gcurrency != "USD") {
-                            $rate = $all_rates['USD' . $transaction->mutualFund->gcurrency];
-                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
-                            if ($transaction->type == "buy")
-                                $total_transaction_price += $transaction->realPrice;
-                            else
-                                $total_transaction_price -= $transaction->realPrice;
-                        } else {
-                            $transaction->realPrice = $transaction->price;
-                            if ($transaction->type == "buy")
-                                $total_transaction_price += $transaction->realPrice;
-                            else
-                                $total_transaction_price -= $transaction->realPrice;
-                        }
-                    }
-                } else {
+                if ($transaction->wherefrom == 0) {
                     if ($transaction->stock) {
                         // add detailed info
                         $transaction->symbol = $transaction->stock->symbol;
@@ -128,9 +96,112 @@ class DashboardController extends Controller
                                 $total_transaction_price -= $transaction->realPrice;
                         }
                     }
+                } else if ($transaction->wherefrom == 1) {
+                    if ($transaction->fund) {
+                        // add detailed info
+                        $transaction->symbol = $transaction->fund->symbol;
+                        $transaction->company_name = $transaction->fund->company_name;
+                        $transaction->gcurrency = $transaction->fund->gcurrency;
+                        $transaction->data_source = $transaction->fund->data_source;
+                        switch ($transaction->fund->data_source) {
+                            case 'iex':
+                                $iex_data = IEX::getDetails($transaction->fund->symbol);
+                                $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
+                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                                $transaction->institutional_price =
+                                    array_has($iex_data, 'quote.latestPrice') ? round($transaction->fund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                                break;
+                            case 'asx':
+                                $asx_data = ASX::getDetails($transaction->stock->symbol);
+                                $transaction->latest_price = array_has($asx_data, 'latest_price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
+                                $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? round(array_get($asx_data, 'change_percentage'), 4) : null;
+                                $transaction->institutional_price = array_has($asx_data, 'price') ? round($transaction->stock->institutionalPrice(array_get($asx_data, 'price')), 3) : null;
+                                break;
+                            case 'custom':
+                                $transaction->latest_price = round(CustomFundData::price($transaction->fund->symbol), 3);
+                                $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->fund->symbol), 4);
+                                $transaction->institutional_price = round(CustomFundData::price($transaction->fund->symbol), 3);
+                        }
+                        // add real price and total prices
+                        if ($transaction->fund->gcurrency != "USD") {
+                            $rate = $all_rates['USD' . $transaction->fund->gcurrency];
+                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
+                            if ($transaction->type == "buy")
+                                $total_transaction_price += $transaction->realPrice;
+                            else
+                                $total_transaction_price -= $transaction->realPrice;
+                        } else {
+                            $transaction->realPrice = $transaction->price;
+                            if ($transaction->type == "buy")
+                                $total_transaction_price += $transaction->realPrice;
+                            else
+                                $total_transaction_price -= $transaction->realPrice;
+                        }
+                    }
+                } else {
+                    if ($transaction->crypto) {
+                        // add detailed info
+                        $transaction->symbol = $transaction->crypto->symbol;
+                        $transaction->company_name = $transaction->crypto->company_name;
+                        $transaction->gcurrency = $transaction->crypto->gcurrency;
+                        $transaction->data_source = $transaction->crypto->data_source;
+                        switch ($transaction->crypto->data_source) {
+                            case 'gecko':
+                                $crypto_data = IEX::getCDetails($transaction->crypto->coin_id);
+                                $transaction->latest_price = array_get($crypto_data, 'market_data.current_price.usd');
+                                $transaction->change_percentage = array_get($crypto_data, 'market_data.price_change_percentage_24h');
+                                $transaction->institutional_price = array_get($crypto_data, 'market_data.current_price.usd') ? '$'.$transaction->crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null;
+                                break;
+                            case 'custom':
+                                $transaction->latest_price = CustomFundData::price($transaction->crypto->symbol);
+                                $transaction->change_percentage = CustomFundData::changePercentage($transaction->crypto->symbol);
+                                $transaction->institutional_price = CustomFundData::price($transaction->crypto->symbol);
+                        }
+                        // add real price and total prices
+                        $transaction->realPrice = $transaction->price;
+                        if ($transaction->type == "buy")
+                            $total_transaction_price += $transaction->realPrice;
+                        else
+                            $total_transaction_price -= $transaction->realPrice;
+                    }
                 }
             }
         }
+
+        // Get all highlights
+        $stock_highlights = StockController::highlights(4)->getData();
+        $fund_highlights = FundsController::highlights(4)->getData();
+        $crypto_highlights = CryptosController::highlights(4)->getData();
+
+        $all_highlights = array_merge($stock_highlights->data, $fund_highlights->data);
+        $all_highlights = array_merge($all_highlights, $crypto_highlights->data);
+
+        /**
+         * Get my investments symbols
+         */
+        $investments = Transaction::where('user_id', auth()->id())
+            ->where('wherefrom', 0)
+            ->select('stock_id')
+            ->with('stock')
+            ->groupBy('stock_id')
+            ->get()
+            ->where('stock.exchange', 'XNYS')
+            ->pluck('stock.symbol')
+            ->toArray();
+
+        /**
+         * Get highlighted symbols
+         */
+        $highlighted = Stock::where('highlighted', true)
+            ->where('exchange', 'XNYS')
+            ->get()
+            ->pluck('symbol')
+            ->toArray();
+
+        /**
+         * Prepare news symbols
+         */
+        $news_symbols = array_merge($investments, $highlighted);
 
         /**
          * Return view
@@ -140,7 +211,9 @@ class DashboardController extends Controller
             'documents' => $documents,
             'total_transaction_price' => $total_transaction_price,
             'transactions' => $transactions,
-            'xtbs' => $xtbs
+            'xtbs' => $xtbs,
+            'all_highlights' => $all_highlights,
+            'news_symbols' => $news_symbols
         ]);
     }
 

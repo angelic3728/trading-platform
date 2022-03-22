@@ -23,6 +23,7 @@ class CreateCryptoCurrenciesTable extends Migration
             $table->decimal('discount_percentage', 8, 2)->default(3);
             $table->string('gcurrency')->default('USD');
             $table->boolean('highlighted')->default(false);
+            $table->boolean('widget')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

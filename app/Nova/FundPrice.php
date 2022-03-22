@@ -9,14 +9,14 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Illuminate\Http\Request;
 
-class MutualFundPrice extends Resource
+class FundPrice extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\MutualFundPrice';
+    public static $model = 'App\FundPrice';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -64,11 +64,11 @@ class MutualFundPrice extends Resource
             ID::make()
                   ->sortable(),
 
-            BelongsTo::make('MutualFund')
+            BelongsTo::make('Fund')
                   ->searchable()
                   ->onlyOnIndex(),
 
-            Select::make('MutualFund', 'mutual_fund_id')->options($this->customMutualFunds())
+            Select::make('Fund', 'fund_id')->options($this->customFunds())
                   ->onlyOnForms()
                   ->rules('required'),
 
@@ -127,10 +127,10 @@ class MutualFundPrice extends Resource
         return [];
     }
 
-    private function customMutualFunds()
+    private function customFunds()
     {
 
-        return \App\MutualFund::query()
+        return \App\Fund::query()
             ->where('data_source', 'custom')
             ->get()
             ->mapWithKeys(function ($item) {

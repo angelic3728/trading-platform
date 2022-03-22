@@ -24,19 +24,25 @@ $(document).ready(function() {
     }
 
     var stockData = $.grep(chartData, function(v) {
-        return v.is_fund == 0;
+        return v.wherefrom == 0;
     });
-    var mfdData = $.grep(chartData, function(v) {
-        return v.is_fund == 1;
+    var fundData = $.grep(chartData, function(v) {
+        return v.wherefrom == 1;
+    });
+    var cryptoData = $.grep(chartData, function(v) {
+        return v.wherefrom == 2;
     });
 
     stockData = stockData.reverse();
-    mfdData = mfdData.reverse();
+    fundData = fundData.reverse();
+    cryptoData = cryptoData.reverse();
 
     adjustedStockData = [];
-    adjustedMfdData = [];
+    adjustedFundData = [];
+    adjustedCryptoData = [];
     total1 = 0;
     total2 = 0;
+    total3 = 0;
 
     for (var i = 0; i < stockData.length; i++) {
         total1 =
@@ -49,23 +55,390 @@ $(document).ready(function() {
         ];
     }
 
-    for (var i = 0; i < mfdData.length; i++) {
+    for (var i = 0; i < fundData.length; i++) {
         total2 =
-            mfdData[i]["type"] == "buy"
-                ? total2 + Number(mfdData[i]["realPrice"])
-                : total2 - number(mfdData[i]["realPrice"]);
-        adjustedMfdData[i] = [
-            mfdData[i]["created_at"],
+            fundData[i]["type"] == "buy"
+                ? total2 + Number(fundData[i]["realPrice"])
+                : total2 - number(fundData[i]["realPrice"]);
+        adjustedFundData[i] = [
+            fundData[i]["created_at"],
             Number(total2.toFixed())
         ];
     }
 
-    renderChart(adjustedStockData, "#chart-timeline-dashbord1");
-    renderChart(adjustedMfdData, "#chart-timeline-dashbord2");
-    renderBarChart(monthProfits, "#month_profit_dash");
+    for (var i = 0; i < cryptoData.length; i++) {
+        total3 =
+            cryptoData[i]["type"] == "buy"
+                ? total3 + Number(cryptoData[i]["realPrice"])
+                : total3 - number(cryptoData[i]["realPrice"]);
+        adjustedCryptoData[i] = [
+            cryptoData[i]["created_at"],
+            Number(total3.toFixed())
+        ];
+    }
+
+    if (stockData.length != 0)
+        renderChart(
+            adjustedStockData,
+            "#chart-timeline-dashbord1",
+            appConfig.primary
+        );
+    else $("#chart-timeline-dashbord1").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+
+    if (fundData.length != 0)
+        renderChart(
+            adjustedFundData,
+            "#chart-timeline-dashbord2",
+            appConfig.fund
+        );
+    else $("#chart-timeline-dashbord2").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+
+    if (cryptoData.length != 0)
+        renderChart(
+            adjustedCryptoData,
+            "#chart-timeline-dashbord3",
+            appConfig.crypto
+        );
+    else $("#chart-timeline-dashbord3").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+
+    if (stockData.length == 0 && fundData.length == 0 && crytoData.length == 0)
+        $("#month_profit_dash").append("<div class='d-flex justify-content-center align-items-center' style='min-height:365px;'><h4>No Chart Data!</h4></div>");
+    else renderBarChart(monthProfits, "#month_profit_dash");
+
+    if (all_highlights.length != 0) {
+        for (var i = 0; i < all_highlights.length; i++) {
+            if (all_highlights[i]["wherefrom"] == "stock") {
+                var stock_carousel = $("#stock_carousel");
+                var item = $("<div>")
+                    .appendTo(stock_carousel)
+                    .attr("class", "item");
+                var card = $("<div>")
+                    .appendTo(item)
+                    .attr("class", "card");
+                var chart_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "chart-content");
+                $("<div>")
+                    .appendTo(chart_content)
+                    .attr("id", "highlight_chart_" + i);
+                var detail_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "d-flex-column p-2");
+                var title = $("<a>")
+                    .appendTo(detail_content)
+                    .attr("href", "/stocks/" + all_highlights[i]["symbol"]);
+                var h6 = $("<h6>")
+                    .appendTo(title)
+                    .attr({
+                        title: all_highlights[i]["company_name"],
+                        style:
+                            "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+                    })
+                    .text(all_highlights[i]["company_name"]);
+                h6.tooltip();
+                var center_content = $("<div>")
+                    .appendTo(detail_content)
+                    .attr("class", "center-content");
+                var smalls = $("<p>")
+                    .appendTo(center_content)
+                    .attr("class", "d-sm-flex align-items-end");
+                $("<span>")
+                    .appendTo(smalls)
+                    .attr("class", "font-primary m-r-10 f-16 f-w-700")
+                    .text(
+                        formatPrice(
+                            all_highlights[i]["price"],
+                            all_highlights[i]["gcurrency"]
+                        )
+                    );
+                var percent = $("<span>")
+                    .appendTo(smalls)
+                    .text(
+                        formatPercentage(all_highlights[i]["change_percentage"])
+                    );
+                if (all_highlights[i]["change_percentage"] >= 0)
+                    percent.addClass("font-primary");
+                else percent.addClass("font-danger");
+                if (
+                    all_highlights[i]["chart"] &&
+                    all_highlights[i]["chart"].length != 0
+                ) {
+                    var adjustedData = [];
+                    for (
+                        var j = 0;
+                        j < all_highlights[i]["chart"].length;
+                        j++
+                    ) {
+                        var unit = all_highlights[i]["chart"][j];
+                        var date = new Date(unit["date"]);
+                        adjustedData[j] = [
+                            date.getTime(),
+                            Number(unit["fClose"].toFixed(2))
+                        ];
+                    }
+                    renderChart(
+                        adjustedData,
+                        "#highlight_chart_" + i,
+                        appConfig.primary,
+                        false,
+                        2,
+                        200
+                    );
+                } else {
+                    $("#highlight_chart_" + i).text("No Chart Data!");
+                }
+            } else if (all_highlights[i]["wherefrom"] == "fund") {
+                var fund_carousel = $("#fund_carousel");
+                var item = $("<div>")
+                    .appendTo(fund_carousel)
+                    .attr("class", "item");
+                var card = $("<div>")
+                    .appendTo(item)
+                    .attr("class", "card");
+                var chart_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "chart-content");
+                $("<div>")
+                    .appendTo(chart_content)
+                    .attr("id", "highlight_chart_" + i);
+                var detail_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "d-flex-column p-2");
+                var title = $("<a>")
+                    .appendTo(detail_content)
+                    .attr("href", "/funds/" + all_highlights[i]["symbol"]);
+                var h6 = $("<h6>")
+                    .appendTo(title)
+                    .attr({
+                        title: all_highlights[i]["company_name"],
+                        style:
+                            "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+                    })
+                    .text(all_highlights[i]["company_name"]);
+                h6.tooltip();
+                var center_content = $("<div>")
+                    .appendTo(detail_content)
+                    .attr("class", "center-content");
+                var smalls = $("<p>")
+                    .appendTo(center_content)
+                    .attr("class", "d-sm-flex align-items-end");
+                $("<span>")
+                    .appendTo(smalls)
+                    .attr("class", "font-primary m-r-10 f-16 f-w-700")
+                    .text(
+                        formatPrice(
+                            all_highlights[i]["price"],
+                            all_highlights[i]["gcurrency"]
+                        )
+                    );
+                var percent = $("<span>")
+                    .appendTo(smalls)
+                    .text(
+                        formatPercentage(all_highlights[i]["change_percentage"])
+                    );
+                if (all_highlights[i]["change_percentage"] >= 0)
+                    percent.addClass("font-primary");
+                else percent.addClass("font-danger");
+                if (
+                    all_highlights[i]["chart"] &&
+                    all_highlights[i]["chart"].length != 0
+                ) {
+                    var adjustedData = [];
+                    for (
+                        var j = 0;
+                        j < all_highlights[i]["chart"].length;
+                        j++
+                    ) {
+                        var unit = all_highlights[i]["chart"][j];
+                        var date = new Date(unit["date"]);
+                        adjustedData[j] = [
+                            date.getTime(),
+                            Number(unit["fClose"].toFixed(2))
+                        ];
+                    }
+                    renderChart(
+                        adjustedData,
+                        "#highlight_chart_" + i,
+                        appConfig.fund,
+                        false,
+                        2,
+                        200
+                    );
+                } else {
+                    $("#highlight_chart_" + i).text("No Chart Data!");
+                }
+            } else if (all_highlights[i]["wherefrom"] == "crypto") {
+                var crypto_carousel = $("#crypto_carousel");
+                var item = $("<div>")
+                    .appendTo(crypto_carousel)
+                    .attr("class", "item");
+                var card = $("<div>")
+                    .appendTo(item)
+                    .attr("class", "card");
+                var chart_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "chart-content");
+                $("<div>")
+                    .appendTo(chart_content)
+                    .attr("id", "highlight_chart_" + i);
+                var detail_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "d-flex-column p-2");
+                var title = $("<a>")
+                    .appendTo(detail_content)
+                    .attr("href", "/cryptos/" + all_highlights[i]["symbol"]);
+                var h6 = $("<h6>")
+                    .appendTo(title)
+                    .attr({
+                        title: all_highlights[i]["name"],
+                        style:
+                            "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+                    })
+                    .text(all_highlights[i]["name"]);
+                h6.tooltip();
+                var center_content = $("<div>")
+                    .appendTo(detail_content)
+                    .attr("class", "center-content");
+                var smalls = $("<p>")
+                    .appendTo(center_content)
+                    .attr("class", "d-sm-flex align-items-end");
+                $("<span>")
+                    .appendTo(smalls)
+                    .attr("class", "font-primary m-r-10 f-16 f-w-700")
+                    .text(
+                        formatPrice(
+                            all_highlights[i]["price"],
+                            all_highlights[i]["gcurrency"]
+                        )
+                    );
+                var percent = $("<span>")
+                    .appendTo(smalls)
+                    .text(
+                        formatPercentage(all_highlights[i]["change_percentage"])
+                    );
+                if (all_highlights[i]["change_percentage"] >= 0)
+                    percent.addClass("font-primary");
+                else percent.addClass("font-danger");
+                if (
+                    all_highlights[i]["chart"] &&
+                    all_highlights[i]["chart"].length != 0
+                ) {
+                    var adjustedData = [];
+                    for (
+                        var j = 0;
+                        j < all_highlights[i]["chart"].length;
+                        j++
+                    ) {
+                        var unit = all_highlights[i]["chart"][j];
+                        var date = new Date(unit[0]);
+                        var unit_price = 0;
+                        if (Number(unit[1] * 1) > 10) {
+                            unit_price = Number((unit[1] * 1).toFixed(2));
+                        } else if (Number(unit[1] * 1) > 1) {
+                            unit_price = Number((unit[1] * 1).toFixed(3));
+                        } else if (Number(unit[1] * 1) > 0.1) {
+                            unit_price = Number((unit[1] * 1).toFixed(4));
+                        } else if (Number(unit[1] * 1) > 0.01) {
+                            unit_price = Number((unit[1] * 1).toFixed(5));
+                        } else if (Number(unit[1] * 1) > 0.001) {
+                            unit_price = Number((unit[1] * 1).toFixed(6));
+                        } else if (Number(unit[1] * 1) > 0.0001) {
+                            unit_price = Number((unit[1] * 1).toFixed(7));
+                        } else {
+                            unit_price = Number((unit[1] * 1).toFixed(8));
+                        }
+                        adjustedData[j] = [date.getTime(), unit_price];
+                    }
+                    renderChart(
+                        adjustedData,
+                        "#highlight_chart_" + i,
+                        appConfig.crypto,
+                        false,
+                        2,
+                        200
+                    );
+                } else {
+                    $("#highlight_chart_" + i).text("No Chart Data!");
+                }
+            }
+        }
+
+        $("#owl-carousel-14").owlCarousel({
+            items: 1,
+            margin: 10,
+            autoHeight: true,
+            nav: false
+        });
+        $(".owl-carousel-16").owlCarousel({
+            items: 4,
+            margin: 10,
+            autoHeight: true,
+            nav: false,
+            dots: false,
+            responsive: {
+                320: {
+                    items: 2,
+                    mergeFit: true
+                },
+                480: {
+                    items: 3,
+                    mergeFit: true
+                },
+                1670: {
+                    items: 4,
+                    mergeFit: true
+                }
+            }
+        });
+    }
+
+    if (news_symbols.length != 0) {
+        var joinedSymbols = news_symbols.join(",");
+        $.ajax({
+            method: "get",
+            url: "/api/news?symbols=" + joinedSymbols + "&&limit=4",
+            success: function(res) {
+                var artiles = res.data;
+                if (artiles.length > 0) {
+                    for (var i = 0; i < artiles.length; i++) {
+                        $(".news-" + i).css("display", "block");
+                        $(".news-img-" + i).attr("src", artiles[i]["image"]);
+                        $(".news-link-" + i).attr("href", artiles[i]["url"]);
+                        $(".news-date-" + i).html(
+                            dateStr(new Date(artiles[i].datetime))
+                        );
+                        $(".news-headline-" + i).html(artiles[i]["headline"]);
+                        if (artiles[i]["summary"].length > 150)
+                            $(".news-summary-" + i).attr('class', 'text-secondary').html(
+                                artiles[i]["summary"].substr(0, 150 - 3) + "..."
+                            );
+                        else
+                            $(".news-summary-" + i).attr('class', 'text-secondary').html(artiles[i]["summary"]);
+
+                        if (i == 2) {
+                            $(".see-more").removeClass("d-none");
+                            $(".see-more").addClass("d-block");
+                        }
+                    }
+                } else {
+                    $(".news-content").css("display", "none");
+                    $(".no-news").css("display", "block");
+                }
+                $(".news-content").css("opacity", "1");
+                $(".news-loader").css("display", "none");
+            }
+        });
+    }
 });
 
-function renderChart(adjustedData, obj) {
+function renderChart(
+    adjustedData,
+    obj,
+    chart_color,
+    lineLabel = true,
+    width = 3,
+    height = 425
+) {
     var options = {
         series: [
             {
@@ -76,13 +449,17 @@ function renderChart(adjustedData, obj) {
         chart: {
             id: "area-datetime",
             type: "area",
-            height: 425,
+            height: height,
             zoom: {
                 autoScaleYaxis: true
             },
             toolbar: {
                 show: false
             }
+        },
+        stroke: {
+            show: true,
+            width: width
         },
         dataLabels: {
             enabled: false
@@ -96,13 +473,19 @@ function renderChart(adjustedData, obj) {
             min: adjustedData[0]["created_at"],
             tickAmount: 6,
             axisTicks: {
-                show: true
+                show: lineLabel
             },
             axisBorder: {
-                show: true
+                show: lineLabel
+            },
+            labels: {
+                show: lineLabel
             }
         },
         yaxis: {
+            labels: {
+                show: lineLabel
+            },
             formatter: function(val) {
                 return val.toFixed(2);
             }
@@ -131,7 +514,7 @@ function renderChart(adjustedData, obj) {
                 breakpoint: 1366,
                 options: {
                     chart: {
-                        height: 350
+                        height: height * 0.8
                     }
                 }
             },
@@ -139,7 +522,7 @@ function renderChart(adjustedData, obj) {
                 breakpoint: 1238,
                 options: {
                     chart: {
-                        height: 300
+                        height: height * 0.6
                     },
                     grid: {
                         padding: {
@@ -152,7 +535,7 @@ function renderChart(adjustedData, obj) {
                 breakpoint: 992,
                 options: {
                     chart: {
-                        height: 300
+                        height: height * 0.5
                     }
                 }
             },
@@ -170,13 +553,13 @@ function renderChart(adjustedData, obj) {
                 breakpoint: 535,
                 options: {
                     chart: {
-                        height: 250
+                        height: height * 0.4
                     }
                 }
             }
         ],
 
-        colors: [vihoAdminConfig.primary]
+        colors: [chart_color]
     };
     var charttimeline = new ApexCharts(document.querySelector(obj), options);
     charttimeline.render();
@@ -243,7 +626,7 @@ function renderBarChart(data, obj) {
                 }
             }
         },
-        colors: [vihoAdminConfig.secondary]
+        colors: [appConfig.secondary]
     };
 
     var barChart = new ApexCharts(document.querySelector(obj), options);
@@ -258,7 +641,7 @@ function confirmTrade(
     price,
     institutional_price,
     current_shares,
-    is_fund
+    wherefrom
 ) {
     var shares_amount = $("#shares_amount").val();
     var csrf_token = $('meta[name="csrf-token"]').attr("content");
@@ -278,7 +661,7 @@ function confirmTrade(
         $(obj).attr("onclick", "");
         $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
         var url =
-            is_fund == 0
+            wherefrom == 0
                 ? "/api/stocks/" + symbol + "/" + type.toLowerCase()
                 : "/api/mfds/" + symbol + "/" + type.toLowerCase();
         $.ajax({
@@ -325,8 +708,8 @@ function openTradeModel(
     institutional_price,
     currency,
     shares,
-    is_fund,
-    exchange
+    wherefrom,
+    exchange='crypto'
 ) {
     $("#shares_amount").val("");
     if (type == "buy") {
@@ -350,7 +733,7 @@ function openTradeModel(
         formatPrice(Number(institutional_price), currency)
     );
 
-    if (exchange.toLowerCase() == "xnys")
+    if (exchange.toLowerCase() == "crypto" || exchange.toLowerCase() == "xnys")
         $("#trade_is_xnys").css("display", "none");
     else $("#trade_is_xnys").css("display", "block");
 
@@ -368,7 +751,7 @@ function openTradeModel(
             ", " +
             shares +
             ", " +
-            is_fund +
+            wherefrom +
             ")"
     );
     $("#tradeModal").modal("show");
@@ -412,6 +795,17 @@ function hide_ad() {
     $("#ad1_container").addClass("d-none");
     $("#ad2_container").removeClass("d-flex");
     $("#ad2_container").addClass("d-none");
-    $(".dashboard-content-wrapper").css("margin-right", "-12px");
+    $(".dashboard-content-wrapper").css("padding-right", "0px");
     $(".dashboard-content-wrapper").css("padding-top", "0px");
+}
+
+function dateStr(obj) {
+    var mm = obj.getMonth() + 1; // getMonth() is zero-based
+    var dd = obj.getDate();
+
+    return [
+        obj.getFullYear(),
+        (mm > 9 ? "" : "0") + mm,
+        (dd > 9 ? "" : "0") + dd
+    ].join(" : ");
 }

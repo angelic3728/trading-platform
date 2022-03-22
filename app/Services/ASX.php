@@ -73,40 +73,39 @@ class ASX
 
         try {
             $details = $this->makeApiCall('get', 'quote/' . $symbol, ['format' => 'json']);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $details = null;
         }
 
         try {
             $intro = $this->makeApiCall('get', 'search', ['query' => $symbol, 'limit' => 1, 'format' => 'json']);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $intro = null;
         }
 
         /**
          * Map data to individual collections
          */
-
-        $details = collect([
-            'price' => $details ? $details[0]['open'] : 0,
-            'change_percentage' => $details ? $details[0]['changesPercentage']*0.01 : 0,
-            'description' => $intro[0]['name'],
-            'exchange' => 'ASX',
-            'industry' => $intro[0]['industry'],
-            'sector' => $intro[0]['sector'],
-            'website' => '',
-            'latest_price' => $details ? $details[0]['previousClose'] : 0,
-            'previous_close' => $details ? $details[0]['previousClose'] : 0,
-            'market_cap' => $details ? $details[0]['marketCap'] : 0,
-            'volume' => $details ? $details[0]['volume'] : 0,
-            'avg_total_volume' => $details ? $details[0]['avgVolume'] : 0,
-            'pe_ratio' => $details ? $details[0]['pe'] : 0,
-        ]);
-
-        /**
-         * Return symbols
-         */
-        return $details;
+        if ($intro && $details) {
+            $details = collect([
+                'price' => $details ? $details[0]['open'] : 0,
+                'change_percentage' => $details ? $details[0]['changesPercentage'] * 0.01 : 0,
+                'description' => $intro[0]['name'],
+                'exchange' => 'ASX',
+                'industry' => $intro[0]['industry'],
+                'sector' => $intro[0]['sector'],
+                'website' => '',
+                'latest_price' => $details ? $details[0]['previousClose'] : 0,
+                'previous_close' => $details ? $details[0]['previousClose'] : 0,
+                'market_cap' => $details ? $details[0]['marketCap'] : 0,
+                'volume' => $details ? $details[0]['volume'] : 0,
+                'avg_total_volume' => $details ? $details[0]['avgVolume'] : 0,
+                'pe_ratio' => $details ? $details[0]['pe'] : 0,
+            ]);
+            return $details;
+        } else {
+            return [];
+        }
     }
 
     public function getChart(string $symbol, string $range = '1m')

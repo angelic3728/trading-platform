@@ -1,11 +1,11 @@
 @charset "UTF-8";
 
 .single-stock-link:hover {
-    color: black!important;
+    color: black !important;
 }
 
 .see-more {
-    color:lightcoral!important;
+    color: lightcoral !important;
 }
 
 .more-info-link {
@@ -17,17 +17,17 @@
 }
 
 .dashboard-content-wrapper {
-    margin-right: 100px;
+    padding-right: 110px;
     padding-top: 95px;
 }
 
 #ad1_container {
     height: 110px;
-    background-color: bisque;
+    background-color: #f5f7fb;
     margin-bottom: 10px;
     width: calc(100% - 420px);
     top: 82px;
-    z-index: 1000;
+    z-index: 8;
     position: fixed;
     margin-left: -27px;
 }
@@ -38,29 +38,86 @@
     right: 0px;
     height: calc(100vh - 91px);
     width: 130px;
-    background-color: bisque;
-    z-index: 1000;
+    background-color: #f5f7fb;
+    z-index: 8;
     padding: 50px 0px;
 }
 
-@media( max-width: 1629px ) {
+@media (max-width: 1629px) {
     .card.profile-greeting {
         padding-top: 12px !important;
         padding-bottom: 12px !important;
     }
 }
 
-@media( max-width: 1200px ) {
+@media (max-width: 1200px) {
     #ad1_container {
-        display: none!important;
+        display: none !important;
     }
 
     #ad2_container {
-        display: none!important;
+        display: none !important;
     }
 
     .dashboard-content-wrapper {
         margin-right: -12px;
-        padding-top:0px;
+        padding-top: 0px;
     }
+}
+
+.header-wrapper {
+    width: calc(100% - 290px);
+}
+
+.nav-ticker {
+    width: calc(100% - 800px);
+}
+
+.ticker-wrapper-h{
+	display: flex;	
+	position: relative;
+	overflow: hidden;
+}
+
+.news-ticker-h {
+	display: flex;
+	margin:0;
+	padding: 0;
+	padding-left: 90%;
+	z-index: 999;
+	
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-name: tic-h;
+	animation-duration: 60s;
+    height: 82px;
+}
+.news-ticker-h:hover { 
+	animation-play-state: paused; 
+}
+
+.news-ticker-h li{
+	display: flex;
+	width: 100%;
+	align-items: center;
+	white-space: nowrap;
+	padding-left: 20px;
+    padding-top: 5px;
+}
+
+.news-ticker-h li a{
+	color: #212529;
+	font-weight: bold;
+}
+
+@keyframes tic-h {
+	0% {
+		-webkit-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+		visibility: visible;
+	}
+	100% {
+		-webkit-transform: translate3d(-100%, 0, 0);
+		transform: translate3d(-100%, 0, 0);
+	}
 }

@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MutualFund extends Model
+class Fund extends Model
 {
     use SoftDeletes;
 
@@ -28,9 +28,9 @@ class MutualFund extends Model
     /**
      * Get the stock prices.
      */
-    public function mutualFundPrices()
+    public function fundPrices()
     {
-        return $this->hasMany('App\MutualFundPrice');
+        return $this->hasMany('App\FundPrice');
     }
 
     /**
