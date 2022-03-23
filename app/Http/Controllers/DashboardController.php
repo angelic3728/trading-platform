@@ -31,7 +31,13 @@ class DashboardController extends Controller
          * Get Latest Documents
          */
         $documents = auth()->user()->documents()->orderBy('id', 'DESC')->latest()->take(5)->get();
+        /**
+         * Get Latest Xtbs
+         */
         $xtbs = Xtbs::query()->orderBy('id', 'DESC')->latest()->take(5)->get();
+        /**
+         * Get All transaction
+         */
         $transactions = auth()->user()->transactions()->orderBy('created_at', 'DESC')->get();
         $used_currencies = array();
         $total_transaction_price = 0;
@@ -149,7 +155,7 @@ class DashboardController extends Controller
                             case 'gecko':
                                 $crypto_data = IEX::getCDetails($transaction->crypto->coin_id);
                                 $transaction->latest_price = array_get($crypto_data, 'market_data.current_price.usd');
-                                $transaction->change_percentage = array_get($crypto_data, 'market_data.price_change_percentage_24h');
+                                $transaction->change_percentage = array_get($crypto_data, 'market_data.price_change_percentage_24h')? round(array_get($crypto_data, 'market_data.price_change_percentage_24h'), 2) : null;
                                 $transaction->institutional_price = array_get($crypto_data, 'market_data.current_price.usd') ? '$'.$transaction->crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null;
                                 break;
                             case 'custom':
@@ -176,32 +182,17 @@ class DashboardController extends Controller
         $all_highlights = array_merge($stock_highlights->data, $fund_highlights->data);
         $all_highlights = array_merge($all_highlights, $crypto_highlights->data);
 
-        /**
-         * Get my investments symbols
-         */
-        $investments = Transaction::where('user_id', auth()->id())
-            ->where('wherefrom', 0)
-            ->select('stock_id')
-            ->with('stock')
-            ->groupBy('stock_id')
-            ->get()
-            ->where('stock.exchange', 'XNYS')
-            ->pluck('stock.symbol')
-            ->toArray();
+        $user_currency = json_decode(auth()->user()->balance, 'true')['currency'];
+        if($user_currency != 'USD') {
+            $user_currency_rate = IEX::getRates('USD'.$user_currency);
+            $total_transaction_price = $total_transaction_price*$user_currency_rate['USD'.$user_currency];
+        }
 
         /**
-         * Get highlighted symbols
+         * Get Top cryptos
          */
-        $highlighted = Stock::where('highlighted', true)
-            ->where('exchange', 'XNYS')
-            ->get()
-            ->pluck('symbol')
-            ->toArray();
 
-        /**
-         * Prepare news symbols
-         */
-        $news_symbols = array_merge($investments, $highlighted);
+        $top_cryptos = IEX::getMarketCryptos();
 
         /**
          * Return view
@@ -210,10 +201,11 @@ class DashboardController extends Controller
             'account_manager' => $account_manager,
             'documents' => $documents,
             'total_transaction_price' => $total_transaction_price,
+            'user_currency' => $user_currency,
             'transactions' => $transactions,
             'xtbs' => $xtbs,
             'all_highlights' => $all_highlights,
-            'news_symbols' => $news_symbols
+            'top_cryptos' => $top_cryptos
         ]);
     }
 

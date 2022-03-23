@@ -57,7 +57,7 @@ class Stock extends Model
                 break;
 
             case 'EUR':
-                return number_format($price, $decimals) . '€';
+                return '€' . number_format($price, $decimals);
                 break;
 
             case 'AUD':
@@ -68,6 +68,10 @@ class Stock extends Model
                 return 'C$' . number_format($price, $decimals);
                 break;
 
+            case 'SEK':
+                return number_format($price, $decimals)." kr";
+                break;
+
             default:
                 return $price;
                 break;
@@ -75,7 +79,8 @@ class Stock extends Model
     }
 
     // Formats currency
-    public function getGcurrencyAttribute($gcurrency) {
+    public function getGcurrencyAttribute($gcurrency)
+    {
         return $gcurrency;
     }
 
@@ -87,7 +92,7 @@ class Stock extends Model
     public function institutionalPrice($last_price)
     {
 
-        return $last_price - ($last_price * ($this->discount_percentage / 100));
+        return round($last_price - ($last_price * ($this->discount_percentage / 100)), 2);
     }
 
     /**

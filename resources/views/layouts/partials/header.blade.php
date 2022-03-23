@@ -21,9 +21,15 @@
         </ul>
       </div>
       <div class="nav-ticker col p-0">
-        <div id="ticker-wrapper" class="ticker-wrapper-h">
-          <ul class="news-ticker-h">
-          </ul>
+        <div class="ticker-wrap">
+          <div class="ticker">
+            <ul class="ticker__item" id="forward_ticker_wrapper">
+            </ul>
+          </div>
+          <div class="ticker2">
+            <ul class="ticker__item" id="back_ticker_wrapper">
+            </ul>
+          </div>
         </div>
       </div>
       <div class="nav-right pull-right right-menu p-0">

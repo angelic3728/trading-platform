@@ -7,11 +7,13 @@
 @endpush
 
 @section('content')
-<div class="container stock-details dashboard-content-wrapper">
-    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
-        <a href="https://bannerboo.com/" target="_blank">
-            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
-        </a>
+<div class="col-md-12 stock-details dashboard-content-wrapper">
+    <div class="col-xl-12 container-fluid">
+        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+            <a href="https://bannerboo.com/" target="_blank">
+                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+            </a>
+        </div>
     </div>
     <div class="d-flex justify-content-center align-items-center" id="ad2_container">
         <ul>
@@ -81,7 +83,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <h4>Company Information</h4>
-                            <p>{{ array_get($data, 'company.description', '-') }}</p>
+                            <p>{{ (array_get($data, 'company.description', '-'))?array_get($data, 'company.description', '-'):"No Information." }}</p>
                         </div>
 
                         <div class="col-lg-6 d-flex flex-column justify-content-between">
@@ -103,10 +105,6 @@
                                         <strong>Exchange</strong>
                                         <span>{{ array_get($data, 'company.exchange', '-') }}</span>
                                     </div>
-                                    <div class="detail">
-                                        <strong>Sector</strong>
-                                        <span>{{ array_get($data, 'company.sector', '-') }}</span>
-                                    </div>
                                 </div>
 
                                 <div class="col-sm-6 col-md-4">
@@ -118,14 +116,6 @@
                                         <strong>Volume</strong>
                                         <span>{{ array_get($data, 'numbers.volume', '-') }}</span>
                                     </div>
-                                    <div class="detail">
-                                        <strong>Latest EPS</strong>
-                                        <span>{{ array_get($data, 'numbers.latest_eps', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Industry</strong>
-                                        <span>{{ array_get($data, 'company.industry', '-') }}</span>
-                                    </div>
                                 </div>
 
                                 <div class="col-sm-6 col-md-4">
@@ -136,14 +126,6 @@
                                     <div class="detail">
                                         <strong>AVG Total Volume</strong>
                                         <span>{{ array_get($data, 'numbers.avg_total_volume', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Latest EPS Date</strong>
-                                        <span>{{ array_get($data, 'numbers.latest_eps_date', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Website</strong>
-                                        <a href="{{ array_get($data, 'company.website', '-') }}" target="_blank">{{ array_get($data, 'company.website', '-') }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -290,10 +272,7 @@
                             },
                             y: {
                                 formatter: function(val) {
-                                    if (currency == "GBP")
-                                        return formatPrice(val / 100, currency)
-                                    else
-                                        return formatPrice(val, currency)
+                                    return formatPrice(val, currency);
                                 }
                             }
                         },
@@ -430,58 +409,6 @@
         });
         $(".chart-content").css("opacity", "0.3");
         renderChart(range);
-    }
-
-    function dateStr(obj) {
-        var mm = obj.getMonth() + 1; // getMonth() is zero-based
-        var dd = obj.getDate();
-
-        return [obj.getFullYear(),
-            (mm > 9 ? '' : '0') + mm,
-            (dd > 9 ? '' : '0') + dd
-        ].join(' : ');
-    };
-
-    // format Price and Percentage functions
-    function formatPrice(price, currency) {
-        switch (currency) {
-            case "USD":
-                return "$" + Number(price).toFixed(2);
-                break;
-
-            case "GBP":
-                return Number(price * 100).toFixed(2) + "p";
-                break;
-
-            case "EUR":
-                return Number(price).toFixed(2) + "€";
-                break;
-
-            case "AUD":
-                return "A$" + Number(price).toFixed(2);
-                break;
-
-            case "CAD":
-                return "C$" + Number(price).toFixed(2);
-                break;
-
-            default:
-                return price;
-                break;
-        }
-    }
-
-    function formatPercentage(percentage) {
-        return (Number(percentage) * 100).toFixed(2) + "%";
-    }
-
-    function hide_ad() {
-        $("#ad1_container").removeClass("d-flex");
-        $("#ad1_container").addClass("d-none");
-        $("#ad2_container").removeClass("d-flex");
-        $("#ad2_container").addClass("d-none");
-        $(".dashboard-content-wrapper").css("padding-right", "0px");
-        $(".dashboard-content-wrapper").css("padding-top", "0px");
     }
 
     $("#current_stock_price").html(formatPrice("{{ array_get($data, 'price') }}", "{{ array_get($data, 'currency') }}"));

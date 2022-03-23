@@ -7,11 +7,23 @@
 @endpush
 
 @section('content')
-<div class="container stock-details dashboard-content-wrapper">
-    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
-        <a href="https://bannerboo.com/" target="_blank">
-            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
-        </a>
+<div class="col-md-12 stock-details dashboard-content-wrapper">
+    <div class="col-xl-12 container-fluid">
+        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+            <a href="https://bannerboo.com/" target="_blank">
+                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+            </a>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+        <ul>
+            <li>
+                <a href="https://bannerboo.com/" target="_blank">
+                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
     </div>
     <div class="row">
         <div class="col">
@@ -65,16 +77,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="d-flex justify-content-center align-items-center" id="ad2_container">
-        <ul>
-            <li>
-                <a href="https://bannerboo.com/" target="_blank">
-                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
-                </a>
-            </li>
-        </ul>
-        <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
     </div>
     <div class="modal fade" id="buySharesModal" tabindex="-1" role="dialog" aria-labelledby="Document Modal Label" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -149,7 +151,7 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <h4>Company Information</h4>
-                            <p>{{ array_get($data, 'company.description', '-') }}</p>
+                            <p>{{ (array_get($data, 'company.description', '-'))?array_get($data, 'company.description', '-'):"No Information." }}</p>
                             <hr class="d-lg-none d-xl-none">
                         </div>
 
@@ -198,11 +200,11 @@
                         </div>
                     </div>
 
-                    <!-- <div class="row link">
+                    <div class="row link">
                         <div class="col d-flex justify-content-end">
                             <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this stock</a>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -225,8 +227,8 @@
                 <div class="col-xl-4 col-md-6 news-0" style="display: none;">
                     <a href="" class="news-link-0" target="_blank">
                         <div class="prooduct-details-box">
-                            <div class="media">
-                                <img class="align-self-center img-fluid news-img-0" src="" alt="#">
+                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                <img class="align-self-center img-fluid news-img-0" src="" alt="#" style="max-height: 180px;">
                                 <div class="media-body">
                                     <p class="news-date-0 text-dark mb-0"></p>
                                     <h6 class="news-headline-0"></h6>
@@ -239,8 +241,8 @@
                 <div class="col-xl-4 col-md-6 news-1" style="display: none;">
                     <a href="" class="news-link-1" target="_blank">
                         <div class="prooduct-details-box">
-                            <div class="media">
-                                <img class="align-self-center img-fluid news-img-1" src="" alt="#">
+                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                <img class="align-self-center img-fluid news-img-1" src="" alt="#" style="max-height: 180px;">
                                 <div class="media-body">
                                     <p class="news-date-1 text-dark mb-0"></p>
                                     <h6 class="news-headline-1"></h6>
@@ -253,8 +255,8 @@
                 <div class="col-xl-4 col-md-6 news-2" style="display: none;">
                     <a href="" class="news-link-2" target="_blank">
                         <div class="prooduct-details-box">
-                            <div class="media">
-                                <img class="align-self-center img-fluid news-img-2" src="" alt="#">
+                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                <img class="align-self-center img-fluid news-img-2" src="" alt="#" style="max-height: 180px;">
                                 <div class="media-body">
                                     <p class="news-date-2 text-dark mb-0"></p>
                                     <h6 class="news-headline-2"></h6>
@@ -335,12 +337,9 @@
             url: '/api/stocks/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
-                debugger;
                 if (res.success && res.data && res.data.length != 0) {
                     var times = 1;
-                    var currency = "{{ array_get($data, 'gcurrency') }}";
-                    if (currency == 'gbp')
-                        times = 100;
+                    var currency = "{{ array_get($data, 'currency') }}";
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {
                         var date = new Date(res.data[i]['date']);
@@ -386,10 +385,7 @@
                             },
                             y: {
                                 formatter: function(val) {
-                                    if (currency == "GBP")
-                                        return formatPrice(val / 100, currency)
-                                    else
-                                        return formatPrice(val, currency)
+                                    return formatPrice(val, currency);
                                 }
                             }
                         },
@@ -528,60 +524,8 @@
         renderChart(range);
     }
 
-    function dateStr(obj) {
-        var mm = obj.getMonth() + 1; // getMonth() is zero-based
-        var dd = obj.getDate();
-
-        return [obj.getFullYear(),
-            (mm > 9 ? '' : '0') + mm,
-            (dd > 9 ? '' : '0') + dd
-        ].join(' : ');
-    };
-
-    // format Price and Percentage functions
-    function formatPrice(price, currency) {
-        switch (currency) {
-            case "USD":
-                return "$" + Number(price).toFixed(2);
-                break;
-
-            case "GBP":
-                return Number(price * 100).toFixed(2) + "p";
-                break;
-
-            case "EUR":
-                return Number(price).toFixed(2) + "€";
-                break;
-
-            case "AUD":
-                return "A$" + Number(price).toFixed(2);
-                break;
-
-            case "CAD":
-                return "C$" + Number(price).toFixed(2);
-                break;
-
-            default:
-                return price;
-                break;
-        }
-    }
-
-    function formatPercentage(percentage) {
-        return (Number(percentage) * 100).toFixed(2) + "%";
-    }
-
-    function hide_ad() {
-        $("#ad1_container").removeClass("d-flex");
-        $("#ad1_container").addClass("d-none");
-        $("#ad2_container").removeClass("d-flex");
-        $("#ad2_container").addClass("d-none");
-        $(".dashboard-content-wrapper").css("padding-right", "0px");
-        $(".dashboard-content-wrapper").css("padding-top", "0px");
-    }
-
-    $("#current_stock_price").html(formatPrice("{{ array_get($data, 'price') }}", "{{ array_get($data, 'currency') }}"));
-    $("#current_stock_percentage").html(formatPercentage("{{ array_get($data, 'change_percentage', 'null') }}"));
+    $("#current_stock_price").html(formatPrice(Number("{{ array_get($data, 'price') }}"), "{{ array_get($data, 'currency') }}"));
+    $("#current_stock_percentage").html(formatPercentage(Number("{{ array_get($data, 'change_percentage', 'null') }}")));
 </script>
 @endpush
 @endsection

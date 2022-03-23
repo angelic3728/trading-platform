@@ -7,11 +7,13 @@
 @endpush
 
 @section('content')
-<div class="container stock-details dashboard-content-wrapper">
-    <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
-        <a href="https://bannerboo.com/" target="_blank">
-            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
-        </a>
+<div class="col-md-12 stock-details dashboard-content-wrapper">
+    <div class="col-xl-12 container-fluid">
+        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+            <a href="https://bannerboo.com/" target="_blank">
+                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+            </a>
+        </div>
     </div>
     <div class="d-flex justify-content-center align-items-center" id="ad2_container">
         <ul>
@@ -179,7 +181,7 @@
                                 <td>
                                     <strong>Retail Price</strong>
                                 </td>
-                                <td>${{array_get($data, "price")}}</td>
+                                <td>${{(array_get($data, "price")*1>10)?number_format(array_get($data, "price"), 2):((array_get($data, "price")*1>1)?number_format(array_get($data, "price"), 3):number_format(array_get($data, "price"), 6))}}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -290,7 +292,7 @@
                             },
                             y: {
                                 formatter: function(val) {
-                                    return '$' + val;
+                                    return formatPrice(val, 'USD');
                                 }
                             }
                         },
@@ -429,31 +431,9 @@
         renderChart(range);
     }
 
-    function dateStr(obj) {
-        var mm = obj.getMonth() + 1; // getMonth() is zero-based
-        var dd = obj.getDate();
-
-        return [obj.getFullYear(),
-            (mm > 9 ? '' : '0') + mm,
-            (dd > 9 ? '' : '0') + dd
-        ].join(' : ');
-    };
-
-    function formatPercentage(percentage) {
-        return Number(percentage).toFixed(2) + "%";
-    }
-
-    function hide_ad() {
-        $("#ad1_container").removeClass("d-flex");
-        $("#ad1_container").addClass("d-none");
-        $("#ad2_container").removeClass("d-flex");
-        $("#ad2_container").addClass("d-none");
-        $(".dashboard-content-wrapper").css("padding-right", "0px");
-        $(".dashboard-content-wrapper").css("padding-top", "0px");
-    }
-
-    $("#current_crypto_price").html("$" + "{{ array_get($data, 'price') }}");
-    $("#current_crypto_percentage").html(formatPercentage("{{ array_get($data, 'change_percentage', 'null') }}"));
+    var current_price = Number("{{ array_get($data, 'price', 0) }}");
+    $("#current_crypto_price").html(formatPrice(current_price, "USD"));
+    $("#current_crypto_percentage").html(formatPercentage("{{ array_get($data, 'change_percentage', 0) }}"/100));
 </script>
 @endpush
 @endsection

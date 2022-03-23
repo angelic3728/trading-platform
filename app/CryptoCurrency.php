@@ -51,7 +51,7 @@ class CryptoCurrency extends Model
      */
     public function institutionalPrice($last_price)
     {
-        return $last_price - ($last_price * ($this->discount_percentage / 100));
+        return round($last_price - ($last_price * ($this->discount_percentage / 100)), 2);
     }
 
     public function getIdentifierAttribute()

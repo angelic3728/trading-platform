@@ -20,7 +20,7 @@ $(document).ready(function() {
                                 var date = new Date(crypto[0]);
                                 adjustedData[j] = [date.getTime(), Number((crypto[1] * 1).toFixed(2))]
                             }
-                            renderChart(adjustedData, (i + 1), res.data[i]['gcurrency'], displayData);
+                            renderChart(adjustedData, (i + 1), 'USD', displayData);
                         } else {
                             $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
                                 type: 'theme',
@@ -35,7 +35,7 @@ $(document).ready(function() {
                             $("#h_crypto_title" + index).attr('title', displayData[0]);
                             $("#h_crypto_link" + index).attr('href', '/cryptos/' + displayData[3]);
                             $("#h_crypto_title" + index).tooltip();
-                            $("#current_crypto_price" + index).html(formatPrice(displayData[1], currency));
+                            $("#current_crypto_price" + index).html(formatPrice(displayData[1], 'USD'));
                             $("#current_crypto_percentage" + index).html(formatPercentage(displayData[2]));
                             if (displayData[2] >= 0)
                                 $("#current_crypto_percentage" + index).addClass("font-primary");
@@ -110,7 +110,7 @@ function renderChart(adjustedData, index, currency, displayData) {
             },
             y: {
                 formatter: function(val) {
-                    return '$'+val;
+                    return formatPrice(val, 'USD');
                 }
             }
         },
@@ -182,51 +182,9 @@ function renderChart(adjustedData, index, currency, displayData) {
     $("#h_crypto_link" + index).attr('href', '/cryptos/' + displayData[3]);
     $("#h_crypto_title" + index).tooltip();
     $("#current_crypto_price" + index).html(formatPrice(displayData[1], currency));
-    $("#current_crypto_percentage" + index).html(formatPercentage(displayData[2]));
+    $("#current_crypto_percentage" + index).html(formatPercentage(displayData[2]/100));
     if (displayData[2] >= 0)
         $("#current_crypto_percentage" + index).addClass("font-primary");
     else
         $("#current_crypto_percentage" + index).addClass("font-danger");
-}
-
-// format Price and Percentage functions
-function formatPrice(price, currency) {
-    switch (currency) {
-        case "USD":
-            return "$" + Number(price).toFixed(2);
-            break;
-
-        case "GBP":
-            return Number(price * 100).toFixed(2) + "p";
-            break;
-
-        case "EUR":
-            return Number(price).toFixed(2) + "€";
-            break;
-
-        case "AUD":
-            return "A$" + Number(price).toFixed(2);
-            break;
-
-        case "CAD":
-            return "C$" + Number(price).toFixed(2);
-            break;
-
-        default:
-            return price;
-            break;
-    }
-}
-
-function formatPercentage(percentage) {
-    return Number(percentage).toFixed(2) + "%";
-}
-
-function hide_ad() {
-    $("#ad1_container").removeClass("d-flex");
-    $("#ad1_container").addClass("d-none");
-    $("#ad2_container").removeClass("d-flex");
-    $("#ad2_container").addClass("d-none");
-    $(".dashboard-content-wrapper").css("padding-right", "0px");
-    $(".dashboard-content-wrapper").css("padding-top", "0px");
 }

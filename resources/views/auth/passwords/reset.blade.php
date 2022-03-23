@@ -2,14 +2,8 @@
 
 @section('content')
 <div class="container login">
-
-    <div class="logo">
-        @svg('logo-auth')
-    </div>
-
-    <div class="card">
+    <div class="card mt-10 p-5">
         <div class="card-header">Reset Password</div>
-
         <div class="card-body">
             <form method="POST" action="{{ route('password.update') }}">
                 @csrf

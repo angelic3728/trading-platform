@@ -43,14 +43,18 @@
         <!-- Container-fluid Ends-->
       </div>
       <!-- footer start-->
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-6 footer-copyright">
-              <p class="mb-0">Copyright {{date('Y')}}-{{date('y', strtotime('+1 year'))}} © viho All rights reserved.</p>
+      <footer>
+        <div class="container">
+          <div class="row justify-content-between">
+            <div class="col-sm-auto">
+              © {{ date('Y') }} {{ config('app.name') }}
             </div>
-            <div class="col-md-6">
-              <p class="pull-right mb-0">Hand crafted & made with <i class="fa fa-heart font-secondary"></i></p>
+            <div class="col-sm-auto pt-2 pt-sm-0">
+              <nav>
+                <a href="mailto://{{ config('app.email') }}" class="m-r-10">Contact Us</a>
+                <a href="{{ route('legal.terms-and-conditions') }}" class="m-r-10">Terms & Conditions</a>
+                <a href="{{ route('legal.privacy-policy') }}" class="m-r-10">Privacy Policy</a>
+              </nav>
             </div>
           </div>
         </div>
@@ -72,6 +76,7 @@
 
     // ticker data
     var ticker_data = {!! $widget_items !!};
+    var news_symbols = {!! json_encode($news_symbols) !!};
   </script>
 
   @includeIf('layouts.partials.js')

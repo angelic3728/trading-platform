@@ -17,7 +17,7 @@
 }
 
 .dashboard-content-wrapper {
-    padding-right: 110px;
+    padding-right: 125px;
     padding-top: 95px;
 }
 
@@ -79,45 +79,78 @@
 	overflow: hidden;
 }
 
-.news-ticker-h {
-	display: flex;
-	margin:0;
-	padding: 0;
-	padding-left: 90%;
-	z-index: 999;
-	
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-	animation-name: tic-h;
-	animation-duration: 60s;
-    height: 82px;
-}
-.news-ticker-h:hover { 
-	animation-play-state: paused; 
+@-webkit-keyframes ticker {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        visibility: visible;
+    }
+    100% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+    }
 }
 
-.news-ticker-h li{
-	display: flex;
-	width: 100%;
-	align-items: center;
-	white-space: nowrap;
-	padding-left: 20px;
-    padding-top: 5px;
+@keyframes ticker {
+    0% {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        visibility: visible;
+    }
+    100% {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+    }
 }
 
-.news-ticker-h li a{
-	color: #212529;
-	font-weight: bold;
+.ticker-wrap {
+    display: inline-flex;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+    height: 73px;
 }
 
-@keyframes tic-h {
-	0% {
-		-webkit-transform: translate3d(0, 0, 0);
-		transform: translate3d(0, 0, 0);
-		visibility: visible;
-	}
-	100% {
-		-webkit-transform: translate3d(-100%, 0, 0);
-		transform: translate3d(-100%, 0, 0);
-	}
+.ticker-wrap .ticker,
+.ticker-wrap .ticker2 {
+    display: inline-block;
+    padding-left: 2rem;
+    white-space: nowrap;
+}
+
+.ticker-wrap .ticker,
+.ticker-wrap .ticker2 {
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-name: ticker;
+    animation-name: ticker;
+    -webkit-animation-duration: 40s;
+    animation-duration: 40s;
+}
+
+.ticker-wrap .ticker2 {
+    left: 100%;
+}
+
+.ticker-wrap .ticker__item {
+    display: block;
+}
+
+.ticker-wrap .ticker__item li {
+    padding-left: 2rem;
+}
+
+.ticker__item li > a {
+    color: #20137c;
+}
+
+.ticker__item li > a:hover {
+    color: #023d32;
+}
+
+/* no vertical border datatable */
+.dataTables_wrapper table.dataTable tbody td, .dataTables_wrapper table.dataTable tbody th {
+    border:0px!important;
 }

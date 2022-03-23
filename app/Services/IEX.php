@@ -164,6 +164,23 @@ class IEX
         return $results;
     }
 
+    public function getMarketCryptos() {
+        $client = new CoinGeckoClient();
+        $feeds = $client->coins()->getMarkets('usd', ['page'=>'1', 'per_page'=>'5']);
+        $results = [];
+        foreach ($feeds as $item) {
+            array_push($results, collect([
+                'symbol' => $item['symbol'],
+                'name' => $item['name'],
+                'image' => $item['image'],
+                'current_price' => $item['current_price'],
+                'market_cap' => $item['market_cap']
+            ]));
+        }
+
+        return $results;
+    }
+
     public function getDetails(string $symbol)
     {
         /**

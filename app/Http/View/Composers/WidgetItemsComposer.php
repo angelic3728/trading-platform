@@ -10,6 +10,7 @@ use Cache;
 use App\Stock;
 use App\Fund;
 use App\CryptoCurrency;
+use App\Transaction;
 
 use CustomStockData;
 use CustomFundData;
@@ -26,13 +27,13 @@ class WidgetItemsComposer
      */
     public function compose(View $view)
     {
-        $view->with('widget_items', $this->getResults());
+        $view->with(['widget_items'=>$this->getWidgets(), 'news_symbols'=>$this->getNewsSymbols()]);
     }
 
     /**
      * Prepare Stock Widget Data
      */
-    public function getResults()
+    public function getWidgets()
     {
 
         /**
@@ -81,7 +82,7 @@ class WidgetItemsComposer
              */
             switch ($c_stock['data_source']) {
                 case 'iex':
-                    $c_stock->put('price', array_get($iex_stock_data, $c_stock->get('symbol') . '.price')?$stock->formatPrice(array_get($iex_stock_data, $c_stock->get('symbol') . '.price')):'-');
+                    $c_stock->put('price', array_get($iex_stock_data, $c_stock->get('symbol') . '.price'));
                     $c_stock->put('chart', array_get($iex_stock_data, $c_stock->get('symbol') . '.chart'));
                     $c_stock->put('change_percentage', array_get($iex_stock_data, $c_stock->get('symbol') . '.quote.changePercent'));
                     break;
@@ -93,9 +94,9 @@ class WidgetItemsComposer
                     $asx_chart = Cache::remember('stocks:widget-asx-chart-'.$c_stock->get('symbol'), 15, function() use ($c_stock) {
                         return ASX::getChart($c_stock->get('symbol'), '1m');
                     });
-                    $c_stock->put('price', array_get($asx_data, 'price')?$stock->formatPrice(array_get($asx_data, 'price')):'-');
+                    $c_stock->put('price', array_get($asx_data, 'price'));
                     $c_stock->put('chart', $asx_chart);
-                    $c_stock->put('change_percentage', array_get($asx_data, 'price'));
+                    $c_stock->put('change_percentage', array_get($asx_data, 'change_percentage'));
                     break;
 
                 case 'custom':
@@ -131,7 +132,7 @@ class WidgetItemsComposer
             switch ($c_fund['data_source']) {
 
                 case 'iex':
-                    $c_fund->put('price', array_get($iex_fund_data, $c_fund->get('symbol') . '.price')?$fund->formatPrice(array_get($iex_fund_data, $c_fund->get('symbol') . '.price')):'-');
+                    $c_fund->put('price', array_get($iex_fund_data, $c_fund->get('symbol') . '.price'));
                     $c_fund->put('chart', array_get($iex_fund_data, $c_fund->get('symbol') . '.chart'));
                     $c_fund->put('change_percentage', array_get($iex_fund_data, $c_fund->get('symbol') . '.quote.changePercent'));
                     break;
@@ -143,13 +144,13 @@ class WidgetItemsComposer
                     $asx_chart = Cache::remember('funds:widget-asx-chart-'.$c_fund->get('symbol'), 15, function() use ($c_fund) {
                         return ASX::getChart($c_fund->get('symbol'), '1m');
                     });
-                    $c_fund->put('price', array_get($asx_data, 'price')?$c_fund->formatPrice(array_get($asx_data, 'price')):'-');
+                    $c_fund->put('price', array_get($asx_data, 'price'));
                     $c_fund->put('chart', $asx_chart);
                     $c_fund->put('change_percentage', array_get($asx_data, 'price'));
                     break;
 
                 case 'custom':
-                    $c_fund->put('price', $fund->formatPrice(CustomFundData::price($c_fund->get('symbol'))));
+                    $c_fund->put('price', CustomFundData::price($c_fund->get('symbol')));
                     $c_fund->put('chart', CustomFundData::chart($c_fund->get('symbol')));
                     $c_fund->put('change_percentage', CustomFundData::changePercentage($c_fund->get('symbol')));
                     break;
@@ -183,7 +184,7 @@ class WidgetItemsComposer
                             'wherefrom' => 'crypto',
                             'symbol' => array_get($detail, 'symbol'),
                             'name' => array_get($detail, 'name'),
-                            'price' => "$".array_get($detail, 'market_data.current_price.usd'),
+                            'price' => array_get($detail, 'market_data.current_price.usd'),
                             'change_percentage' => array_get($detail, 'market_data.price_change_percentage_24h'),
                             'chart' => $chart,
                         ]));
@@ -196,7 +197,7 @@ class WidgetItemsComposer
                             'wherefrom' => 'crypto',
                             'symbol' => $crypto->symbol,
                             'name' => $crypto->name,
-                            'price' => '$'.$price,
+                            'price' => $price,
                             'change_percentage' => $change_percentage,
                             'chart' => $chart,
                         ]));
@@ -213,5 +214,35 @@ class WidgetItemsComposer
          * Return results
          */
         return $results;
+    }
+
+    public function getNewsSymbols() {
+         /**
+         * Get my investments symbols
+         */
+        $investments = Transaction::where('user_id', auth()->id())
+            ->where('wherefrom', 0)
+            ->select('stock_id')
+            ->with('stock')
+            ->groupBy('stock_id')
+            ->get()
+            ->where('stock.exchange', 'XNYS')
+            ->pluck('stock.symbol')
+            ->toArray();
+
+        /**
+         * Get highlighted symbols
+         */
+        $highlighted = Stock::where('highlighted', true)
+            ->where('exchange', 'XNYS')
+            ->get()
+            ->pluck('symbol')
+            ->toArray();
+
+        /**
+         * Prepare news symbols
+         */
+        $news_symbols = array_merge($investments, $highlighted);
+        return $news_symbols;
     }
 }

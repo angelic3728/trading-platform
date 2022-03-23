@@ -102,7 +102,7 @@ $(document).ready(function() {
     else $("#chart-timeline-dashbord3").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
 
     if (stockData.length == 0 && fundData.length == 0 && crytoData.length == 0)
-        $("#month_profit_dash").append("<div class='d-flex justify-content-center align-items-center' style='min-height:365px;'><h4>No Chart Data!</h4></div>");
+        $("#month_profit_dash").append("<div class='d-flex justify-content-center align-items-center' style='min-height:470px;'><h4>No Chart Data!</h4></div>");
     else renderBarChart(monthProfits, "#month_profit_dash");
 
     if (all_highlights.length != 0) {
@@ -308,13 +308,13 @@ $(document).ready(function() {
                     .text(
                         formatPrice(
                             all_highlights[i]["price"],
-                            all_highlights[i]["gcurrency"]
+                            'USD'
                         )
                     );
                 var percent = $("<span>")
                     .appendTo(smalls)
                     .text(
-                        formatPercentage(all_highlights[i]["change_percentage"])
+                        formatPercentage(all_highlights[i]["change_percentage"]/100)
                     );
                 if (all_highlights[i]["change_percentage"] >= 0)
                     percent.addClass("font-primary");
@@ -391,44 +391,6 @@ $(document).ready(function() {
             }
         });
     }
-
-    if (news_symbols.length != 0) {
-        var joinedSymbols = news_symbols.join(",");
-        $.ajax({
-            method: "get",
-            url: "/api/news?symbols=" + joinedSymbols + "&&limit=4",
-            success: function(res) {
-                var artiles = res.data;
-                if (artiles.length > 0) {
-                    for (var i = 0; i < artiles.length; i++) {
-                        $(".news-" + i).css("display", "block");
-                        $(".news-img-" + i).attr("src", artiles[i]["image"]);
-                        $(".news-link-" + i).attr("href", artiles[i]["url"]);
-                        $(".news-date-" + i).html(
-                            dateStr(new Date(artiles[i].datetime))
-                        );
-                        $(".news-headline-" + i).html(artiles[i]["headline"]);
-                        if (artiles[i]["summary"].length > 150)
-                            $(".news-summary-" + i).attr('class', 'text-secondary').html(
-                                artiles[i]["summary"].substr(0, 150 - 3) + "..."
-                            );
-                        else
-                            $(".news-summary-" + i).attr('class', 'text-secondary').html(artiles[i]["summary"]);
-
-                        if (i == 2) {
-                            $(".see-more").removeClass("d-none");
-                            $(".see-more").addClass("d-block");
-                        }
-                    }
-                } else {
-                    $(".news-content").css("display", "none");
-                    $(".no-news").css("display", "block");
-                }
-                $(".news-content").css("opacity", "1");
-                $(".news-loader").css("display", "none");
-            }
-        });
-    }
 });
 
 function renderChart(
@@ -487,7 +449,7 @@ function renderChart(
                 show: lineLabel
             },
             formatter: function(val) {
-                return val.toFixed(2);
+                return formatPrice(val, 'USD');
             }
         },
         tooltip: {
@@ -496,7 +458,7 @@ function renderChart(
             },
             y: {
                 formatter: function(val) {
-                    return "$" + val;
+                    return formatPrice(val, 'USD');
                 }
             }
         },
@@ -568,7 +530,7 @@ function renderChart(
 function renderBarChart(data, obj) {
     var options = {
         chart: {
-            height: 350,
+            height: 455,
             type: "bar",
             toolbar: {
                 show: false
@@ -613,7 +575,7 @@ function renderBarChart(data, obj) {
         },
         yaxis: {
             formatter: function(val) {
-                return val.toFixed(2);
+                return formatPrice(val, 'USD');
             }
         },
         fill: {
@@ -622,7 +584,7 @@ function renderBarChart(data, obj) {
         tooltip: {
             y: {
                 formatter: function(val) {
-                    return "$ " + val;
+                    return formatPrice(val, 'USD');
                 }
             }
         },
@@ -755,57 +717,4 @@ function openTradeModel(
             ")"
     );
     $("#tradeModal").modal("show");
-}
-
-// format Price and Percentage functions
-function formatPrice(price, currency) {
-    switch (currency) {
-        case "USD":
-            return "$" + Number(price).toFixed(2);
-            break;
-
-        case "GBP":
-            return Number(price * 100).toFixed(2) + "p";
-            break;
-
-        case "EUR":
-            return Number(price.toFixed(2)) + "€";
-            break;
-
-        case "AUD":
-            return "A$" + Number(price.toFixed(2)) + "€";
-            break;
-
-        case "CAD":
-            return "C$" + Number(price.toFixed(2));
-            break;
-
-        default:
-            return price;
-            break;
-    }
-}
-
-function formatPercentage(percentage) {
-    return (Number(percentage) * 100).toFixed(2) + "%";
-}
-
-function hide_ad() {
-    $("#ad1_container").removeClass("d-flex");
-    $("#ad1_container").addClass("d-none");
-    $("#ad2_container").removeClass("d-flex");
-    $("#ad2_container").addClass("d-none");
-    $(".dashboard-content-wrapper").css("padding-right", "0px");
-    $(".dashboard-content-wrapper").css("padding-top", "0px");
-}
-
-function dateStr(obj) {
-    var mm = obj.getMonth() + 1; // getMonth() is zero-based
-    var dd = obj.getDate();
-
-    return [
-        obj.getFullYear(),
-        (mm > 9 ? "" : "0") + mm,
-        (dd > 9 ? "" : "0") + dd
-    ].join(" : ");
 }
