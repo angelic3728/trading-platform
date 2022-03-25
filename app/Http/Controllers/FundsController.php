@@ -23,6 +23,7 @@ class FundsController extends Controller
          * Get Account Manager
          */
         $account_manager = auth()->user()->account_manager;
+
         /**
          * Get Funds
          */

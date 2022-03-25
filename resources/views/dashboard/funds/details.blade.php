@@ -8,10 +8,10 @@
 
 @section('content')
 <div class="col-md-12 stock-details dashboard-content-wrapper">
-    <div class="col-xl-12 container-fluid">
-        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+    <div class="col-xl-12">
+        <div class="d-flex justify-content-center align-items-center" id="ad1_container">
             <a href="https://bannerboo.com/" target="_blank">
-                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+                <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <ul>
             <li>
                 <a href="https://bannerboo.com/" target="_blank">
-                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                    <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
             </li>
         </ul>
@@ -34,11 +34,11 @@
                             <h5>{{ array_get($data, 'company_name') }}</h5>
                             <div class="center-content">
                                 <p class="d-sm-flex align-items-center">
-                                    <span class="font-primary m-r-10 f-22 f-w-700" id="current_stock_price"></span>
+                                    <span class="font-primary m-r-10 f-22 f-w-700" id="current_fund_price"></span>
                                     @if((float)array_get($data, 'change_percentage', 'null') >= 0)
-                                    <span class="font-primary" id="current_stock_percentage"></span>
+                                    <span class="font-primary" id="current_fund_percentage"></span>
                                     @else
-                                    <span class="font-danger" id="current_stock_percentage"></span>
+                                    <span class="font-danger" id="current_fund_percentage"></span>
                                     @endif
                                 </p>
                             </div>
@@ -71,6 +71,7 @@
             </div>
         </div>
     </div>
+    @if(array_get($data, 'source') != 'custom')
     <div class="row">
         <div class="col">
             <h2 class="title">Fund Details</h2>
@@ -132,15 +133,23 @@
                         </div>
                     </div>
 
-                    <!-- <div class="row link">
+                    <div class="row link">
                         <div class="col text-right">
                             <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this stock</a>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    @endif
+    @if(array_get($data, 'link'))
+    <div class="row link">
+        <div class="col d-flex justify-content-end">
+            <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this stock</a>
+        </div>
+    </div>
+    @endif
     <div class="modal fade" id="buySharesModal" tabindex="-1" role="dialog" aria-labelledby="Document Modal Label" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -411,8 +420,8 @@
         renderChart(range);
     }
 
-    $("#current_stock_price").html(formatPrice("{{ array_get($data, 'price') }}", "{{ array_get($data, 'currency') }}"));
-    $("#current_stock_percentage").html(formatPercentage("{{ array_get($data, 'change_percentage', 'null') }}"));
+    $("#current_fund_price").html(formatPrice(Number("{{ array_get($data, 'price') }}"), "{{ array_get($data, 'currency') }}"));
+    $("#current_fund_percentage").html(formatPercentage(Number("{{ array_get($data, 'change_percentage', 'null') }}")));
 </script>
 @endpush
 @endsection

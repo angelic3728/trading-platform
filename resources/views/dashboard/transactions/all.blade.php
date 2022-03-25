@@ -10,10 +10,10 @@
 
 <!-- Zero Configuration  Starts-->
 <div class="col-sm-12 dashboard-content-wrapper">
-    <div class="col-xl-12 container-fluid">
-        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+    <div class="col-xl-12">
+        <div class="d-flex justify-content-center align-items-center" id="ad1_container">
             <a href="https://bannerboo.com/" target="_blank">
-                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+                <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
         </div>
     </div>
@@ -21,7 +21,7 @@
         <ul>
             <li>
                 <a href="https://bannerboo.com/" target="_blank">
-                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                    <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
             </li>
         </ul>
@@ -38,9 +38,9 @@
                         <tr>
                             <th scope="col">Symbol</th>
                             <th scope="col">Type</th>
-                            <th scope="col">Company Name</th>
+                            <th scope="col">Company Name / Crypto Name</th>
                             <th scope="col">Price</th>
-                            <th scope="col">Shares</th>
+                            <th scope="col">Shares/Coin Amounts</th>
                             <th scope="col">Date</th>
                             <th scope="col">Market</th>
                         </tr>
@@ -51,7 +51,7 @@
                             <td class="type">{{ $transaction->symbol }}</td>
                             <td class="type">{{ $transaction->type }}</td>
                             <td class="symbol-with-company-name">
-                                <small>{{ $transaction->company_name }}</small>
+                                <small>{{ $transaction->wherefrom=="2"?$transaction->name:$transaction->company_name }}</small>
                             </td>
                             <td class="text-nowrap">{{ $transaction->formatPrice($transaction->price) }}</td>
                             <td class="text-nowrap">{{ $transaction->shares }}</td>

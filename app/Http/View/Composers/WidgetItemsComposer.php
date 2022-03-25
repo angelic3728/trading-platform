@@ -11,6 +11,7 @@ use App\Stock;
 use App\Fund;
 use App\CryptoCurrency;
 use App\Transaction;
+use App\Advertise;
 
 use CustomStockData;
 use CustomFundData;
@@ -27,7 +28,7 @@ class WidgetItemsComposer
      */
     public function compose(View $view)
     {
-        $view->with(['widget_items'=>$this->getWidgets(), 'news_symbols'=>$this->getNewsSymbols()]);
+        $view->with(['widget_items'=>$this->getWidgets(), 'news_symbols'=>$this->getNewsSymbols(), 'ads'=>$this->getAds()]);
     }
 
     /**
@@ -244,5 +245,18 @@ class WidgetItemsComposer
          */
         $news_symbols = array_merge($investments, $highlighted);
         return $news_symbols;
+    }
+
+    public function getAds() {
+        /**
+         * Get Ad images
+         */
+        $h_ad = Advertise::where('is_vertical', false)
+        ->inRandomOrder()->first();
+
+        $v_ad = Advertise::where('is_vertical', true)
+        ->inRandomOrder()->first();
+
+        return [$h_ad, $v_ad];
     }
 }

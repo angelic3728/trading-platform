@@ -1,13 +1,8 @@
 @extends('layouts.authentication')
 
 @section('content')
-<div class="container login get-started">
-
-    <div class="logo">
-        @svg('logo-auth')
-    </div>
-
-    <div class="card">
+<div class="container login get-started p-50">
+    <div class="card m-t-50">
         <div class="card-body">
 
             <p class="intro">Welcome to our platform {{ $activation_token->user->first_name }}! Please fill out the following form to complete your account</p>

@@ -8,10 +8,10 @@
 
 @section('content')
 <div class="col-sm-12 dashboard-content-wrapper">
-    <div class="col-xl-12 container-fluid">
-        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+    <div class="col-xl-12">
+        <div class="d-flex justify-content-center align-items-center" id="ad1_container">
             <a href="https://bannerboo.com/" target="_blank">
-                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+                <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <ul>
             <li>
                 <a href="https://bannerboo.com/" target="_blank">
-                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                    <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
             </li>
         </ul>

@@ -28,11 +28,13 @@ class CustomFundData
         /**
          * Return Fund Price
          */
-        return FundPrice::query()
-            ->where('fund_id', $fund->id)
-            ->latest()
-            ->first()
-            ->price;
+
+        $item = FundPrice::query()
+        ->where('fund_id', $fund->id)
+        ->latest()
+        ->first();
+
+        return ($item)?$item->price:0;
 
     }
 

@@ -8,10 +8,10 @@
 
 @section('content')
 <div class="col-md-12 stock-details dashboard-content-wrapper">
-    <div class="col-xl-12 container-fluid">
-        <div class="d-flex justify-content-center align-items-center container-fluid" id="ad1_container">
+    <div class="col-xl-12">
+        <div class="d-flex justify-content-center align-items-center" id="ad1_container">
             <a href="https://bannerboo.com/" target="_blank">
-                <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+                <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <ul>
             <li>
                 <a href="https://bannerboo.com/" target="_blank">
-                    <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
+                    <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
             </li>
         </ul>
@@ -143,14 +143,15 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="row link">
-                        <div class="col d-flex justify-content-end mt-3">
-                            <a href="{{ array_get($data, 'link') }}" target="_blank" class="more-info-link">Click here for more information about this stock</a>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+    @endif
+    @if(array_get($data, 'link'))
+    <div class="row link">
+        <div class="col d-flex justify-content-end mt-3">
+            <a href="{{ array_get($data, 'link') }}" target="_blank" class="more-info-link">Click here for more information about this stock</a>
         </div>
     </div>
     @endif
@@ -433,7 +434,7 @@
 
     var current_price = Number("{{ array_get($data, 'price', 0) }}");
     $("#current_crypto_price").html(formatPrice(current_price, "USD"));
-    $("#current_crypto_percentage").html(formatPercentage("{{ array_get($data, 'change_percentage', 0) }}"/100));
+    $("#current_crypto_percentage").html(formatPercentage("{{ array_get($data, 'change_percentage', 0) }}" / 100));
 </script>
 @endpush
 @endsection

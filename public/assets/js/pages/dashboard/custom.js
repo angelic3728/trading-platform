@@ -530,7 +530,7 @@ function renderChart(
 function renderBarChart(data, obj) {
     var options = {
         chart: {
-            height: 455,
+            height: 395,
             type: "bar",
             toolbar: {
                 show: false

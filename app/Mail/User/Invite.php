@@ -35,6 +35,6 @@ class Invite extends Mailable
     public function build()
     {
         return $this->markdown('mails.user.invite')
-                    ->subject($this->user->first_name.', welcome to HoverHyfield online!');
+                    ->subject($this->user->first_name.', welcome to Our Platform online!');
     }
 }

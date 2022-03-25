@@ -5728,7 +5728,7 @@ table tbody .border-bottom-warning td {
 .page-wrapper .page-body-wrapper .page-body {
     min-height: calc(100vh - 76px);
     margin-top: 76px;
-    padding: 0 15px 0 15px;
+    padding: 0 27px 0 27px;
     position: relative;
     -webkit-transition: 0.5s;
     transition: 0.5s;

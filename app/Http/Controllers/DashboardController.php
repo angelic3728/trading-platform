@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\User;
-
-use App\Stock;
-use App\Transaction;
 use App\Xtbs;
 
 use IEX;
@@ -27,6 +24,7 @@ class DashboardController extends Controller
          * Get Account Manager
          */
         $account_manager = auth()->user()->account_manager;
+
         /**
          * Get Latest Documents
          */
@@ -89,7 +87,7 @@ class DashboardController extends Controller
                         // add real price and total prices
                         if ($transaction->stock->gcurrency != "USD") {
                             $rate = $all_rates['USD' . $transaction->stock->gcurrency];
-                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
+                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->latest_price*$transaction->shares / $rate, 2) : $transaction->price;
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
@@ -131,7 +129,7 @@ class DashboardController extends Controller
                         // add real price and total prices
                         if ($transaction->fund->gcurrency != "USD") {
                             $rate = $all_rates['USD' . $transaction->fund->gcurrency];
-                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->price / $rate, 2) : $transaction->price;
+                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->latest_price*$transaction->shares / $rate, 2) : $transaction->price;
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
@@ -164,7 +162,7 @@ class DashboardController extends Controller
                                 $transaction->institutional_price = CustomFundData::price($transaction->crypto->symbol);
                         }
                         // add real price and total prices
-                        $transaction->realPrice = $transaction->price;
+                        $transaction->realPrice = round($transaction->latest_price*$transaction->shares, 2);
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;
                         else
@@ -205,7 +203,7 @@ class DashboardController extends Controller
             'transactions' => $transactions,
             'xtbs' => $xtbs,
             'all_highlights' => $all_highlights,
-            'top_cryptos' => $top_cryptos
+            'top_cryptos' => $top_cryptos,
         ]);
     }
 

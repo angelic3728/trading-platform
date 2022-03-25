@@ -29,11 +29,13 @@ class CustomCryptoData
         /**
          * Return Crypto Price
          */
-        return CryptoCurrencyPrice::query()
-            ->where('crypto_currency_id', $crypto->id)
-            ->latest()
-            ->first()
-            ->price;
+
+        $item = CryptoCurrencyPrice::query()
+        ->where('crypto_currency_id', $crypto->id)
+        ->latest()
+        ->first();
+
+        return $item->price;
     }
 
     /**

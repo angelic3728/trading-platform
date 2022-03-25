@@ -28,11 +28,13 @@ class CustomStockData
         /**
          * Return Stock Price
          */
-        return StockPrice::query()
-            ->where('stock_id', $stock->id)
-            ->latest()
-            ->first()
-            ->price;
+
+        $item = StockPrice::query()
+        ->where('stock_id', $stock->id)
+        ->latest()
+        ->first();
+
+        return $item->price;
 
     }
 

@@ -13,16 +13,26 @@
 @endpush
 @section('content')
 <!-- Container-fluid starts-->
-<div class="container-fluid dashboard-default-sec">
+<div class="container-fluid dashboard-default-sec" style="padding: 0px;">
     <div class="row dashboard-content-wrapper">
         <div class="col-xl-12">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="d-flex justify-content-center align-items-center" id="ad1_container">
                         <a href="https://bannerboo.com/" target="_blank">
-                            <img src="{{asset('assets/images/pros/horizontal.png')}}" class="img-fluid" alt="">
+                            <img src="{{ 'storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
                         </a>
                     </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center" id="ad2_container">
+                    <ul>
+                        <li>
+                            <a href="https://bannerboo.com/" target="_blank">
+                                <img src="{{ 'storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
+                            </a>
+                        </li>
+                    </ul>
+                    <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
                 </div>
                 <div class="col-xl-5 box-col-12 des-xl-100">
                     <div class="row">
@@ -156,16 +166,6 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center align-items-center" id="ad2_container">
-                <ul>
-                    <li>
-                        <a href="https://bannerboo.com/" target="_blank">
-                            <img src="{{asset('assets/images/pros/vertical1.png')}}" class="img-fluid" alt="">
-                        </a>
-                    </li>
-                </ul>
-                <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
-            </div>
         </div>
         <div class="col-xl-12">
             <div class="row">
@@ -180,7 +180,7 @@
                                     <div class="tabbed-card">
                                         <ul class="pull-right nav nav-tabs border-tab nav-success" id="portfolio-tab" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="stock_tab" data-bs-toggle="tab" href="#stock_portfolio" role="tab" aria-controls="stock-portfolio" aria-selected="false"  style="cursor: pointer;"><i class="icofont icofont-ui-home"></i>Stocks</a>
+                                                <a class="nav-link active" id="stock_tab" data-bs-toggle="tab" href="#stock_portfolio" role="tab" aria-controls="stock-portfolio" aria-selected="false" style="cursor: pointer;"><i class="icofont icofont-ui-home"></i>Stocks</a>
                                                 <div class="material-border"></div>
                                             </li>
                                             <li class="nav-item">
@@ -198,17 +198,17 @@
                                         </ul>
                                         <div class="tab-content" id="portfolio_content">
                                             <div class="tab-pane fade active show" id="stock_portfolio" role="tabpanel" aria-labelledby="stock-portfolio">
-                                                <div class="vertical-scroll scroll-demo p-0" style="height: 410px;">
+                                                <div class="vertical-scroll scroll-demo p-0" style="height: 350px;">
                                                     <div class="table-responsive">
                                                         <table class="table table-responsive table-responsive-sm">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Company</th>
-                                                                    <th>Last Price</th>
-                                                                    <th>Change</th>
-                                                                    <th>Institutional Price</th>
-                                                                    <th>Shares</th>
-                                                                    <th>Value</th>
+                                                                    <th style="font-size:13px;">Company</th>
+                                                                    <th style="font-size:13px;">Last Price</th>
+                                                                    <th style="font-size:13px;">Change</th>
+                                                                    <th style="font-size:13px;">Institutional Price</th>
+                                                                    <th style="font-size:13px;">Shares</th>
+                                                                    <th style="font-size:13px;">Value</th>
                                                                     <th class="text-center table-secondary" style="right: 0px; min-width:140px;">Action</th>
                                                                 </tr>
                                                             </thead>
@@ -219,17 +219,17 @@
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
                                                                         <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:200px">{{$transaction->company_name}}</small>
+                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->company_name}}</small>
                                                                     </td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
-                                                                    <td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">
                                                                         <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
                                                                             {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
                                                                         </span>
                                                                     </td>
-                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                    <td>{{$transaction->shares}}</td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->stock->formatPrice(round($transaction->price*$transaction->shares, 2)):"-" }}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">{{$transaction->shares}}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; min-width:140px;">
                                                                         <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
                                                                         <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
@@ -248,17 +248,17 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="fund_portfolio" role="tabpanel" aria-labelledby="fund-portfolio">
-                                                <div class="vertical-scroll scroll-demo p-0" style="height: 410px;">
+                                                <div class="vertical-scroll scroll-demo p-0" style="height: 350px;">
                                                     <div class="table-responsive">
                                                         <table class="table table-responsive table-responsive-sm">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Company</th>
-                                                                    <th>Last Price</th>
-                                                                    <th>Change</th>
-                                                                    <th>Institutional Price</th>
-                                                                    <th>Shares</th>
-                                                                    <th>Value</th>
+                                                                    <th style="font-size:13px;">Company</th>
+                                                                    <th style="font-size:13px;">Last Price</th>
+                                                                    <th style="font-size:13px;">Change</th>
+                                                                    <th style="font-size:13px;">Institutional Price</th>
+                                                                    <th style="font-size:13px;">Shares</th>
+                                                                    <th style="font-size:13px;">Value</th>
                                                                     <th class="text-center table-secondary" style="right: 0px; width:140px;">Action</th>
                                                                 </tr>
                                                             </thead>
@@ -269,17 +269,17 @@
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
                                                                         <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:200px">{{$transaction->company_name}}</small>
+                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->company_name}}</small>
                                                                     </td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
-                                                                    <td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">
                                                                         <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
                                                                             {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
                                                                         </span>
                                                                     </td>
-                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->fund->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                    <td>{{ $transaction->shares }}</td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->fund->formatPrice(round($transaction->price*$transaction->shares, 2)):"-" }}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->fund->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">{{ $transaction->shares }}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; width:140px;">
                                                                         <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
                                                                         <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
@@ -298,17 +298,17 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="crypto_portfolio" role="tabpanel" aria-labelledby="crypto-portfolio">
-                                                <div class="vertical-scroll scroll-demo p-0" style="height: 410px;">
+                                                <div class="vertical-scroll scroll-demo p-0" style="height: 350px;">
                                                     <div class="table-responsive">
                                                         <table class="table table-responsive table-responsive-sm">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Company</th>
-                                                                    <th>Last Price</th>
-                                                                    <th>Change</th>
-                                                                    <th>Institutional Price</th>
-                                                                    <th>Amount</th>
-                                                                    <th>Value</th>
+                                                                    <th style="font-size:13px;">Company</th>
+                                                                    <th style="font-size:13px;">Last Price</th>
+                                                                    <th style="font-size:13px;">Change</th>
+                                                                    <th style="font-size:13px;">Institutional Price</th>
+                                                                    <th style="font-size:13px;">Amount</th>
+                                                                    <th style="font-size:13px;">Value</th>
                                                                     <th class="text-center table-secondary" style="right: 0px; width:140px;">Action</th>
                                                                 </tr>
                                                             </thead>
@@ -319,17 +319,17 @@
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
                                                                         <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:200px">{{$transaction->name}}</small>
+                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->name}}</small>
                                                                     </td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
-                                                                    <td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">
                                                                         <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
                                                                             {{ ($transaction->change_percentage)?(($transaction->change_percentage)."%"):"-"}}
                                                                         </span>
                                                                     </td>
-                                                                    <td>{{ ($transaction->institutional_price) ? $transaction->institutional_price:"-"}}</td>
-                                                                    <td>{{ $transaction->shares }}</td>
-                                                                    <td>{{ ($transaction->latest_price)?$transaction->crypto->formatPrice(round($transaction->price*$transaction->shares, 2)):"-" }}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->institutional_price:"-"}}</td>
+                                                                    <td style="vertical-align: middle;">{{ $transaction->shares }}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; width:140px;">
                                                                         <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
                                                                         <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
@@ -441,7 +441,7 @@
                                     <table class="table table-responsive table-responsive-sm">
                                         <thead>
                                             <tr>
-                                                <th class="text-center">CODE</th>
+                                                <th class="text-center">Name</th>
                                                 <th class="text-center">COUPON P.A</th>
                                                 <th class="text-center">PRICE</th>
                                                 <th class="text-center">YTM</th>
@@ -451,7 +451,10 @@
                                             @if(count($xtbs) != 0)
                                             @foreach($xtbs as $xtb)
                                             <tr>
-                                                <td class="text-center text-nowrap text-secondary f-w-600">{{ $xtb->asx_code }}</td>
+                                                <td class="text-center text-nowrap text-secondary f-w-600">
+                                                    <span class="f-w-600">{{ $xtb->asx_code }}</span>
+                                                    <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$xtb->bond_issuer}}</small>
+                                                </td>
                                                 <td class="text-center text-nowrap text-info">{{ ($xtb->coupon_pa && $xtb->coupon_pa != "")?$xtb->coupon_pa:"-" }}</td>
                                                 <td class="text-center text-nowrap text-success fw-bold">{{ "$".$xtb->xtb_price }}</td>
                                                 <td class="text-center text-nowrap text-primary">{{ ($xtb->ytm !="")?$xtb->ytm."%":"-" }}</td>
@@ -479,39 +482,37 @@
                         </div>
                         <div class="card-body p-0">
                             <div class="vertical-scroll scroll-demo p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-responsive table-responsive-sm">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">Logo</th>
-                                                <th class="text-center">Coin</th>
-                                                <th class="text-center">Current Price</th>
-                                                <th class="text-center">Market Cap</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if(count($top_cryptos) != 0)
-                                            @foreach($top_cryptos as $top_crypto)
-                                            <tr>
-                                                <td class="text-center"><img src="{{ $top_crypto['image'] }}" width="40" alt=""></td>
-                                                <td class="d-flex flex-column text-center">
-                                                    <span class="f-w-600">{{$top_crypto['symbol']}}</span>
-                                                    <small>
-                                                        {{$top_crypto['name']}}
-                                                    </small>
-                                                </td>
-                                                <td class="text-center" valign="center">{{ '$'.number_format($top_crypto['current_price'], 2) }}</td>
-                                                <td class="text-center" valign="center">{{ number_format($top_crypto['market_cap'], 0) }}</td>
-                                            </tr>
-                                            @endforeach
-                                            @else
-                                            <tr>
-                                                <td colspan="4" class="text-center">No Data!</td>
-                                            </tr>
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <table class="table table-responsive table-responsive-sm table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Logo</th>
+                                            <th class="text-center">Coin</th>
+                                            <th class="text-center">Current Price</th>
+                                            <th class="text-center">Market Cap</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if(count($top_cryptos) != 0)
+                                        @foreach($top_cryptos as $top_crypto)
+                                        <tr>
+                                            <td class="text-center" style="vertical-align: middle;"><img src="{{ $top_crypto['image'] }}" width="30" alt=""></td>
+                                            <td class="d-flex flex-column text-center">
+                                                <span class="f-w-600">{{$top_crypto['symbol']}}</span>
+                                                <small>
+                                                    {{$top_crypto['name']}}
+                                                </small>
+                                            </td>
+                                            <td class="text-center" style="vertical-align: middle;">{{ '$'.number_format($top_crypto['current_price'], 2) }}</td>
+                                            <td class="text-center" style="vertical-align: middle;">{{ number_format($top_crypto['market_cap'], 0) }}</td>
+                                        </tr>
+                                        @endforeach
+                                        @else
+                                        <tr>
+                                            <td colspan="4" class="text-center">No Data!</td>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -729,7 +730,7 @@
 @push('scripts')
 <script>
     var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'wherefrom' => $transaction->wherefrom, 'type' => $transaction->type];}) -> toJson() !!};
-    var all_highlights = {!!json_encode($all_highlights) !!};
+    var all_highlights = {!!json_encode($all_highlights) !!}; 
     var total_value = "{{ $total_transaction_price }}";
     $('#total_profile_value').text(formatPrice(Number(total_value)));
     $('#cash_on_account').text(formatPrice(Number('{{ auth()->user()->getBalance()->amount }}')));

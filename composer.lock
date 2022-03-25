@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e5ec9517032bab850e9db08702061b4",
+    "content-hash": "42d0c1375d3ae926bac0f089f66946f6",
     "packages": [
         {
             "name": "64robots/nova-fields",
@@ -50,6 +50,51 @@
                 "source": "https://github.com/64robots/nova-fields/tree/master"
             },
             "time": "2019-05-08T14:59:17+00:00"
+        },
+        {
+            "name": "ajhaupt7/image-upload-preview",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ajhaupt7/image-upload-preview.git",
+                "reference": "99a98ed2c5b01d16dfabaff503be96e6cbe7d187"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ajhaupt7/image-upload-preview/zipball/99a98ed2c5b01d16dfabaff503be96e6cbe7d187",
+                "reference": "99a98ed2c5b01d16dfabaff503be96e6cbe7d187",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ajhaupt7\\ImageUploadPreview\\FieldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ajhaupt7\\ImageUploadPreview\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova field.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/ajhaupt7/image-upload-preview/issues",
+                "source": "https://github.com/ajhaupt7/image-upload-preview/tree/v1.0.0"
+            },
+            "time": "2018-08-30T15:48:50+00:00"
         },
         {
             "name": "bugsnag/bugsnag",
