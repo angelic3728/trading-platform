@@ -13,6 +13,7 @@ class StocksTableSeeder extends Seeder
      */
     public function run()
     {
-        Artisan::call('iex:import-stocks');
+        Artisan::call('iex:import-data');
+        Artisan::call('asx:import-data');
     }
 }

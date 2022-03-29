@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Trade Now')
+@section('title', 'All Funds')
 
 @push('css')
 <!-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}"> -->
@@ -279,9 +279,17 @@
     </div>
 </div>
 @push('scripts')
-<script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
-<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <script src="{{asset('assets/js/pages/funds/custom.js')}}"></script>
+<script>
+    if("{{session('error')}}" == "unknown") {
+        $.notify('<i class="fa fa-bell-o"></i>The fund data is not providing right now.', {
+            type: 'theme',
+            allow_dismiss: true,
+            delay: 2000,
+            showProgressbar: false,
+            timer: 300
+        });
+    }
+</script>
 @endpush
 @endsection

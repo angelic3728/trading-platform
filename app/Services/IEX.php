@@ -25,6 +25,7 @@ class IEX
         $symbols = $symbols->where('currency', '!=', 'ISK');
         $symbols = $symbols->where('currency', '!=', 'MYR');
         $symbols = $symbols->where('currency', '!=', 'BGN');
+        $symbols = $symbols->where('currency', '!=', 'MYR');
 
         /**
          * Map data to individual collections

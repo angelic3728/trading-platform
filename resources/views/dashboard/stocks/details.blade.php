@@ -204,6 +204,35 @@
         </div>
     </div>
     @endif
+    @if(array_get($data, 'source') == 'custom')
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h4>Company Information</h4>
+                    <p>{{ (array_get($data, 'company.description', '-'))?array_get($data, 'company.description', '-'):"No Information." }}</p>
+                    <hr class="d-lg-none d-xl-none">
+                </div>
+
+                <div class="col-lg-6 d-flex flex-column justify-content-between">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail">
+                                <strong>Latest Price</strong>
+                                <span>{{ array_get($data, 'numbers.latest_price', '-') }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="detail">
+                                <strong>Institutional Price</strong>
+                                <span>{{ array_get($data, 'numbers.institutional_price', '-') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @if(array_get($data, 'link'))
     <div class="row link">
         <div class="col d-flex justify-content-end">
@@ -211,58 +240,139 @@
         </div>
     </div>
     @endif
+    @endif
+    <div class="col-xl-12 box-col-12 des-xl-100 mt-3">
+        <div class="card news-container">
+            <div class="card-header d-flex justify-content-between">
+                <div class="header-top d-sm-flex align-items-center">
+                    <h5>Recent News</h5>
+                </div>
+                <a href="/news?symbols={{implode(',', $news_symbols)}}" class="btn btn-outline-success btn-xs" style="line-height: 20px;">See More</a>
+            </div>
+            <div class="card-body">
+                <div class="loader-box news-loader justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex; height:initial;">
+                    <div class="loader-19"></div>
+                </div>
+                <div class="row news-content" style="min-height: 440px;">
+                    <div class="col-xl-3 col-md-6 news-0" style="display: none;">
+                        <a href="" class="news-link-0" target="_blank">
+                            <div class="prooduct-details-box">
+                                <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                    <img class="align-self-center img-fluid news-img-0" src="" style="max-height: 180px;" alt="#">
+                                    <div class="media-body">
+                                        <p class="news-date-0 text-dark mb-0"></p>
+                                        <h6 class="news-headline-0"></h6>
+                                        <div class="summary news-summary-0"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-md-6 news-1" style="display: none;">
+                        <a href="" class="news-link-1" target="_blank">
+                            <div class="prooduct-details-box">
+                                <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                    <img class="align-self-center img-fluid news-img-1" src="" style="max-height: 180px;" alt="#">
+                                    <div class="media-body">
+                                        <p class="news-date-1 text-dark mb-0"></p>
+                                        <h6 class="news-headline-1"></h6>
+                                        <div class="summary news-summary-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-md-6 news-2" style="display: none;">
+                        <a href="" class="news-link-2" target="_blank">
+                            <div class="prooduct-details-box">
+                                <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                    <img class="align-self-center img-fluid news-img-2" src="" style="max-height: 180px;" alt="#">
+                                    <div class="media-body">
+                                        <p class="news-date-2 text-dark mb-0"></p>
+                                        <h6 class="news-headline-2"></h6>
+                                        <div class="summary news-summary-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-xl-3 col-md-6 news-3" style="display: none;">
+                        <a href="" class="news-link-3" target="_blank">
+                            <div class="prooduct-details-box">
+                                <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                    <img class="align-self-center img-fluid news-img-3" src="" style="max-height: 180px;" alt="#">
+                                    <div class="media-body">
+                                        <p class="news-date-3 text-dark mb-0"></p>
+                                        <h6 class="news-headline-3"></h6>
+                                        <div class="summary news-summary-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row no-news" style="display: none;">
+                    <div class="col-sm-12">
+                        <div class="alert alert-light dark alert-dismissible fade show" id="zero_shares_alert" role="alert">
+                            There are no recent news.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @push('scripts')
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script>
     $(document).ready(function() {
-        var symbol = "{{ array_get($data, 'symbol') }}";
-        $(".chart-loader").css({
-            'top': $('.card-header').innerHeight() + "px",
-            'height': $('.chart-content').innerHeight() + "px"
-        });
-        $(".news-loader").css({
-            'height': $('.news-content').innerHeight() + "px"
-        });
-        $(".chart-content").css("opacity", "0.3");
-        $(".news-content").css("opacity", "0.3");
+        // var symbol = "{{ array_get($data, 'symbol') }}";
+        // $(".chart-loader").css({
+        //     'top': $('.card-header').innerHeight() + "px",
+        //     'height': $('.chart-content').innerHeight() + "px"
+        // });
+        // $(".news-loader").css({
+        //     'height': $('.news-content').innerHeight() + "px"
+        // });
+        // $(".chart-content").css("opacity", "0.3");
+        // $(".news-content").css("opacity", "0.3");
         renderChart('1m');
-        if ("{{array_get($data, 'source')}}" == 'iex') {
-            $.ajax({
-                method: 'get',
-                url: '/api/news?symbols=' + symbol + '&&limit=3',
-                success: function(res) {
-                    if (res.success) {
-                        var artiles = res.data;
-                        if (artiles.length > 0) {
-                            for (var i = 0; i < artiles.length; i++) {
-                                $('.news-' + i).css('display', 'block');
-                                $('.news-img-' + i).attr('src', artiles[i]['image']);
-                                $('.news-link-' + i).attr('href', artiles[i]['url']);
-                                $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
-                                $('.news-headline-' + i).html(artiles[i]['headline']);
-                                if (artiles[i]['summary'].length > 150)
-                                    $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
-                                else
-                                    $('.news-summary-' + i).html(artiles[i]['summary']);
+        // if ("{{array_get($data, 'source')}}" == 'iex') {
+        //     $.ajax({
+        //         method: 'get',
+        //         url: '/api/news?symbols=' + symbol + '&&limit=3',
+        //         success: function(res) {
+        //             if (res.success) {
+        //                 var artiles = res.data;
+        //                 if (artiles.length > 0) {
+        //                     for (var i = 0; i < artiles.length; i++) {
+        //                         $('.news-' + i).css('display', 'block');
+        //                         $('.news-img-' + i).attr('src', artiles[i]['image']);
+        //                         $('.news-link-' + i).attr('href', artiles[i]['url']);
+        //                         $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
+        //                         $('.news-headline-' + i).html(artiles[i]['headline']);
+        //                         if (artiles[i]['summary'].length > 150)
+        //                             $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
+        //                         else
+        //                             $('.news-summary-' + i).html(artiles[i]['summary']);
 
-                                if (i == 2) {
-                                    $('.see-more').removeClass('d-none');
-                                    $('.see-more').addClass('d-block');
-                                }
-                            }
-                        } else {
-                            $('.news-content').css('display', 'none');
-                            $('.no-news').css('display', 'block');
-                        }
-                        $(".news-content").css("opacity", "1");
-                        $(".news-loader").css('display', 'none');
-                    }
-                }
-            });
-        } else {
-            $('.news-container').css('display', 'none');
-        }
+        //                         if (i == 2) {
+        //                             $('.see-more').removeClass('d-none');
+        //                             $('.see-more').addClass('d-block');
+        //                         }
+        //                     }
+        //                 } else {
+        //                     $('.news-content').css('display', 'none');
+        //                     $('.no-news').css('display', 'block');
+        //                 }
+        //                 $(".news-content").css("opacity", "1");
+        //                 $(".news-loader").css('display', 'none');
+        //             }
+        //         }
+        //     });
+        // } else {
+        //     $('.news-container').css('display', 'none');
+        // }
     });
 
     function renderChart(range) {

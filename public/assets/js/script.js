@@ -356,7 +356,6 @@ $(document).ready(function() {
         url: "/api/cryptos/all",
         success: function(res) {
             all_cryptos = res.data;
-            console.log(all_cryptos);
             total_items = total_items.concat(all_cryptos);
         }
     });
@@ -375,8 +374,10 @@ $(document).ready(function() {
                         item.name.match(search_regex)
                     );
                 else
-                    item.symbol.match(search_regex) ||
-                        item.company_name.match(search_regex);
+                    return (
+                        item.symbol.match(search_regex) ||
+                        item.company_name.match(search_regex)
+                    );
             });
             if (filtered.length == 0) {
                 $(".search-results").append(
@@ -416,17 +417,6 @@ $(document).ready(function() {
             $(".search-results").removeClass("d-flex");
             $(".search-results").addClass("d-none");
             $(".search-results").append("<span>No Stocks</span>");
-        }
-    });
-
-    $("#search_switch").on("click", function() {
-        var flag = $(this)[0].checked;
-        if (flag) {
-            $("#search_stocks").attr("placeholder", "Search Stocks");
-            search_fund = false;
-        } else {
-            $("#search_stocks").attr("placeholder", "Search Mutual Funds");
-            search_fund = true;
         }
     });
 
@@ -964,78 +954,82 @@ $(document).ready(function() {
 // format Price and Percentage functions
 function formatPrice(price, currency) {
     var decimal = 2;
-    if(Number(price)>10) {
+    if (Number(price) > 10) {
         decimal = 2;
-    } else if(Number(price)>1) {
+    } else if (Number(price) > 1) {
         decimal = 3;
-    } else if(Number(price)>0.1) {
+    } else if (Number(price) > 0.1) {
         decimal = 4;
-    } else if(Number(price)>0.01) {
+    } else if (Number(price) > 0.01) {
         decimal = 5;
     } else {
         decimal = 6;
     }
+
+    var amount =
+        Number(price) > 999
+            ? Number(price.toFixed(decimal))
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            : Number(price.toFixed(decimal)).toString();
+
     switch (currency) {
         case "USD":
-            return (
-                "$" +
-                ((Number(price) > 999)
-                ? Number(price.toFixed(decimal))
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString()
-            ));
-            break;
+            return "$" + amount;
 
         case "GBP":
             return (
-                ((Number(price) > 999)
-                ? Number(price.toFixed(decimal)*100)
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString()) + "p"
+                (Number(price)*100 > 999
+                    ? (price.toFixed(decimal) * 100)
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    : (price.toFixed(decimal)*100).toString()) + "p"
             );
-            break;
 
         case "EUR":
-            return "€" + ((Number(price) > 999)
-                ? Number(price.toFixed(decimal))
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString());
-            break;
+            return "€" + amount;
 
         case "AUD":
-            return "A$" + ((Number(price) > 999)
-                ? Number(price.toFixed(decimal))
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString());
-            break;
+            return "A$" + amount;
 
         case "CAD":
-            return "C$" + ((Number(price) > 999)
-                ? Number(price.toFixed(decimal))
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString());
-            break;
+            return "C$" + amount;
 
         case "SEK":
-            return ((Number(price) > 999)
-                ? Number(price.toFixed(decimal))
-                      .toString()
-                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString()) + " kr";
-            break;
+            return amount + " kr";
+
+        case "CHF":
+            return "fr." + amount;
+
+        case "CZK":
+            return amount + " Kč";
+
+        case "DKK":
+            return "kr." + amount;
+
+        case "HKD":
+            return "HK$" + amount;
+
+        case "HUF":
+            return amount + " Ft";
+
+        case "ILS":
+            return "₪" + amount;
+
+        case "JPY":
+            return "¥" + amount;
+
+        case "NOK":
+            return "kr" + amount;
+
+        case "PLN":
+            return amount + " zł";
+
+        case "PLN":
+            return amount + " lei";
 
         default:
-            return ((Number(price) > 999)
-                ? Number(price.toFixed(decimal))
-                .toString()
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString());
-            break;
+            return amount;
     }
 }
 

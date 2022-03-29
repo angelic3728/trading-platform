@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Boolean;
@@ -98,6 +99,9 @@ class Fund extends Resource
                 ->step(0.001)
                 ->sortable(),
 
+            Textarea::make('Company Information', 'information')
+                ->hideFromIndex(),
+
             Select::make('Currency', 'gcurrency')->options([
                 'USD' => 'USD',
                 'GBP' => 'GBP',
@@ -105,7 +109,6 @@ class Fund extends Resource
             ]),
 
             Text::make('Link')
-                ->rules('required', 'max:255')
                 ->help('Enter an link where users can find more details about this stock')
                 ->hideFromIndex(),
 

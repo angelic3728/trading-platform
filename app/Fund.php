@@ -40,11 +40,12 @@ class Fund extends Model
      */
     public function formatPrice($price, $decimals = 2)
     {
+        $amount = number_format($price, $decimals);
 
         switch ($this->gcurrency) {
 
             case 'USD':
-                return '$' . number_format($price, $decimals);
+                return '$'.$amount;
                 break;
 
             case 'GBP':
@@ -52,16 +53,52 @@ class Fund extends Model
                 break;
 
             case 'EUR':
-                return number_format(($price * 100), $decimals) . '€';
+                return '€'.$amount;
                 break;
 
             case 'AUD':
-                return 'A$' . number_format(($price * 100), $decimals);
+                return 'A$'.$amount;
                 break;
 
             case 'CAD':
-                return 'C$' . number_format(($price * 100), $decimals);
+                return 'C$'.$amount;
                 break;
+
+            case 'SEK':
+                return $amount." kr";
+                break;
+
+            case 'CHF':
+                return "fr.".$amount;
+                break;
+
+            case 'CZK':
+                return $amount." Kč";
+                break;
+
+            case "DKK":
+                return "kr.".$amount;
+
+            case "HKD":
+                return "HK$". $amount;
+
+            case "HUF":
+                return $amount." Ft";
+
+            case "ILS":
+                return "₪". $amount;
+
+            case "JPY":
+                return "¥". $amount;
+
+            case "NOK":
+                return "kr". $amount;
+
+            case "PLN":
+                return $amount." zł";
+
+            case "RON":
+                return $amount." lei";
 
             default:
                 return $price;

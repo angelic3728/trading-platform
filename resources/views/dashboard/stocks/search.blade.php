@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Trade Now')
+@section('title', 'All Stocks')
 
 @push('css')
 <!-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}"> -->
@@ -282,5 +282,16 @@
 </div>
 @push('scripts')
 <script src="{{asset('assets/js/pages/stocks/custom.js')}}"></script>
+<script>
+    if("{{session('error')}}" == "unknown") {
+        $.notify('<i class="fa fa-bell-o"></i>The stock data is not providing right now.', {
+            type: 'theme',
+            allow_dismiss: true,
+            delay: 2000,
+            showProgressbar: false,
+            timer: 300
+        });
+    }
+</script>
 @endpush
 @endsection

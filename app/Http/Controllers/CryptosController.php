@@ -94,63 +94,75 @@ class CryptosController extends Controller
          */
         $crypto = CryptoCurrency::where('symbol', $symbol)->firstOrFail();
 
-        /**
-         * Prepare Data
-         */
 
-        switch ($crypto->data_source) {
+        try {
+            /**
+             * Prepare Data
+             */
 
-            case 'gecko':
-                $crypto_data = IEX::getCDetails($crypto->coin_id);
-                $data = [
-                    'source' => 'gecko',
-                    'symbol' => array_get($crypto_data, 'symbol'),
-                    'name' => array_get($crypto_data, 'name'),
-                    'currency' => 'USD',
-                    'price' => array_get($crypto_data, 'market_data.current_price.usd'),
-                    'change_percentage' => array_get($crypto_data, 'market_data.price_change_percentage_24h'),
-                    'link' => $crypto->link,
-                    'info' => [
-                        'description' => array_get($crypto_data, 'description.en'),
-                        'genesis_date' => array_get($crypto_data, 'genesis_date'),
-                        'block_time' => array_get($crypto_data, 'block_time_in_minutes'),
-                        'hashing_algorithm' => array_get($crypto_data, 'hashing_algorithm'),
-                        'website' => array_get($crypto_data, 'links.homepage.0'),
-                    ],
-                    'numbers' => [
-                        'ath' => array_get($crypto_data, 'market_data.ath.usd'),
-                        'institutional_price' => array_get($crypto_data, 'market_data.current_price.usd') ? '$'.$crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null,
-                        'market_cap' => array_get($crypto_data, 'market_data.market_cap.usd'),
-                        'total_volume' => array_get($crypto_data, 'market_data.total_volume.usd'),
-                        'total_supply' => array_get($crypto_data, 'market_data.total_supply'),
-                        'circulating_supply' => array_get($crypto_data, 'market_data.circulating_supply'),
-                    ],
-                ];
-                break;
+            switch ($crypto->data_source) {
 
-            case 'custom':
-                $data = [
-                    'source' => 'custom',
-                    'symbol' => $crypto->symbol,
-                    'name' => $crypto->company_name,
-                    'currency' => $crypto->gcurrency,
-                    'price' => CustomCryptoData::price($crypto->symbol),
-                    'change_percentage' => CustomCryptoData::changePercentage($crypto->symbol),
-                    'link' => $crypto->link,
-                ];
-                break;
+                case 'gecko':
+                    $crypto_data = IEX::getCDetails($crypto->coin_id);
+                    $data = [
+                        'source' => 'gecko',
+                        'symbol' => array_get($crypto_data, 'symbol'),
+                        'name' => array_get($crypto_data, 'name'),
+                        'currency' => 'USD',
+                        'price' => array_get($crypto_data, 'market_data.current_price.usd'),
+                        'change_percentage' => array_get($crypto_data, 'market_data.price_change_percentage_24h'),
+                        'link' => $crypto->link,
+                        'info' => [
+                            'description' => array_get($crypto_data, 'description.en'),
+                            'genesis_date' => array_get($crypto_data, 'genesis_date'),
+                            'block_time' => array_get($crypto_data, 'block_time_in_minutes'),
+                            'hashing_algorithm' => array_get($crypto_data, 'hashing_algorithm'),
+                            'website' => array_get($crypto_data, 'links.homepage.0'),
+                        ],
+                        'numbers' => [
+                            'ath' => array_get($crypto_data, 'market_data.ath.usd'),
+                            'institutional_price' => array_get($crypto_data, 'market_data.current_price.usd') ? '$' . $crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null,
+                            'market_cap' => array_get($crypto_data, 'market_data.market_cap.usd'),
+                            'total_volume' => array_get($crypto_data, 'market_data.total_volume.usd'),
+                            'total_supply' => array_get($crypto_data, 'market_data.total_supply'),
+                            'circulating_supply' => array_get($crypto_data, 'market_data.circulating_supply'),
+                        ],
+                    ];
+                    break;
 
-            default:
-                abort(500);
-                break;
+                case 'custom':
+                    $data = [
+                        'source' => 'custom',
+                        'symbol' => $crypto->symbol,
+                        'name' => $crypto->company_name,
+                        'currency' => $crypto->gcurrency,
+                        'price' => CustomCryptoData::price($crypto->symbol),
+                        'change_percentage' => CustomCryptoData::changePercentage($crypto->symbol),
+                        'link' => $crypto->link,
+                        'company' => [
+                            'description' => $crypto->information,
+                        ],
+                        'numbers' => [
+                            'latest_price' => $crypto->formatPrice(CustomcryptoData::price($crypto->symbol)),
+                            'institutional_price' => CustomCryptoData::price($crypto->symbol) ? $crypto->formatPrice($crypto->institutionalPrice(CustomCryptoData::price($crypto->symbol))) : null,
+                        ],
+                    ];
+                    break;
+
+                default:
+                    abort(500);
+                    break;
+            }
+
+            /**
+             * Return view
+             */
+            return view('dashboard.cryptos.details', [
+                'data' => $data,
+                'account_manager' => $account_manager
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('cryptos.search')->withError("unknown");
         }
-
-        /**
-         * Return view
-         */
-        return view('dashboard.cryptos.details', [
-            'data' => $data,
-            'account_manager' => $account_manager
-        ]);
     }
 }

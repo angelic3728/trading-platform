@@ -62,27 +62,6 @@ class StockController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  string  $symbol
@@ -98,129 +77,107 @@ class StockController extends Controller
          */
         $stock = Stock::where('symbol', $symbol)->firstOrFail();
 
-        /**
-         * Prepare Data
-         */
 
-        switch ($stock->data_source) {
+        try {
+            /**
+             * Prepare Data
+             */
 
-            case 'iex':
-                $iex_data = IEX::getDetails($stock->symbol);
-                $data = [
-                    'source' => 'iex',
-                    'symbol' => $stock->symbol,
-                    'company_name' => $stock->company_name,
-                    'currency' => $stock->gcurrency,
-                    'price' => array_get($iex_data, 'price'),
-                    'change_percentage' => array_get($iex_data, 'quote.changePercent'),
-                    'link' => $stock->link,
-                    'exchange' => $stock->exchange,
-                    'company' => [
-                        'description' => array_get($iex_data, 'company.description'),
-                        'exchange' => array_get($iex_data, 'company.exchange'),
-                        'industry' => array_get($iex_data, 'company.industry'),
-                        'sector' => array_get($iex_data, 'company.sector'),
-                        'website' => array_get($iex_data, 'company.website'),
-                    ],
-                    'numbers' => [
-                        'latest_price' => array_has($iex_data, 'quote.latestPrice') ? $stock->formatPrice(array_get($iex_data, 'quote.latestPrice')) : null,
-                        'previous_close' => array_has($iex_data, 'quote.previousClose') ? $stock->formatPrice(array_get($iex_data, 'quote.previousClose')) : null,
-                        'institutional_price' => array_has($iex_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($iex_data, 'price'))) : null,
-                        'market_cap' => array_has($iex_data, 'quote.marketCap') ? $stock->formatPrice(array_get($iex_data, 'quote.marketCap'), 0) : null,
-                        'volume' => array_has($iex_data, 'quote.latestVolume') ? number_format(array_get($iex_data, 'quote.latestVolume')) : null,
-                        'avg_total_volume' => array_has($iex_data, 'quote.avgTotalVolume') ? number_format(array_get($iex_data, 'quote.avgTotalVolume')) : null,
-                        'pe_ratio' => array_has($iex_data, 'quote.peRatio') ? number_format(array_get($iex_data, 'quote.peRatio'), 2) : null,
-                    ],
-                ];
-                break;
+            switch ($stock->data_source) {
 
-            case 'asx':
-                $asx_data = ASX::getDetails($stock->symbol);
-                $data = [
-                    'source' => 'asx',
-                    'symbol' => $stock->symbol,
-                    'company_name' => $stock->company_name,
-                    'currency' => $stock->gcurrency,
-                    'price' => array_get($asx_data, 'price'),
-                    'change_percentage' => array_get($asx_data, 'change_percentage'),
-                    'link' => $stock->link,
-                    'exchange' => $stock->exchange,
-                    'company' => [
-                        'description' => array_get($asx_data, 'description'),
-                        'exchange' => array_get($asx_data, 'exchange'),
-                        'industry' => array_get($asx_data, 'industry'),
-                        'sector' => array_get($asx_data, 'sector'),
-                        'website' => array_get($asx_data, 'website'),
-                    ],
-                    'numbers' => [
-                        'latest_price' => array_has($asx_data, 'latest_price') ? $stock->formatPrice(array_get($asx_data, 'latest_price')) : null,
-                        'previous_close' => array_has($asx_data, 'previous_close') ? $stock->formatPrice(array_get($asx_data, 'previous_close')) : null,
-                        'institutional_price' => array_has($asx_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($asx_data, 'price'))) : null,
-                        'market_cap' => array_has($asx_data, 'market_cap') ? $stock->formatPrice(array_get($asx_data, 'market_cap'), 0) : null,
-                        'volume' => array_has($asx_data, 'volume') ? number_format(array_get($asx_data, 'volume')) : null,
-                        'avg_total_volume' => array_has($asx_data, 'avg_total_volume') ? number_format(array_get($asx_data, 'avg_total_volume')) : null,
-                        'pe_ratio' => array_has($asx_data, 'pe_ratio') ? number_format(array_get($asx_data, 'pe_ratio'), 2) : null,
-                    ],
-                ];
-                break;
+                case 'iex':
+                    $iex_data = IEX::getDetails($stock->symbol);
+                    $data = [
+                        'source' => 'iex',
+                        'symbol' => $stock->symbol,
+                        'company_name' => $stock->company_name,
+                        'currency' => $stock->gcurrency,
+                        'price' => array_get($iex_data, 'price'),
+                        'change_percentage' => array_get($iex_data, 'quote.changePercent'),
+                        'link' => $stock->link,
+                        'exchange' => $stock->exchange,
+                        'company' => [
+                            'description' => array_get($iex_data, 'company.description'),
+                            'exchange' => array_get($iex_data, 'company.exchange'),
+                            'industry' => array_get($iex_data, 'company.industry'),
+                            'sector' => array_get($iex_data, 'company.sector'),
+                            'website' => array_get($iex_data, 'company.website'),
+                        ],
+                        'numbers' => [
+                            'latest_price' => array_has($iex_data, 'quote.latestPrice') ? $stock->formatPrice(array_get($iex_data, 'quote.latestPrice')) : null,
+                            'previous_close' => array_has($iex_data, 'quote.previousClose') ? $stock->formatPrice(array_get($iex_data, 'quote.previousClose')) : null,
+                            'institutional_price' => array_has($iex_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($iex_data, 'price'))) : null,
+                            'market_cap' => array_has($iex_data, 'quote.marketCap') ? $stock->formatPrice(array_get($iex_data, 'quote.marketCap'), 0) : null,
+                            'volume' => array_has($iex_data, 'quote.latestVolume') ? number_format(array_get($iex_data, 'quote.latestVolume')) : null,
+                            'avg_total_volume' => array_has($iex_data, 'quote.avgTotalVolume') ? number_format(array_get($iex_data, 'quote.avgTotalVolume')) : null,
+                            'pe_ratio' => array_has($iex_data, 'quote.peRatio') ? number_format(array_get($iex_data, 'quote.peRatio'), 2) : null,
+                        ],
+                    ];
+                    break;
 
-            case 'custom':
-                $data = [
-                    'source' => 'custom',
-                    'symbol' => $stock->symbol,
-                    'company_name' => $stock->company_name,
-                    'currency' => $stock->gcurrency,
-                    'price' => CustomStockData::price($stock->symbol),
-                    'change_percentage' => CustomStockData::changePercentage($stock->symbol),
-                    'link' => $stock->link,
-                    'exchange' => $stock->exchange,
-                ];
-                break;
+                case 'asx':
+                    $asx_data = ASX::getDetails($stock->symbol);
+                    $data = [
+                        'source' => 'asx',
+                        'symbol' => $stock->symbol,
+                        'company_name' => $stock->company_name,
+                        'currency' => $stock->gcurrency,
+                        'price' => array_get($asx_data, 'price'),
+                        'change_percentage' => array_get($asx_data, 'change_percentage'),
+                        'link' => $stock->link,
+                        'exchange' => $stock->exchange,
+                        'company' => [
+                            'description' => array_get($asx_data, 'description'),
+                            'exchange' => array_get($asx_data, 'exchange'),
+                            'industry' => array_get($asx_data, 'industry'),
+                            'sector' => array_get($asx_data, 'sector'),
+                            'website' => array_get($asx_data, 'website'),
+                        ],
+                        'numbers' => [
+                            'latest_price' => array_has($asx_data, 'latest_price') ? $stock->formatPrice(array_get($asx_data, 'latest_price')) : null,
+                            'previous_close' => array_has($asx_data, 'previous_close') ? $stock->formatPrice(array_get($asx_data, 'previous_close')) : null,
+                            'institutional_price' => array_has($asx_data, 'price') ? $stock->formatPrice($stock->institutionalPrice(array_get($asx_data, 'price'))) : null,
+                            'market_cap' => array_has($asx_data, 'market_cap') ? $stock->formatPrice(array_get($asx_data, 'market_cap'), 0) : null,
+                            'volume' => array_has($asx_data, 'volume') ? number_format(array_get($asx_data, 'volume')) : null,
+                            'avg_total_volume' => array_has($asx_data, 'avg_total_volume') ? number_format(array_get($asx_data, 'avg_total_volume')) : null,
+                            'pe_ratio' => array_has($asx_data, 'pe_ratio') ? number_format(array_get($asx_data, 'pe_ratio'), 2) : null,
+                        ],
+                    ];
+                    break;
 
-            default:
-                abort(500);
-                break;
+                case 'custom':
+                    $data = [
+                        'source' => 'custom',
+                        'symbol' => $stock->symbol,
+                        'company_name' => $stock->company_name,
+                        'currency' => $stock->gcurrency,
+                        'price' => CustomStockData::price($stock->symbol),
+                        'change_percentage' => CustomStockData::changePercentage($stock->symbol),
+                        'link' => $stock->link,
+                        'exchange' => $stock->exchange,
+                        'company' => [
+                            'description' => $stock->information,
+                        ],
+                        'numbers' => [
+                            'latest_price' => $stock->formatPrice(CustomStockData::price($stock->symbol)),
+                            'institutional_price' => CustomStockData::price($stock->symbol) ? $stock->formatPrice($stock->institutionalPrice(CustomStockData::price($stock->symbol))) : null,
+                        ],
+                    ];
+                    break;
+
+                default:
+                    abort(500);
+                    break;
+            }
+            /**
+             * Return view
+             */
+            return view('dashboard.stocks.details', [
+                'data' => $data,
+                'account_manager' => $account_manager
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->route('stocks.search')->withError("unknown");
         }
-        /**
-         * Return view
-         */
-        return view('dashboard.stocks.details', [
-            'data' => $data,
-            'account_manager' => $account_manager
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

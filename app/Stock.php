@@ -72,6 +72,13 @@ class Stock extends Model
                 return number_format($price, $decimals)." kr";
                 break;
 
+                case 'CHF':
+                    return "fr.".number_format($price, $decimals);
+                    break;
+                    case 'CZK':
+                        return number_format($price, $decimals)." Kč";
+                        break;
+
             default:
                 return $price;
                 break;
