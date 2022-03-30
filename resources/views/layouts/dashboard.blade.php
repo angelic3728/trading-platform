@@ -43,7 +43,7 @@
         <!-- Container-fluid Ends-->
       </div>
       <!-- footer start-->
-      <footer>
+      <footer class="m-l-0">
         <div class="container">
           <div class="row justify-content-between">
             <div class="col-sm-auto">

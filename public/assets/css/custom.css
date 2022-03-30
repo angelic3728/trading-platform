@@ -61,6 +61,16 @@
     }
 }
 
+.chart-wrapper {
+    min-height: 300px;
+}
+
+@media (min-width: 1200px) {
+    .chart-wrapper {
+        min-height: 410px;
+    }
+}
+
 .header-wrapper {
     width: calc(100% - 290px);
 }

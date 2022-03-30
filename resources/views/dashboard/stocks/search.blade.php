@@ -10,7 +10,7 @@
 <div class="col-sm-12 dashboard-content-wrapper">
     <div class="col-xl-12">
         <div class="d-flex justify-content-center align-items-center" id="ad1_container">
-            <a href="https://bannerboo.com/" target="_blank">
+            <a href="{{$ads[0]['link']}}#" target="_blank">
                 <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
         </div>
@@ -18,7 +18,7 @@
     <div class="d-flex justify-content-center align-items-center" id="ad2_container">
         <ul>
             <li>
-                <a href="https://bannerboo.com/" target="_blank">
+                <a href="{{$ads[1]['link']}}#" target="_blank">
                     <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
             </li>
@@ -130,9 +130,9 @@
             <div class="row align-items-center">
                 <div class="col">
                     @if(request()->filled('q') || request()->filled('ex'))
-                    <h4 class="mb-0">Results ({{ $stocks->total() }})</h4>
+                    <h4 class="mb-2 sm:mb-0">Results ({{ $stocks->total() }})</h4>
                     @else
-                    <h4 class="mb-0">All Stocks ({{ $stocks->total() }})</h4>
+                    <h4 class="mb-2 sm:mb-0">All Stocks ({{ $stocks->total() }})</h4>
                     @endif
                 </div>
                 <div class="col-auto d-flex justify-content-between">
@@ -162,37 +162,35 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col">Symbol</th>
-                                <th scope="col">Company Name</th>
-                                <th scope="col">Exchange</th>
-                                <th scope="col">Currency</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($stocks as $stock)
-                            <tr>
-                                <td width="10%">{{ $stock->symbol }}</td>
-                                <td>{{ $stock->company_name }}</td>
-                                <td>{{ $stock->exchange }}</td>
-                                <td>{{ $stock->currency }}</td>
-                                <td class="text-right" nowrap>
-                                    <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('stocks.show', ['symbol' => $stock->symbol]) }}">See More</a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    @if($stocks->isEmpty())
-                    <div class="p-10 d-flex justify-content-center">
-                        There are no stocks that match your search result
-                    </div>
-                    @endif
+                <table class="table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Symbol</th>
+                            <th scope="col">Company Name</th>
+                            <th scope="col">Exchange</th>
+                            <th scope="col">Currency</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($stocks as $stock)
+                        <tr>
+                            <td width="10%">{{ $stock->symbol }}</td>
+                            <td>{{ $stock->company_name }}</td>
+                            <td>{{ $stock->exchange }}</td>
+                            <td>{{ $stock->currency }}</td>
+                            <td class="text-right" nowrap>
+                                <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('stocks.show', ['symbol' => $stock->symbol]) }}">See More</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @if($stocks->isEmpty())
+                <div class="p-10 d-flex justify-content-center">
+                    There are no stocks that match your search result
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -283,7 +281,7 @@
 @push('scripts')
 <script src="{{asset('assets/js/pages/stocks/custom.js')}}"></script>
 <script>
-    if("{{session('error')}}" == "unknown") {
+    if ("{{session('error')}}" == "unknown") {
         $.notify('<i class="fa fa-bell-o"></i>The stock data is not providing right now.', {
             type: 'theme',
             allow_dismiss: true,

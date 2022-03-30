@@ -13,7 +13,7 @@
     <div class="card">
         <div class="col-xl-12">
             <div class="d-flex justify-content-center align-items-center" id="ad1_container">
-                <a href="https://bannerboo.com/" target="_blank">
+                <a href="{{$ads[0]['link']}}#" target="_blank">
                     <img src="{{ 'storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
                 </a>
             </div>
@@ -21,7 +21,7 @@
         <div class="d-flex justify-content-center align-items-center" id="ad2_container">
             <ul>
                 <li>
-                    <a href="https://bannerboo.com/" target="_blank">
+                    <a href="{{$ads[0]['link']}}#" target="_blank">
                         <img src="{{ 'storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                     </a>
                 </li>

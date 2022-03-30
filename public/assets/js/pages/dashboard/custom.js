@@ -377,11 +377,15 @@ $(document).ready(function() {
             dots: false,
             responsive: {
                 320: {
-                    items: 2,
+                    items: 1,
                     mergeFit: true
                 },
                 480: {
-                    items: 3,
+                    items: 2,
+                    mergeFit: true
+                },
+                1280: {
+                    items: 2,
                     mergeFit: true
                 },
                 1670: {
@@ -484,7 +488,7 @@ function renderChart(
                 breakpoint: 1238,
                 options: {
                     chart: {
-                        height: height * 0.6
+                        height: 350
                     },
                     grid: {
                         padding: {
@@ -497,7 +501,7 @@ function renderChart(
                 breakpoint: 992,
                 options: {
                     chart: {
-                        height: height * 0.5
+                        height: (lineLabel)?320:height*0.6
                     }
                 }
             },
@@ -515,7 +519,7 @@ function renderChart(
                 breakpoint: 535,
                 options: {
                     chart: {
-                        height: height * 0.4
+                        height: (lineLabel)?280:250
                     }
                 }
             }

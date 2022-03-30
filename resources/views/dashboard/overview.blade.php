@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="d-flex justify-content-center align-items-center" id="ad1_container">
-                        <a href="https://bannerboo.com/" target="_blank">
+                        <a href="{{$ads[0]['link']}}#" target="_blank">
                             <img src="{{ 'storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
                         </a>
                     </div>
@@ -27,7 +27,7 @@
                 <div class="d-flex justify-content-center align-items-center" id="ad2_container">
                     <ul>
                         <li>
-                            <a href="https://bannerboo.com/" target="_blank">
+                            <a href="{{$ads[0]['link']}}#" target="_blank">
                                 <img src="{{ 'storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                             </a>
                         </li>
@@ -87,6 +87,9 @@
                                         @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'GBP')
                                         <span class="f-w-600">£</span>
                                         @endif
+                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'AUD')
+                                        <span class="f-w-600">A$</span>
+                                        @endif
                                         <span class="counter" id="total_profile_value"></span>
                                     </h5>
                                     <p>Total Portfolio Value</p>
@@ -111,6 +114,9 @@
                                         @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'GBP')
                                         <span class="f-w-600">£</span>
                                         @endif
+                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'AUD')
+                                        <span class="f-w-600">A$</span>
+                                        @endif
                                         @if(auth()->user()->getBalance())
                                         <span class="counter" id="cash_on_account"></span>
                                         @else
@@ -132,25 +138,30 @@
                         </div>
                         <div class="card-body p-0">
                             <div class="tabbed-card">
-                                <ul class="pull-right nav nav-tabs border-tab nav-success" id="chart_tab" role="tablist">
+                                <ul class="pull-right nav nav-tabs border-tab nav-success" id="chart_tab" role="tablist" style="z-index: 7;">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="stock_chart_tab" data-bs-toggle="tab" href="#stock_chart" role="tab" aria-controls="stock-chart" aria-selected="false" style="cursor: pointer;"><i class="icofont icofont-ui-home"></i>Stocks</a>
-                                        <div class="material-border"></div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="fund_chart_tab" data-bs-toggle="tab" href="#fund_chart" role="tab" aria-controls="fund-chart" aria-selected="true" style="cursor: pointer;">
-                                            <i class="fa fa-cloud"></i>Funds
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#stock_chart" role="tab" aria-controls="stock-chart" aria-selected="false" style="cursor: pointer;">
+                                            <i class="icofont icofont-ui-home"></i>
+                                            Stocks
                                         </a>
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="crypto_chart_tab" data-bs-toggle="tab" href="#crypto_chart" role="tab" aria-controls="crypto-chart" aria-selected="true" style="cursor: pointer;">
-                                            <i class="fa fa-btc"></i>Cryptos
+                                        <a class="nav-link" data-bs-toggle="tab" href="#fund_chart" role="tab" aria-controls="fund-chart" aria-selected="true" style="cursor: pointer;">
+                                            <i class="fa fa-cloud"></i>
+                                            Funds
+                                        </a>
+                                        <div class="material-border"></div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#crypto_chart" role="tab" aria-controls="crypto-chart" aria-selected="true" style="cursor: pointer;">
+                                            <i class="fa fa-btc"></i>
+                                            Cryptos
                                         </a>
                                         <div class="material-border"></div>
                                     </li>
                                 </ul>
-                                <div class="tab-content">
+                                <div class="tab-content p-t-50 sm:p-t-0">
                                     <div class="tab-pane fade active show" id="stock_chart" role="tabpanel" aria-labelledby="stock-chart">
                                         <div id="chart-timeline-dashbord1"></div>
                                     </div>
@@ -180,18 +191,23 @@
                                     <div class="tabbed-card">
                                         <ul class="pull-right nav nav-tabs border-tab nav-success" id="portfolio-tab" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="stock_tab" data-bs-toggle="tab" href="#stock_portfolio" role="tab" aria-controls="stock-portfolio" aria-selected="false" style="cursor: pointer;"><i class="icofont icofont-ui-home"></i>Stocks</a>
-                                                <div class="material-border"></div>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="fund_tab" data-bs-toggle="tab" href="#fund_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true" style="cursor: pointer;">
-                                                    <i class="fa fa-cloud"></i>Funds
+                                                <a class="nav-link active" data-bs-toggle="tab" href="#stock_portfolio" role="tab" aria-controls="stock-portfolio" aria-selected="false" style="cursor: pointer;">
+                                                    <i class="icofont icofont-ui-home"></i>
+                                                    Stocks
                                                 </a>
                                                 <div class="material-border"></div>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="crypto_tab" data-bs-toggle="tab" href="#crypto_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true" style="cursor: pointer;">
-                                                    <i class="fa fa-btc"></i>Cryptos
+                                                <a class="nav-link" data-bs-toggle="tab" href="#fund_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true" style="cursor: pointer;">
+                                                    <i class="fa fa-cloud"></i>
+                                                    Funds
+                                                </a>
+                                                <div class="material-border"></div>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#crypto_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true" style="cursor: pointer;">
+                                                    <i class="fa fa-btc"></i>
+                                                    Cryptos
                                                 </a>
                                                 <div class="material-border"></div>
                                             </li>
@@ -231,8 +247,8 @@
                                                                     <td style="vertical-align: middle;">{{$transaction->shares}}</td>
                                                                     <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; min-width:140px;">
-                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
-                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
                                                                     </td>
                                                                 </tr>
                                                                 @endif
@@ -281,8 +297,8 @@
                                                                     <td style="vertical-align: middle;">{{ $transaction->shares }}</td>
                                                                     <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; width:140px;">
-                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
-                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
                                                                     </td>
                                                                 </tr>
                                                                 @endif
@@ -298,7 +314,7 @@
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="crypto_portfolio" role="tabpanel" aria-labelledby="crypto-portfolio">
-                                                <div class="vertical-scroll scroll-demo p-0" style="height: 350px;">
+                                                <div class="sm:vertical-scroll scroll-demo p-0" style="height: 350px;">
                                                     <div class="table-responsive">
                                                         <table class="table table-responsive table-responsive-sm">
                                                             <thead>
@@ -331,8 +347,8 @@
                                                                     <td style="vertical-align: middle;">{{ $transaction->shares }}</td>
                                                                     <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                     <td class="text-center table-secondary" style="right: 0px; width:140px;">
-                                                                        <button class="btn btn-pill btn-outline-primary btn-xs me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
-                                                                        <button class="btn btn-pill btn-outline-danger btn-xs ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
                                                                     </td>
                                                                 </tr>
                                                                 @endif
@@ -656,7 +672,7 @@
                                 <div class="col-xl-3 col-md-6 news-0" style="display: none;">
                                     <a href="" class="news-link-0" target="_blank">
                                         <div class="prooduct-details-box">
-                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                            <div class="chart-wrapper media sm:w-auto" style="text-align: center; padding:10px 0px;">
                                                 <img class="align-self-center img-fluid news-img-0" src="" style="max-height: 180px;" alt="#">
                                                 <div class="media-body">
                                                     <p class="news-date-0 text-dark mb-0"></p>
@@ -670,7 +686,7 @@
                                 <div class="col-xl-3 col-md-6 news-1" style="display: none;">
                                     <a href="" class="news-link-1" target="_blank">
                                         <div class="prooduct-details-box">
-                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                            <div class="chart-wrapper media" style="text-align: center; padding:10px 0px;">
                                                 <img class="align-self-center img-fluid news-img-1" src="" style="max-height: 180px;" alt="#">
                                                 <div class="media-body">
                                                     <p class="news-date-1 text-dark mb-0"></p>
@@ -684,7 +700,7 @@
                                 <div class="col-xl-3 col-md-6 news-2" style="display: none;">
                                     <a href="" class="news-link-2" target="_blank">
                                         <div class="prooduct-details-box">
-                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                            <div class="chart-wrapper media" style="text-align: center; padding:10px 0px;">
                                                 <img class="align-self-center img-fluid news-img-2" src="" style="max-height: 180px;" alt="#">
                                                 <div class="media-body">
                                                     <p class="news-date-2 text-dark mb-0"></p>
@@ -698,7 +714,7 @@
                                 <div class="col-xl-3 col-md-6 news-3" style="display: none;">
                                     <a href="" class="news-link-3" target="_blank">
                                         <div class="prooduct-details-box">
-                                            <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
+                                            <div class="chart-wrapper media" style="text-align: center; padding:10px 0px;">
                                                 <img class="align-self-center img-fluid news-img-3" src="" style="max-height: 180px;" alt="#">
                                                 <div class="media-body">
                                                     <p class="news-date-3 text-dark mb-0"></p>
@@ -735,19 +751,11 @@
     $('#total_profile_value').text(formatPrice(Number(total_value)));
     $('#cash_on_account').text(formatPrice(Number('{{ auth()->user()->getBalance()->amount }}')));
 </script>
-<script src="{{asset('assets/js/chart/chartist/chartist.js')}}"></script>
-<script src="{{asset('assets/js/chart/chartist/chartist-plugin-tooltip.js')}}"></script>
-<script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
-<!-- <script src="{{asset('assets/js/chart/apex-chart/stock-prices.js')}}"></script> -->
 <script src="{{asset('assets/js/prism/prism.min.js')}}"></script>
 <script src="{{asset('assets/js/clipboard/clipboard.min.js')}}"></script>
 <script src="{{asset('assets/js/counter/jquery.waypoints.min.js')}}"></script>
 <script src="{{asset('assets/js/counter/jquery.counterup.min.js')}}"></script>
 <script src="{{asset('assets/js/counter/counter-custom.js')}}"></script>
-<script src="{{asset('assets/js/custom-card/custom-card.js')}}"></script>
-<script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/jquery-jvectormap-2.0.2.min.js')}}"></script>
-<script src="{{asset('assets/js/vector-map/map/jquery-jvectormap-world-mill-en.js')}}"></script>
 <script src="{{asset('assets/js/scrollable/perfect-scrollbar.min.js')}}"></script>
 <script src="{{asset('assets/js/scrollable/scrollable-custom.js')}}"></script>
 <script src="{{asset('assets/js/dashboard/default.js')}}"></script>

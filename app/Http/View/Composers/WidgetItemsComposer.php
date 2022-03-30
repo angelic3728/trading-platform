@@ -40,20 +40,20 @@ class WidgetItemsComposer
         /**
          * Get widget stocks, funds and cryptos
          */
-        $stocks = Stock::where('widget', true)->take(4)->get();
-        $funds = Fund::where('widget', true)->take(4)->get();
-        $cryptos = CryptoCurrency::where('widget', true)->take(4)->get();
-        // $stocks = Cache::remember('stocks:widget', 15, function () {
-        //     return Stock::where('widget', true)->take(4)->get();
-        // });
+        // $stocks = Stock::where('widget', true)->take(4)->get();
+        // $funds = Fund::where('widget', true)->take(4)->get();
+        // $cryptos = CryptoCurrency::where('widget', true)->take(4)->get();
+        $stocks = Cache::remember('stocks:widget', 15, function () {
+            return Stock::where('widget', true)->take(4)->get();
+        });
 
-        // $funds = Cache::remember('funds:widget', 15, function () {
-        //     return Fund::where('widget', true)->take(4)->get();
-        // });
+        $funds = Cache::remember('funds:widget', 15, function () {
+            return Fund::where('widget', true)->take(4)->get();
+        });
 
-        // $cryptos = Cache::remember('stocks:widget', 15, function () {
-        //     return CryptoCurrency::where('widget', true)->take(4)->get();
-        // });
+        $cryptos = Cache::remember('stocks:widget', 15, function () {
+            return CryptoCurrency::where('widget', true)->take(4)->get();
+        });
         // print_r($stocks); die();
 
         /**

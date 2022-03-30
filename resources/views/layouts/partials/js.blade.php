@@ -9,7 +9,6 @@
 <script src="{{asset('assets/js/bootstrap/popper.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap/bootstrap.min.js')}}"></script>
 <script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
-<script src="{{asset('assets/js/tooltip-init.js')}}"></script>
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script src="{{asset('assets/js/script.js')}}"></script>
 <!-- Plugins JS start-->

@@ -1025,7 +1025,7 @@ function formatPrice(price, currency) {
         case "PLN":
             return amount + " zł";
 
-        case "PLN":
+        case "RON":
             return amount + " lei";
 
         default:

@@ -10,7 +10,7 @@
 <div class="col-md-12 crypto-details dashboard-content-wrapper">
     <div class="col-xl-12">
         <div class="d-flex justify-content-center align-items-center" id="ad1_container">
-            <a href="https://bannerboo.com/" target="_blank">
+            <a href="{{$ads[0]['link']}}#" target="_blank">
                 <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
         </div>
@@ -18,7 +18,7 @@
     <div class="d-flex justify-content-center align-items-center" id="ad2_container">
         <ul>
             <li>
-                <a href="https://bannerboo.com/" target="_blank">
+                <a href="{{$ads[1]['link']}}#" target="_blank">
                     <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
             </li>
@@ -57,13 +57,13 @@
                         </div>
                         <div class="d-flex justify-content-end p-10" id="range_btn_group">
                             <div class="btn-group btn-group-square" id="range_group" role="group">
-                                <button class="btn btn-outline-dark active" type="button" onclick="updateChart('1d', this)">1d</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('5d', this)">5d</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('1m', this)">1m</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('6m', this)">6m</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('ytd', this)">ytd</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('1y', this)">1y</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('5y', this)">5y</button>
+                                <button class="btn btn-outline-dark active" type="button" onclick="updateChart('1d', this)" style="padding: 0.3rem 0.8rem;">1d</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('5d', this)" style="padding: 0.3rem 0.8rem;">5d</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('1m', this)" style="padding: 0.3rem 0.8rem;">1m</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('6m', this)" style="padding: 0.3rem 0.8rem;">6m</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('ytd', this)" style="padding: 0.3rem 0.8rem;">ytd</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('1y', this)" style="padding: 0.3rem 0.8rem;">1y</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('5y', this)" style="padding: 0.3rem 0.8rem;">5y</button>
                             </div>
                         </div>
                     </div>

@@ -25,10 +25,12 @@ class RedoForeigns extends Migration
             $table->dropForeign('transactions_user_id_foreign');
             $table->dropForeign('transactions_stock_id_foreign');
             $table->dropForeign('transactions_fund_id_foreign');
+            $table->dropForeign('transactions_crypto_id_foreign');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('stock_id')->references('id')->on('stocks')->onDelete('cascade');
             $table->foreign('fund_id')->references('id')->on('funds')->onDelete('cascade');
+            $table->foreign('crypto_id')->references('id')->on('crypto_currencies')->onDelete('cascade');
         });
 
         Schema::table('activation_tokens', function (Blueprint $table) {

@@ -16,11 +16,10 @@
                 </div>
               </div>
             </div>
-            <span class="d-sm-none mobile-search search-bg"><i class="fa fa-search"></i></span>
           </li>
         </ul>
       </div>
-      <div class="nav-ticker col p-0">
+      <div class="nav-ticker col p-0 sm:d-none">
         <div class="ticker-wrap">
           <div class="ticker">
             <ul class="ticker__item" id="forward_ticker_wrapper">
@@ -33,7 +32,7 @@
         </div>
       </div>
       <div class="nav-right pull-right right-menu p-0">
-        <ul class="nav-menus" style="width: 230px;">
+        <ul class="nav-menus w-100 sm:w-auto " style="width: 230px;">
           <li><a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()"><i data-feather="maximize"></i></a></li>
           <li>
             <div class="mode"><i class="fa fa-moon-o"></i></div>

@@ -49,7 +49,7 @@ php artisan user:set-password
 ### Step 6
 Set the first highlighted stocks and widget stocks. At least 1 stocks should be highlighted and enabled for the widget to load the platform.
 
-You can set these by setting the `highlighted` or `widget` columns in the `stocks` table to `1`. You can have up to 4 stocks as highlighted.
+You can set these by setting the `highlighted` or `widget` columns in the `stocks` table to `1`. You can have up to 4 stocks, funds and cryptos as highlighted.
 
 After changing these values, run `php artisan cache:clear` to clear the cache
 

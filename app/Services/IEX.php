@@ -19,9 +19,6 @@ class IEX
          * Only get us stocks
          */
         $symbols = $symbols->where('region', 'US');
-        $symbols = $symbols->where('type', 'ad');
-        $symbols = $symbols->where('type', 'cs');
-        $symbols = $symbols->where('type', 'ps');
         $symbols = $symbols->where('currency', '!=', 'ISK');
         $symbols = $symbols->where('currency', '!=', 'MYR');
         $symbols = $symbols->where('currency', '!=', 'BGN');
@@ -30,6 +27,11 @@ class IEX
         /**
          * Map data to individual collections
          */
+
+        $symbols = $symbols->filter(function($symbol) {
+            return ($symbol['type'] == 'ad' || $symbol['type'] == 'cs' || $symbol['type'] == 'ps');
+        });
+
         $symbols = $symbols->map(function ($symbol) {
             return collect([
                 'symbol' => $symbol['symbol'],
