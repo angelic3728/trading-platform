@@ -39,12 +39,22 @@ Then import the ASX data
 php artisan asx:import-data
 ```
 
+php artisan db:seed
+
+sudo apt install redis-server
+in sudo nano /etc/redis/redis.conf
+...............
+supervised systemd
+...............
+
 ### Step 5
 Setup your first manager account by inserting a row in the users table. You can leave the password empty.
 After the row is saved, run the following command to generate a password
 ```
 php artisan user:set-password
 ```
+
+
 
 ### Step 6
 Set the first highlighted stocks and widget stocks. At least 1 stocks should be highlighted and enabled for the widget to load the platform.

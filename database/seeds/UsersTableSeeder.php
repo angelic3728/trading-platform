@@ -13,8 +13,6 @@ class UsersTableSeeder extends Seeder
     {
         factory(App\User::class, 10)->create()->each(function ($user) {
             $user->documents()->save(factory(App\Document::class)->make());
-            $user->documents()->save(factory(App\Document::class)->make());
-            $user->documents()->save(factory(App\Document::class)->make());
         });
     }
 }
