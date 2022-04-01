@@ -13,6 +13,7 @@ class Transactions extends Migration
      */
     public function up()
     {
+        $this->down();
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
