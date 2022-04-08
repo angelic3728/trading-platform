@@ -19,17 +19,25 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="d-flex justify-content-center align-items-center" id="ad1_container">
+                        @if($ads[0])
                         <a href="{{$ads[0]['link']}}#" target="_blank">
-                            <img src="{{ 'storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
+                            <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
                         </a>
+                        @else
+                        <b>No Advertising.</b>
+                        @endif
                     </div>
                 </div>
                 <div class="d-flex justify-content-center align-items-center" id="ad2_container">
                     <ul>
                         <li>
-                            <a href="{{$ads[0]['link']}}#" target="_blank">
-                                <img src="{{ 'storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
+                            @if($ads[1])
+                            <a href="{{$ads[1]['link']}}#" target="_blank">
+                                <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                             </a>
+                            @else
+                            <b>No Advertising.</b>
+                            @endif
                         </li>
                     </ul>
                     <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
@@ -47,7 +55,7 @@
                                 <div class="card-body text-center p-t-0">
                                     <h3 class="font-light">Welcome back {{auth()->user()->first_name}}!</h3>
                                     <p class="font-light" style="font-size: 11px;">Your account manager is available from 05:00am to 17:00pm Monday to Friday. If you need to speak to somebody outside of these hours, please click below.</p>
-                                    <a class="btn btn-light" href="#">Click Here</a>
+                                    <a class="btn btn-light" href="mailto://{{ config('app.email') }}">Click Here</a>
                                 </div>
                                 <div class="confetti">
                                     <div class="confetti-piece"></div>
@@ -747,9 +755,10 @@
 <script>
     var chartData = {!! $transactions->map(function($transaction) { return ['id' => $transaction->id, 'realPrice' => $transaction->realPrice, 'created_at' => $transaction->created_at, 'wherefrom' => $transaction->wherefrom, 'type' => $transaction->type];}) -> toJson() !!};
     var all_highlights = {!!json_encode($all_highlights) !!}; 
+    var news_symbols = {!!json_encode($news_symbols) !!}
     var total_value = "{{ $total_transaction_price }}";
     $('#total_profile_value').text(formatPrice(Number(total_value)));
-    $('#cash_on_account').text(formatPrice(Number('{{ auth()->user()->getBalance()->amount }}')));
+    $('#cash_on_account').text(formatPrice(Number('{{ (auth()->user()->getBalance())?auth()->user()->getBalance()->amount:0 }}')));
 </script>
 <script src="{{asset('assets/js/prism/prism.min.js')}}"></script>
 <script src="{{asset('assets/js/clipboard/clipboard.min.js')}}"></script>

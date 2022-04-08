@@ -28,7 +28,7 @@ class IEX
          * Map data to individual collections
          */
 
-        $symbols = $symbols->filter(function($symbol) {
+        $symbols = $symbols->filter(function ($symbol) {
             return ($symbol['type'] == 'ad' || $symbol['type'] == 'cs' || $symbol['type'] == 'ps');
         });
 
@@ -153,13 +153,14 @@ class IEX
         $results = [];
 
         foreach ($symbols as $item) {
-            array_push($results, collect([
-                'symbol' => $item['symbol'],
-                'name' => $item['name'],
-                'coin_id' => $item['id'],
-                'currency' => 'USD',
-                'msymbol' => $item['symbol'].'-usd',
-            ]));
+            if ($item['symbol'] != "")
+                array_push($results, collect([
+                    'symbol' => $item['symbol'],
+                    'name' => $item['name'],
+                    'coin_id' => $item['id'],
+                    'currency' => 'USD',
+                    'msymbol' => $item['symbol'] . '-usd',
+                ]));
         }
         /**
          * Return symbols
@@ -167,9 +168,10 @@ class IEX
         return $results;
     }
 
-    public function getMarketCryptos() {
+    public function getMarketCryptos()
+    {
         $client = new CoinGeckoClient();
-        $feeds = $client->coins()->getMarkets('usd', ['page'=>'1', 'per_page'=>'5']);
+        $feeds = $client->coins()->getMarkets('usd', ['page' => '1', 'per_page' => '5']);
         $results = [];
         foreach ($feeds as $item) {
             array_push($results, collect([
@@ -197,7 +199,8 @@ class IEX
         return $data->first();
     }
 
-    public function getCDetails(string $coin_id) {
+    public function getCDetails(string $coin_id)
+    {
         $client = new CoinGeckoClient();
         $result = $client->coins()->getCoin($coin_id, ['tickers' => 'false', 'market_data' => 'true', 'community_data' => 'false', 'developer_data' => 'false', 'sparkline' => 'false']);
         return $result;
@@ -220,12 +223,13 @@ class IEX
 
             default:
                 $url = 'stock/' . $symbol . '/chart/' . $range;
-                return $this->makeApiCall('GET', 'stock/' . $symbol . '/chart/' . $range);
+                return $this->makeApiCall('GET', $url);
                 break;
         }
     }
 
-    public function getCChart(string $coin_id, string $range = '1m') {
+    public function getCChart(string $coin_id, string $range = '5d')
+    {
         $client = new CoinGeckoClient();
 
         $start_date = '';

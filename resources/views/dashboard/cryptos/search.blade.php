@@ -6,17 +6,25 @@
 <div class="col-sm-12 dashboard-content-wrapper">
     <div class="col-xl-12">
         <div class="d-flex justify-content-center align-items-center" id="ad1_container">
+            @if($ads[0])
             <a href="{{$ads[0]['link']}}#" target="_blank">
                 <img src="{{ '/storage/'.$ads[0]['source'] }}" class="img-fluid" alt="">
             </a>
+            @else
+            <b>No Advertising.</b>
+            @endif
         </div>
     </div>
     <div class="d-flex justify-content-center align-items-center" id="ad2_container">
         <ul>
             <li>
+                @if($ads[1])
                 <a href="{{$ads[1]['link']}}#" target="_blank">
                     <img src="{{ '/storage/'.$ads[1]['source'] }}" class="img-fluid" alt="">
                 </a>
+                @else
+                <b>No Advertising.</b>
+                @endif
             </li>
         </ul>
         <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>

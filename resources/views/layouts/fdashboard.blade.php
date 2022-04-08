@@ -30,12 +30,12 @@
   <!-- page-wrapper Start-->
   <div class="page-wrapper compact-wrapper" id="pageWrapper">
     <!-- Page Header Start-->
-    @includeIf('layouts.partials.header')
+    @includeIf('layouts.partials.fheader')
     <!-- Page Header Ends -->
     <!-- Page Body Start-->
     <div class="page-body-wrapper sidebar-icon">
       <!-- Page Sidebar Start-->
-      @includeIf('layouts..partials.sidebar')
+      @includeIf('layouts.partials.fsidebar')
       <!-- Page Sidebar Ends-->
       <div class="page-body">
         <!-- Container-fluid starts-->
@@ -81,5 +81,4 @@
 
   @includeIf('layouts.partials.js')
 </body>
-
 </html>

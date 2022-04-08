@@ -11,6 +11,9 @@
 <script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script src="{{asset('assets/js/script.js')}}"></script>
+@if(!request()->route()->named('forms'))
+<script src="{{asset('assets/js/search-bar.js')}}"></script>
+@endif
 <!-- Plugins JS start-->
 @stack('scripts')
 <!-- Plugins JS Ends-->

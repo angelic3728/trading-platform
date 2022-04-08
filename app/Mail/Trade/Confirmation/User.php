@@ -13,7 +13,9 @@ class User extends Mailable
 
     public $action;
     public $user;
-    public $stock;
+    public $obj;
+    public $symbol;
+    public $name;
     public $price;
     public $institutional_price;
     public $shares;
@@ -28,7 +30,9 @@ class User extends Mailable
     {
         $this->action = array_get($data, 'action');
         $this->user = array_get($data, 'user');
-        $this->stock = array_get($data, 'stock');
+        $this->obj = array_get($data, 'obj');
+        $this->symbol = array_get($data, 'stock');
+        $this->name = array_get($data, 'name');
         $this->price = array_get($data, 'price');
         $this->institutional_price = array_get($data, 'institutional_price');
         $this->shares = array_get($data, 'shares');
@@ -48,7 +52,7 @@ class User extends Mailable
          */
         if($this->action == 'buy'){
 
-            $subject = 'Trade Confirmation: You have bought '.$this->shares.' shares of '.$this->stock->symbol.' stock';
+            $subject = 'Trade Confirmation: You have bought '.$this->shares.' shares of '.$this->symbol.' stock';
 
         } else {
 

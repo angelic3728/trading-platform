@@ -51,7 +51,7 @@ class WidgetItemsComposer
             return Fund::where('widget', true)->take(4)->get();
         });
 
-        $cryptos = Cache::remember('stocks:widget', 15, function () {
+        $cryptos = Cache::remember('cryptos:widget', 15, function () {
             return CryptoCurrency::where('widget', true)->take(4)->get();
         });
         // print_r($stocks); die();
@@ -139,10 +139,10 @@ class WidgetItemsComposer
                     break;
 
                 case 'asx':
-                    $asx_data = Cache::remember('funds:widget-asx-detail-'.$c_fund->get('symbol'), 15, function() use ($c_fund) {
+                    $asx_data = Cache::remember('funds:widget-asx-detail-'.$c_fund->get('symbol'), 18, function() use ($c_fund) {
                         return ASX::getDetails($c_fund->get('symbol'));
                     });
-                    $asx_chart = Cache::remember('funds:widget-asx-chart-'.$c_fund->get('symbol'), 15, function() use ($c_fund) {
+                    $asx_chart = Cache::remember('funds:widget-asx-chart-'.$c_fund->get('symbol'), 22, function() use ($c_fund) {
                         return ASX::getChart($c_fund->get('symbol'), '1m');
                     });
                     $c_fund->put('price', array_get($asx_data, 'price'));
@@ -170,23 +170,33 @@ class WidgetItemsComposer
         });
 
         $crypto_results = [];
+        $cnt = 0;
         if (count($cryptos) != 0)
             foreach ($cryptos as $crypto) {
                 switch ($crypto['data_source']) { 
                     case 'gecko':
-                        $detail = Cache::remember('cryptos:widget-gecko-detail-'.$crypto->coin_id, 15, function() use ($crypto) {
-                            return IEX::getCDetails($crypto->coin_id);
-                        });
-                        $chart = Cache::remember('cryptos:widget-gecko-chart-'.$crypto->coin_id, 15, function() use ($crypto) {
-                            return IEX::getCChart($crypto->coin_id, '5d');
-                        });
+                        try {
+                            $cnt++;
+                            $chart = Cache::remember('cryptos:widget-gecko-chart-'.$crypto->coin_id, (10+$cnt), function() use ($crypto) {
+                                return IEX::getCChart($crypto->coin_id, '5d');
+                            });
+                        } catch(\Exception $e) {
+                            $chart = [];
+                        }
+
+                        $price = 0;
+                        $change_percentage = 0;
+                        if(count($chart) != 0) {
+                            $price = $chart[count($chart)-1][1];
+                            $change_percentage = number_format(($chart[count($chart)-1][1] - $chart[count($chart)-2][1])/100, 2);
+                        }
 
                         array_push($crypto_results, collect([
                             'wherefrom' => 'crypto',
-                            'symbol' => array_get($detail, 'symbol'),
-                            'name' => array_get($detail, 'name'),
-                            'price' => array_get($detail, 'market_data.current_price.usd'),
-                            'change_percentage' => array_get($detail, 'market_data.price_change_percentage_24h'),
+                            'symbol' => $crypto['symbol'],
+                            'name' => $crypto['name'],
+                            'price' => $price,
+                            'change_percentage' => $change_percentage,
                             'chart' => $chart,
                         ]));
                         break;

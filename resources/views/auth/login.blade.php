@@ -1,20 +1,20 @@
 @extends('layouts.authentication')
 
 @section('title')
- Login
+Login
 @endsection
 
 @push('css')
 @endpush
 
 @section('content')
-    <section>
+<section>
     <div class="container-fluid p-0">
         <div class="row">
             <div class="col-12">
                 <div class="login-card">
-                    <form class="theme-form login-form"  method="POST" action="{{ route('login') }}">
-                    @csrf
+                    <form class="theme-form login-form" method="POST" action="{{ route('login') }}">
+                        @csrf
                         <h4>Login</h4>
                         <h6>Welcome back! Log in to your account.</h6>
                         <div class="form-group">
@@ -44,15 +44,13 @@
                         <div class="form-group">
                             <button class="btn btn-primary btn-block" type="submit">Sign in</button>
                         </div>
-                    </form>
-                </div>
+                    </form                    
+                </div>                
             </div>
         </div>
     </div>
 </section>
-
-	
-    @push('scripts')
-    @endpush
+@push('scripts')
+@endpush
 
 @endsection

@@ -1,7 +1,7 @@
 @component('mail::message')
 Dear {{ $user->first_name }},
 
-Thank you for trading with Hoover Hyfield.
+Thank you for trading with WatchStone Capital.
 
 Below you can find the details of your trade:
 <table class="table td-50">
@@ -16,13 +16,13 @@ Below you can find the details of your trade:
             <td>
                 <strong>Symbol:</strong>
             </td>
-            <td>{{ $stock->symbol }}</td>
+            <td>{{ $symbol }}</td>
         </tr>
         <tr>
             <td>
                 <strong>Company Name:</strong>
             </td>
-            <td>{{ $stock->company_name }}</td>
+            <td>{{ $name }}</td>
         </tr>
         <tr>
             <td>
@@ -34,14 +34,14 @@ Below you can find the details of your trade:
             <td>
                 <strong>Retail Price:</strong>
             </td>
-            <td>{{ $stock->formatPrice($price) }}</td>
+            <td>{{ $obj->formatPrice($price) }}</td>
         </tr>
         @if($action == 'buy')
             <tr>
                 <td>
                     <strong>Institutional Price:</strong>
                 </td>
-                <td>{{ $stock->formatPrice($institutional_price) }}</td>
+                <td>{{ $obj->formatPrice($institutional_price) }}</td>
             </tr>
         @endif
         <tr>

@@ -21,7 +21,7 @@ class Stocks extends Migration
             $table->string('data_source');
             $table->string('exchange');
             $table->decimal('discount_percentage', 8, 2)->default(3);
-            $table->text('information')->change();
+            $table->text('information')->nullable();
             $table->string('gcurrency');
             $table->boolean('highlighted')->default(false);
             $table->boolean('widget')->default(false);

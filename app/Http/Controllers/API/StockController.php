@@ -45,7 +45,9 @@ class StockController extends Controller
                 $data = [
                     'action' => $action,
                     'user' => auth()->user(),
-                    'stock' => $stock,
+                    'obj' => $stock,
+                    'symbol' => $stock->symbol,
+                    'name' => $stock->company_name,
                     'price' => $request->price,
                     'institutional_price' => $request->institutional_price,
                     'shares' => $request->shares,
@@ -55,7 +57,8 @@ class StockController extends Controller
                 /**
                  * Mail User and Account Manager
                  */
-                Mail::to($request->user())->send(new \App\Mail\Trade\Confirmation\User($data));
+
+                Mail::to($request->user()['email'])->send(new \App\Mail\Trade\Confirmation\User($data));
                 Mail::to(config('app.email'))->send(new \App\Mail\Trade\Confirmation\AccountManager($data));
 
                 /**

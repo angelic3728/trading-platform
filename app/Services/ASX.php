@@ -173,7 +173,7 @@ class ASX
         $sorted = $results->sortBy('date');
         $results = $sorted->values()->all();
 
-        return ['results' => $results];
+        return $results;
     }
 
     /**

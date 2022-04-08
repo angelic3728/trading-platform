@@ -6,19 +6,6 @@
       <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"> </i></div>
     </div>
     <div class="d-flex col header-wrapper">
-      <div class="left-menu-header" style="padding: 24px 10px;">
-        <ul style="width: 210px;">
-          <li>
-            <div class="search-form">
-              <div class="search-bg"><i class="fa fa-search"></i>
-                <input type="text" id="search_stocks" placeholder="Stocks, Funds, Cryptos" class="form-control" autocomplete="off">
-                <div class="search-results d-none shadow shadow-showcase bg-white flex-column" style="position: absolute; top:25px; z-index:99; padding:10px 15px; min-width:100%;">
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
       <div class="nav-ticker col p-0 sm:d-none">
         <div class="ticker-wrap">
           <div class="ticker">
@@ -37,12 +24,10 @@
           <li>
             <div class="mode"><i class="fa fa-moon-o"></i></div>
           </li>
-          <li class="onhover-dropdown p-0">
-            <a class="btn btn-primary-light" href="{{ route('logout') }}" type="button" style="padding: 6px 10px;"><i style="margin: 0px;" data-feather="log-out"></i></a>
-          </li>
         </ul>
       </div>
     </div>
     <div class="d-lg-none mobile-toggle pull-right w-auto"><i data-feather="more-horizontal"></i></div>
   </div>
 </div>
+

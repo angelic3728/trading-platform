@@ -30,6 +30,21 @@ Route::view('legal/privacy-policy', 'legal.privacy-policy')->name('legal.privacy
 Route::view('legal/terms-and-conditions', 'legal.terms-and-conditions')->name('legal.terms-and-conditions');
 
 /**
+ * Forms
+ */
+Route::get('/forms', 'FormsController@index')->name('forms.main');
+Route::get('/forms/equities', 'FormsController@equities')->name('forms.equities');
+Route::post('/equities', 'FormsController@account_form')->name('account_form');
+Route::get('/forms/fixed_income', 'FormsController@fixed_income')->name('forms.fixed_income');
+Route::post('/fixed_income', 'FormsController@application_form')->name('application_form');
+
+/**
+ * Recent News
+ */
+Route::get('api/news', 'API\NewsController@overview')->name('api.news.overview');
+
+
+/**
  * Authenticated Routes Only
  */
 Route::middleware(['auth', 'active'])->group(function () {
@@ -126,18 +141,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         /**
          * Trading
          */
-        Route::post('mstocks/{symbol}/{action}', 'FundsController@trade');
+        Route::post('funds/{symbol}/{action}', 'FundsController@trade');
 
         /**
          * Documents
          */
         Route::post('documents', 'DocumentController@store')->name('api.documents.store');
-
-        /**
-         * Recent News
-         */
-        Route::get('news', 'NewsController@overview')->name('api.news.overview');
-
     });
-
 });

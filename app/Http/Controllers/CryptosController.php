@@ -8,6 +8,7 @@ use App\CryptoCurrency;
 
 use IEX;
 use CustomCryptoData;
+use Cache;
 
 class CryptosController extends Controller
 {
@@ -26,26 +27,15 @@ class CryptosController extends Controller
         /**
          * Get Funds
          */
-        $cryptos = ($request->ex == "" || $request->ex == "all") ?
-            CryptoCurrency::query()
-            ->when($request->q, function ($query) use ($request) {
-                return $query->where(function ($query) use ($request) {
-                    $query->where('symbol', 'LIKE', "%$request->q%")
-                        ->orWhere('name', 'LIKE', "%$request->q%");
-                });
-            })
-            ->orderBy('symbol', 'asc')
-            ->paginate(25)
-            :
-            CryptoCurrency::where('exchange', $request->ex)
-            ->when($request->q, function ($query) use ($request) {
-                return $query->where(function ($query) use ($request) {
-                    $query->where('symbol', 'LIKE', "%$request->q%")
-                        ->orWhere('company_name', 'LIKE', "%$request->q%");
-                });
-            })
-            ->orderBy('symbol', 'asc')
-            ->paginate(25);
+        $cryptos = CryptoCurrency::query()
+        ->when($request->q, function ($query) use ($request) {
+            return $query->where(function ($query) use ($request) {
+                $query->where('symbol', 'LIKE', "%$request->q%")
+                    ->orWhere('name', 'LIKE', "%$request->q%");
+            });
+        })
+        ->orderBy('symbol', 'asc')
+        ->paginate(25);
 
 
         /**
@@ -103,7 +93,10 @@ class CryptosController extends Controller
             switch ($crypto->data_source) {
 
                 case 'gecko':
-                    $crypto_data = IEX::getCDetails($crypto->coin_id);
+                    $crypto_data = Cache::remember('crypto:detail-info'.$crypto->coin_id, 7, function() use ($crypto) {
+                        return IEX::getCDetails($crypto->coin_id);
+                    });
+                    
                     $data = [
                         'source' => 'gecko',
                         'symbol' => array_get($crypto_data, 'symbol'),

@@ -45,7 +45,9 @@ class FundsController extends Controller
                 $data = [
                     'action' => $action,
                     'user' => auth()->user(),
-                    'fund' => $fund,
+                    'obj' => $fund,
+                    'symbol' => $fund->symbol,
+                    'name' => $fund->company_name,
                     'price' => $request->price,
                     'institutional_price' => $request->institutional_price,
                     'shares' => $request->shares,
@@ -55,7 +57,7 @@ class FundsController extends Controller
                 /**
                  * Mail User and Account Manager
                  */
-                Mail::to($request->user())->send(new \App\Mail\Trade\Confirmation\User($data));
+                Mail::to($request->user()['email'])->send(new \App\Mail\Trade\Confirmation\User($data));
                 Mail::to(config('app.email'))->send(new \App\Mail\Trade\Confirmation\AccountManager($data));
 
                 /**
@@ -357,10 +359,7 @@ class FundsController extends Controller
         /**
          * Get all funds and cache for an hour
          */
-        $funds = Cache::remember('funds:all', 60, function () {
-
-            return Fund::select('symbol', 'company_name')->get();
-        });
+        $funds = Fund::select('symbol', 'company_name')->get();
 
         foreach($funds as $fund) {
             $fund['wherefrom'] = 'funds';

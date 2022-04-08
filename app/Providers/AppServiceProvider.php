@@ -41,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
             'dashboard.transactions.all',
             'dashboard.news',
             'dashboard.settings',
+            'forms.main',
+            'forms.equities',
+            'forms.fixed_income',
         ], 'App\Http\View\Composers\WidgetItemsComposer');
 
     }

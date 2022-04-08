@@ -39,6 +39,10 @@
     padding: 50px 0px;
 }
 
+#ad2_container > ul > li > a > img {
+    max-height: 60vh!important;
+}
+
 @media (max-width: 1629px) {
     .card.profile-greeting {
         padding-top: 12px !important;

@@ -42,7 +42,9 @@ class CryptosController extends Controller
                 $data = [
                     'action' => $action,
                     'user' => auth()->user(),
-                    'crypto' => $crypto,
+                    'obj' => $crypto,
+                    'symbol' => $crypto->symbol,
+                    'name' => $crypto->name,
                     'price' => $request->price,
                     'institutional_price' => $request->institutional_price,
                     'shares' => $request->shares,
@@ -52,7 +54,7 @@ class CryptosController extends Controller
                 /**
                  * Mail User and Account Manager
                  */
-                Mail::to($request->user())->send(new \App\Mail\Trade\Confirmation\User($data));
+                Mail::to($request->user()['email'])->send(new \App\Mail\Trade\Confirmation\User($data));
                 Mail::to(config('app.email'))->send(new \App\Mail\Trade\Confirmation\AccountManager($data));
 
                 /**
@@ -75,25 +77,36 @@ class CryptosController extends Controller
         /**
          * Get highlighted cryptos and cache them for an hour
          */
-        $cryptos = Cache::remember('cryptos:highlighted', 15, function () use ($cnt) {
+        $cryptos = Cache::remember('cryptos:highlighted', 22, function () use ($cnt) {
             return CryptoCurrency::where('highlighted', true)->take($cnt)->get();
         });
 
         $results = [];
-
+        $cnt = 0;
         if (count($cryptos) != 0)
             foreach ($cryptos as $crypto) {
                 switch ($crypto['data_source']) {
                     case 'gecko':
-                        $detail = IEX::getCDetails($crypto->coin_id);
-                        $chart = IEX::getCChart($crypto->coin_id, '5d');
+                        try {
+                            $chart = Cache::remember('cryptos:highlight-gecko-chart-'.$crypto->coin_id, (10+$cnt), function() use ($crypto) {
+                                return IEX::getCChart($crypto->coin_id, '5d');
+                            });
+                        } catch(\Exception $e) {
+                            $chart = [];
+                        }
+                        $price = 0;
+                        $change_percentage = 0;
+                        if(count($chart) != 0) {
+                            $price = $chart[count($chart)-1][1];
+                            $change_percentage = number_format(($chart[count($chart)-1][1] - $chart[count($chart)-2][1])/100, 2);
+                        }
 
                         array_push($results, collect([
                             'wherefrom' => 'crypto',
-                            'symbol' => array_get($detail, 'symbol'),
-                            'name' => array_get($detail, 'name'),
-                            'price' => array_get($detail, 'market_data.current_price.usd'),
-                            'change_percentage' => array_get($detail, 'market_data.price_change_percentage_24h'),
+                            'symbol' => $crypto['symbol'],
+                            'name' => $crypto['name'],
+                            'price' => $price,
+                            'change_percentage' => $change_percentage,
                             'chart' => $chart,
                         ]));
                         break;
@@ -135,7 +148,13 @@ class CryptosController extends Controller
         switch ($crypto->data_source) {
 
             case 'gecko':
-                $chart = IEX::getCChart($crypto->coin_id, $range);
+                try {
+                    $chart = Cache::remember('cryptos:widget-gecko-chart-'.$crypto->coin_id, 11, function() use ($crypto, $range) {
+                        return IEX::getCChart($crypto->coin_id, $range);
+                    });
+                } catch(\Exception $e) {
+                    $chart= [];
+                }
                 break;
 
             case 'custom':

@@ -14,13 +14,13 @@ A new trade has been placed. See the details below
             <td>
                 <strong>Symbol:</strong>
             </td>
-            <td>{{ $stock->symbol }}</td>
+            <td>{{ $symbol }}</td>
         </tr>
         <tr>
             <td>
-                <strong>Company Name:</strong>
+                <strong>Company Name / Crypto Name:</strong>
             </td>
-            <td>{{ $stock->company_name }}</td>
+            <td>{{ $name }}</td>
         </tr>
         <tr>
             <td>
@@ -32,14 +32,14 @@ A new trade has been placed. See the details below
             <td>
                 <strong>Retail Price:</strong>
             </td>
-            <td>{{ $stock->formatPrice($price) }}</td>
+            <td>{{ $obj->formatPrice($price) }}</td>
         </tr>
         @if($action == 'buy')
             <tr>
                 <td>
                     <strong>Institutional Price:</strong>
                 </td>
-                <td>{{ $stock->formatPrice($institutional_price) }}</td>
+                <td>{{ $obj->formatPrice($institutional_price) }}</td>
             </tr>
         @endif
         <tr>
@@ -76,7 +76,7 @@ A new trade has been placed. See the details below
 </table>
 
 Click below to process the transaction
-@component('mail::button', ['url' => url('/admin/resources/transactions/new?viaResource=&viaResourceId=&viaRelationship=&price='.$institutional_price.'&shares='.($action == 'buy' ? $shares : (-1 * abs($shares))).'&stock_id='.$stock->id.'&user_id='.$user->id.'&type='.$action)])
+@component('mail::button', ['url' => url('/admin/resources/transactions/new?viaResource=&viaResourceId=&viaRelationship=&price='.$institutional_price.'&shares='.($action == 'buy' ? $shares : (-1 * abs($shares))).'&item_id='.$obj->id.'&user_id='.$user->id.'&type='.$action)])
 Process Transaction
 @endcomponent
 
