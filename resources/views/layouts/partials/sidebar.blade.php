@@ -45,9 +45,6 @@
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('overview') ? 'active' : '' }}" href="{{ route('overview') }}"><i data-feather="home"></i><span>Dashboard</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('xtbs') ? 'active' : '' }}" href="{{ route('xtbs') }}"><i data-feather="aperture"></i><span>XTB's</span></a>
-                    </li>
-                    <li class="dropdown">
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('transactions') ? 'active' : '' }}" href="{{ route('transactions') }}"><i data-feather="zap"></i><span>Transactions</span></a>
                     </li>
                     <li class="dropdown">
@@ -58,6 +55,9 @@
                     </li>
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('funds.search') ? 'active' : '' }}" href="{{ route('funds.search') }}"><i data-feather="bar-chart"></i><span>All Funds</span></a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('bonds.search') ? 'active' : '' }}" href="{{ route('bonds.search') }}"><i data-feather="aperture"></i><span>All Bonds</span></a>
                     </li>
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i data-feather="bar-chart"></i><span>All Crypto</span></a>

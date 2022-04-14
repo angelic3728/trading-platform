@@ -233,7 +233,6 @@ class IEX
         $client = new CoinGeckoClient();
 
         $start_date = '';
-
         switch ($range) {
 
             case '1d':

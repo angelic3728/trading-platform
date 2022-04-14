@@ -56,11 +56,6 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/viewAsUser/{user}', 'DashboardController@viewAsUser')->name('overview.viewasuser');
 
     /**
-     * Transactions
-     */
-    Route::get('xtbs', 'XtbsController@index')->name('xtbs');
-
-    /**
      * Documents
      */
     Route::get('documents', 'DocumentController@index')->name('documents.index');
@@ -78,10 +73,16 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('stocks/{symbol}', 'StockController@show')->name('stocks.show');
 
     /**
-     * FundsControllerFunds
+     * Funds
      */
     Route::get('funds/search', 'FundsController@index')->name('funds.search');
     Route::get('funds/{symbol}', 'FundsController@show')->name('funds.show');
+
+    /**
+     * Bonds
+     */
+    Route::get('bonds/search', 'BondsController@index')->name('bonds.search');
+    Route::get('bonds/{symbol}', 'BondsController@show')->name('bonds.show');
 
     /**
      * Cryptocurrencies
@@ -130,6 +131,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('funds/chart/{symbol}/{range}', 'FundsController@chart');
         Route::get('funds/{symbol}', 'FundsController@details');
 
+        /**
+         * Trading
+         */
+        Route::post('funds/{symbol}/{action}', 'FundsController@trade');
 
         // Get cryptocurrencies
         Route::get('cryptos/investments', 'CryptosController@investments');
@@ -141,7 +146,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         /**
          * Trading
          */
-        Route::post('funds/{symbol}/{action}', 'FundsController@trade');
+        Route::post('cryptos/{symbol}/{action}', 'CryptosController@trade');
 
         /**
          * Documents

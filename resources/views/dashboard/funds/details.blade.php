@@ -65,6 +65,7 @@
                         </div>
                         <div class="d-flex justify-content-end p-10" id="range_btn_group">
                             <div class="btn-group btn-group-square" id="range_group" role="group">
+                                <!-- <button class="btn btn-outline-dark active" type="button" onclick="updateChart('1d', this)" style="padding: 0.3rem 0.8rem;">1d</button> -->
                                 <button class="btn btn-outline-dark active" type="button" onclick="updateChart('1m', this)" style="padding: 0.3rem 0.8rem;">1m</button>
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('3m', this)" style="padding: 0.3rem 0.8rem;">3m</button>
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('6m', this)" style="padding: 0.3rem 0.8rem;">6m</button>
@@ -201,7 +202,7 @@
                     <div class="loader-19"></div>
                 </div>
                 <div class="row news-content" style="min-height: 440px;">
-                    <div class="col-xl-3 col-md-6 news-0" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-0" style="display: none;">
                         <a href="" class="news-link-0" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -215,7 +216,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-3 col-md-6 news-1" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-1" style="display: none;">
                         <a href="" class="news-link-1" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -229,7 +230,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-3 col-md-6 news-2" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-2" style="display: none;">
                         <a href="" class="news-link-2" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -243,7 +244,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-3 col-md-6 news-3" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-3" style="display: none;">
                         <a href="" class="news-link-3" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -352,12 +353,10 @@
                 if (res.success && res.data.length != 0) {
                     var times = 1;
                     var currency = "{{ array_get($data, 'currency') }}";
-                    if ("{{array_get($data, 'exchange') == 'LSE'}}")
-                        times = 100;
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {
                         var date = new Date(res.data[i]['date']);
-                        adjustedData[i] = [date.getTime(), Number((res.data[i]['fClose'] * times).toFixed(2))]
+                        adjustedData[i] = [date.getTime(), Number(((res.exchange == 'NAS' || res.data[i]['data_source'] != "asx") ? res.data[i]['adjClose'] * times : res.data[i]['fClose'] * times).toFixed(2))]
                     }
                     var options = {
                         series: [{

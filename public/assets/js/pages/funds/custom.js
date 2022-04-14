@@ -17,7 +17,7 @@ $(document).ready(function() {
                         for (var j = 0; j < res.data[i]['chart'].length; j++) {
                             var stock = res.data[i]['chart'][j];
                             var date = new Date(stock['date']);
-                            adjustedData[j] = [date.getTime(), Number((stock['fClose']).toFixed(2))]
+                            adjustedData[i] = [date.getTime(), Number(((res.exchange == 'NAS' || res.data_source == 'asx') ? res.data[i]['adjClose'] * times : res.data[i]['fClose'] * times).toFixed(2))]
                         }
                         renderChart(adjustedData, (i + 1), 'USD', displayData, res.data.length);
                     } else {

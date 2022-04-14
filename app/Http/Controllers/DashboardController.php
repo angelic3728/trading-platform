@@ -73,7 +73,7 @@ class DashboardController extends Controller
                                 $iex_data = [];
                                 try {
                                     $iex_data = IEX::getDetails($transaction->stock->symbol);
-                                } catch(\Exception $e) {
+                                } catch (\Exception $e) {
                                 }
                                 $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
                                 $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
@@ -118,19 +118,28 @@ class DashboardController extends Controller
                             case 'iex':
                                 $iex_data = [];
                                 try {
-                                    $iex_data = IEX::getDetails($transaction->fund->symbol);
-                                } catch(\Exception $e) {
+                                    if ($transaction->fund->exchange != "NAS")
+                                        $iex_data = IEX::getDetails($transaction->fund->symbol);
+                                    else
+                                        $iex_data = ASX::getDetails($transaction->fund->symbol);
+                                } catch (\Exception $e) {
                                 }
-                                $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
-                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
-                                $transaction->institutional_price =
-                                    array_has($iex_data, 'quote.latestPrice') ? round($transaction->fund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                                if ($transaction->fund->exchange != "NAS") {
+                                    $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
+                                    $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                                    $transaction->institutional_price =
+                                        array_has($iex_data, 'quote.latestPrice') ? round($transaction->fund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                                } else {
+                                    $transaction->latest_price = array_has($iex_data, 'latest_price') ? round(array_get($iex_data, 'latest_price'), 3) : null;
+                                    $transaction->change_percentage = array_has($iex_data, 'change_percentage') ? round(array_get($iex_data, 'change_percentage'), 4) : null;
+                                    $transaction->institutional_price = array_has($iex_data, 'price') ? round($transaction->fund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
+                                }
                                 break;
                             case 'asx':
                                 $asx_data = ASX::getDetails($transaction->stock->symbol);
                                 $transaction->latest_price = array_has($asx_data, 'latest_price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
                                 $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? round(array_get($asx_data, 'change_percentage'), 4) : null;
-                                $transaction->institutional_price = array_has($asx_data, 'price') ? round($transaction->stock->institutionalPrice(array_get($asx_data, 'price')), 3) : null;
+                                $transaction->institutional_price = array_has($asx_data, 'price') ? round($transaction->fund->institutionalPrice(array_get($asx_data, 'price')), 3) : null;
                                 break;
                             case 'custom':
                                 $transaction->latest_price = round(CustomFundData::price($transaction->fund->symbol), 3);
@@ -162,16 +171,16 @@ class DashboardController extends Controller
                         $transaction->data_source = $transaction->crypto->data_source;
                         switch ($transaction->crypto->data_source) {
                             case 'gecko':
-                                $crypto_data = null;
+                                $crypto_data = [];
                                 try {
-                                    $crypto_data = Cache::remember('cryptos:highlight-gecko-detail-'.$transaction->crypto->coin_id, 25, function() use ($transaction) {
-                                        return IEX::getCDetails($transaction->crypto->coin_id);
+                                    $crypto_data = Cache::remember('cryptos:gecko-detail-' . $transaction->crypto->coin_id, 25, function () use ($transaction) {
+                                        return ASX::getCDetails($transaction->crypto->coin_id);
                                     });
-                                } catch(\Exception $e) {
+                                } catch (\Exception $e) {
                                 }
-                                $transaction->latest_price = ($crypto_data)?array_get($crypto_data, 'market_data.current_price.usd'):0;
+                                $transaction->latest_price = ($crypto_data) ? array_get($crypto_data, 'market_data.current_price.usd') : 0;
                                 $transaction->change_percentage = array_get($crypto_data, 'market_data.price_change_percentage_24h') ? round(array_get($crypto_data, 'market_data.price_change_percentage_24h'), 2) : null;
-                                $transaction->institutional_price = array_get($crypto_data, 'market_data.current_price.usd') ? '$' . $transaction->crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null;
+                                $transaction->institutional_price = array_get($crypto_data, 'market_data.current_price.usd') ? $transaction->crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null;
                                 break;
                             case 'custom':
                                 $transaction->latest_price = CustomFundData::price($transaction->crypto->symbol);
@@ -188,6 +197,7 @@ class DashboardController extends Controller
                 }
             }
         }
+
 
         // Get all highlights
         $stock_highlights = StockController::highlights(4)->getData();
@@ -213,9 +223,7 @@ class DashboardController extends Controller
         $top_cryptos = [];
 
         try {
-            $top_cryptos = Cache::remember('dashboard:top-cryptos', 20, function() {
-                return IEX::getMarketCryptos();
-            });
+            $top_cryptos = ASX::getMarketCryptos();
         } catch (\Exception $e) {
         }
 

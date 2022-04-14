@@ -447,7 +447,13 @@ $(document).ready(function() {
                     var date = new Date(chartData[j]["date"]);
                     adjustedData[j] = [
                         date.getTime(),
-                        Number((chartData[j]["fClose"] * 1).toFixed(2))
+                        Number(
+                            (ticker_data[i]["exchange"] == "NAS" ||
+                            ticker_data[i]["data_source"] == "asx"
+                                ? chartData[j]["adjClose"] * 1
+                                : chartData[j]["fClose"] * 1
+                            ).toFixed(2)
+                        )
                     ];
                 }
                 ticker_item.appendTo("#forward_ticker_wrapper");
@@ -645,7 +651,13 @@ $(document).ready(function() {
                     var date = new Date(chartData[j]["date"]);
                     adjustedData[j] = [
                         date.getTime(),
-                        Number((chartData[j]["fClose"] * 1).toFixed(2))
+                        Number(
+                            (ticker_data[i]["exchange"] == "NAS" ||
+                            ticker_data[i]["data_source"] == "asx"
+                                ? chartData[j]["adjClose"] * 1
+                                : chartData[j]["fClose"] * 1
+                            ).toFixed(2)
+                        )
                     ];
                 }
                 ticker_item.appendTo("#back_ticker_wrapper");
@@ -860,83 +872,87 @@ $(document).ready(function() {
 
 // format Price and Percentage functions
 function formatPrice(price, currency) {
-    var decimal = 2;
-    if (Number(price) > 10) {
-        decimal = 2;
-    } else if (Number(price) > 1) {
-        decimal = 3;
-    } else if (Number(price) > 0.1) {
-        decimal = 4;
-    } else if (Number(price) > 0.01) {
-        decimal = 5;
+    if (typeof Number(price) == "number") {
+        var decimal = 2;
+        if (Number(price) > 10) {
+            decimal = 2;
+        } else if (Number(price) > 1) {
+            decimal = 3;
+        } else if (Number(price) > 0.1) {
+            decimal = 4;
+        } else if (Number(price) > 0.01) {
+            decimal = 5;
+        } else {
+            decimal = 6;
+        }
+
+        var amount =
+            Number(price) > 999
+                ? Number(price.toFixed(decimal))
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                : Number(price.toFixed(decimal)).toString();
+
+        switch (currency) {
+            case "USD":
+                return "$" + amount;
+
+            case "GBP":
+                return (
+                    (Number(price) * 100 > 999
+                        ? (price.toFixed(decimal) * 100)
+                              .toString()
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        : (price.toFixed(decimal) * 100).toString()) + "p"
+                );
+
+            case "EUR":
+                return "€" + amount;
+
+            case "AUD":
+                return "A$" + amount;
+
+            case "CAD":
+                return "C$" + amount;
+
+            case "SEK":
+                return amount + " kr";
+
+            case "CHF":
+                return "fr." + amount;
+
+            case "CZK":
+                return amount + " Kč";
+
+            case "DKK":
+                return "kr." + amount;
+
+            case "HKD":
+                return "HK$" + amount;
+
+            case "HUF":
+                return amount + " Ft";
+
+            case "ILS":
+                return "₪" + amount;
+
+            case "JPY":
+                return "¥" + amount;
+
+            case "NOK":
+                return "kr" + amount;
+
+            case "PLN":
+                return amount + " zł";
+
+            case "RON":
+                return amount + " lei";
+
+            default:
+                return amount;
+        }
     } else {
-        decimal = 6;
-    }
-
-    var amount =
-        Number(price) > 999
-            ? Number(price.toFixed(decimal))
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-            : Number(price.toFixed(decimal)).toString();
-
-    switch (currency) {
-        case "USD":
-            return "$" + amount;
-
-        case "GBP":
-            return (
-                (Number(price)*100 > 999
-                    ? (price.toFixed(decimal) * 100)
-                          .toString()
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    : (price.toFixed(decimal)*100).toString()) + "p"
-            );
-
-        case "EUR":
-            return "€" + amount;
-
-        case "AUD":
-            return "A$" + amount;
-
-        case "CAD":
-            return "C$" + amount;
-
-        case "SEK":
-            return amount + " kr";
-
-        case "CHF":
-            return "fr." + amount;
-
-        case "CZK":
-            return amount + " Kč";
-
-        case "DKK":
-            return "kr." + amount;
-
-        case "HKD":
-            return "HK$" + amount;
-
-        case "HUF":
-            return amount + " Ft";
-
-        case "ILS":
-            return "₪" + amount;
-
-        case "JPY":
-            return "¥" + amount;
-
-        case "NOK":
-            return "kr" + amount;
-
-        case "PLN":
-            return amount + " zł";
-
-        case "RON":
-            return amount + " lei";
-
-        default:
-            return amount;
+        return price;
     }
 }
 

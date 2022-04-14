@@ -145,10 +145,7 @@ $(document).ready(function() {
                     ) {
                         var unit = all_highlights[i]["chart"][j];
                         var date = new Date(unit["date"]);
-                        adjustedData[j] = [
-                            date.getTime(),
-                            Number(unit["fClose"].toFixed(2))
-                        ];
+                        adjustedData[j] = [date.getTime(), Number(((all_highlights[i]['exchange'] == 'NAS' || all_highlights[i]['data_source'] == 'asx') ? unit['adjClose'] * 1 : unit['fClose'] * 1).toFixed(2))];
                     }
                     renderChart(
                         adjustedData,

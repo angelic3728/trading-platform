@@ -5,6 +5,7 @@ namespace App\Http\View\Composers;
 use Illuminate\View\View;
 
 use IEX;
+use ASX;
 use Cache;
 
 use App\Stock;
@@ -28,7 +29,7 @@ class WidgetItemsComposer
      */
     public function compose(View $view)
     {
-        $view->with(['widget_items'=>$this->getWidgets(), 'news_symbols'=>$this->getNewsSymbols(), 'ads'=>$this->getAds()]);
+        $view->with(['widget_items' => $this->getWidgets(), 'news_symbols' => $this->getNewsSymbols(), 'ads' => $this->getAds()]);
     }
 
     /**
@@ -60,18 +61,18 @@ class WidgetItemsComposer
          * Get Prices and Chart from IEX
          */
 
-        $iex_stock_data = Cache::remember('stocks:batch_data', 15, function() use ($stocks) {
+        $iex_stock_data = Cache::remember('stocks:batch_data', 15, function () use ($stocks) {
             return IEX::getBatchData($stocks->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
         });
 
-        $iex_fund_data = Cache::remember('funds:batch_data', 15, function() use ($funds) {
+        $iex_fund_data = Cache::remember('funds:batch_data', 15, function () use ($funds) {
             return IEX::getBatchData($funds->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
         });
-        
+
         /**
          * For each stock, add the price
          */
-        $stock_results = (count($stocks) == 0)?[]:$stocks->map(function ($stock) use ($iex_stock_data) {
+        $stock_results = (count($stocks) == 0) ? [] : $stocks->map(function ($stock) use ($iex_stock_data) {
             /**
              * Make collection of stock
              */
@@ -89,10 +90,10 @@ class WidgetItemsComposer
                     break;
 
                 case 'asx':
-                    $asx_data = Cache::remember('stocks:widget-asx-detail-'.$c_stock->get('symbol'), 15, function() use ($c_stock) {
+                    $asx_data = Cache::remember('stocks:widget-asx-detail-' . $c_stock->get('symbol'), 15, function () use ($c_stock) {
                         return ASX::getDetails($c_stock->get('symbol'));
                     });
-                    $asx_chart = Cache::remember('stocks:widget-asx-chart-'.$c_stock->get('symbol'), 15, function() use ($c_stock) {
+                    $asx_chart = Cache::remember('stocks:widget-asx-chart-' . $c_stock->get('symbol'), 15, function () use ($c_stock) {
                         return ASX::getChart($c_stock->get('symbol'), '1m');
                     });
                     $c_stock->put('price', array_get($asx_data, 'price'));
@@ -116,10 +117,10 @@ class WidgetItemsComposer
             /**
              * Return stock
              */
-            return $c_stock->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
+            return $c_stock->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source');
         });
 
-        $fund_results = (count($funds) == 0)?[]:$funds->map(function ($fund) use ($iex_fund_data) {
+        $fund_results = (count($funds) == 0) ? [] : $funds->map(function ($fund) use ($iex_fund_data) {
 
             /**
              * Make collection of fund
@@ -133,21 +134,33 @@ class WidgetItemsComposer
             switch ($c_fund['data_source']) {
 
                 case 'iex':
-                    $c_fund->put('price', array_get($iex_fund_data, $c_fund->get('symbol') . '.price'));
-                    $c_fund->put('chart', array_get($iex_fund_data, $c_fund->get('symbol') . '.chart'));
-                    $c_fund->put('change_percentage', array_get($iex_fund_data, $c_fund->get('symbol') . '.quote.changePercent'));
+                    if ($c_fund->get('exchange') != "NAS") {
+                        $c_fund->put('price', array_get($iex_fund_data, $c_fund->get('symbol') . '.price'));
+                        $c_fund->put('chart', array_get($iex_fund_data, $c_fund->get('symbol') . '.chart'));
+                        $c_fund->put('change_percentage', array_get($iex_fund_data, $c_fund->get('symbol') . '.quote.changePercent'));
+                    } else {
+                        $asx_data = Cache::remember('funds:widget-nas-detail-' . $c_fund->get('symbol'), 18, function () use ($c_fund) {
+                            return ASX::getDetails($c_fund->get('symbol'));
+                        });
+                        $asx_chart = Cache::remember('funds:widget-nas-chart-' . $c_fund->get('symbol'), 22, function () use ($c_fund) {
+                            return ASX::getChart($c_fund->get('symbol'), '1m');
+                        });
+                        $c_fund->put('price', array_get($asx_data, 'price'));
+                        $c_fund->put('chart', $asx_chart);
+                        $c_fund->put('change_percentage', array_get($asx_data, 'change_percentage'));
+                    }
                     break;
 
                 case 'asx':
-                    $asx_data = Cache::remember('funds:widget-asx-detail-'.$c_fund->get('symbol'), 18, function() use ($c_fund) {
+                    $asx_data = Cache::remember('funds:widget-asx-detail-' . $c_fund->get('symbol'), 18, function () use ($c_fund) {
                         return ASX::getDetails($c_fund->get('symbol'));
                     });
-                    $asx_chart = Cache::remember('funds:widget-asx-chart-'.$c_fund->get('symbol'), 22, function() use ($c_fund) {
+                    $asx_chart = Cache::remember('funds:widget-asx-chart-' . $c_fund->get('symbol'), 22, function () use ($c_fund) {
                         return ASX::getChart($c_fund->get('symbol'), '1m');
                     });
                     $c_fund->put('price', array_get($asx_data, 'price'));
                     $c_fund->put('chart', $asx_chart);
-                    $c_fund->put('change_percentage', array_get($asx_data, 'price'));
+                    $c_fund->put('change_percentage', array_get($asx_data, 'change_percentage'));
                     break;
 
                 case 'custom':
@@ -166,29 +179,29 @@ class WidgetItemsComposer
             /**
              * Return fund
              */
-            return $c_fund->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
+            return $c_fund->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source');
         });
 
         $crypto_results = [];
         $cnt = 0;
         if (count($cryptos) != 0)
             foreach ($cryptos as $crypto) {
-                switch ($crypto['data_source']) { 
+                switch ($crypto['data_source']) {
                     case 'gecko':
                         try {
                             $cnt++;
-                            $chart = Cache::remember('cryptos:widget-gecko-chart-'.$crypto->coin_id, (10+$cnt), function() use ($crypto) {
-                                return IEX::getCChart($crypto->coin_id, '5d');
+                            $chart = Cache::remember('cryptos:widget-gecko-chart-' . $crypto->coin_id, (10 + $cnt), function () use ($crypto) {
+                                return ASX::getCChart($crypto->coin_id, '5d');
                             });
-                        } catch(\Exception $e) {
+                        } catch (\Exception $e) {
                             $chart = [];
                         }
 
                         $price = 0;
                         $change_percentage = 0;
-                        if(count($chart) != 0) {
-                            $price = $chart[count($chart)-1][1];
-                            $change_percentage = number_format(($chart[count($chart)-1][1] - $chart[count($chart)-2][1])/100, 2);
+                        if (count($chart) != 0) {
+                            $price = $chart[count($chart) - 1][1];
+                            $change_percentage = number_format(($chart[count($chart) - 1][1] - $chart[count($chart) - 2][1]) / 100, 2);
                         }
 
                         array_push($crypto_results, collect([
@@ -212,7 +225,6 @@ class WidgetItemsComposer
                             'change_percentage' => $change_percentage,
                             'chart' => $chart,
                         ]));
-
                 }
             }
 
@@ -227,8 +239,9 @@ class WidgetItemsComposer
         return $results;
     }
 
-    public function getNewsSymbols() {
-         /**
+    public function getNewsSymbols()
+    {
+        /**
          * Get my investments symbols
          */
         $investments = Transaction::where('user_id', auth()->id())
@@ -257,15 +270,16 @@ class WidgetItemsComposer
         return $news_symbols;
     }
 
-    public function getAds() {
+    public function getAds()
+    {
         /**
          * Get Ad images
          */
         $h_ad = Advertise::where('is_vertical', false)
-        ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         $v_ad = Advertise::where('is_vertical', true)
-        ->inRandomOrder()->first();
+            ->inRandomOrder()->first();
 
         return [$h_ad, $v_ad];
     }

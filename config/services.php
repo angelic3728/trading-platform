@@ -49,4 +49,9 @@ return [
         'url' => env('ASX_URL'),
         'apikey' => env('ASX_KEY'),
     ],
+
+    'gecko' => [
+        'url' => env('GECKO_URL'),
+        'apikey' => env('GECKO_KEY'),
+    ],
 ];

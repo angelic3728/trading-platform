@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use IEX;
+use ASX;
 use Cache;
 use Mail;
 use CustomCryptoData;
@@ -89,7 +90,7 @@ class CryptosController extends Controller
                     case 'gecko':
                         try {
                             $chart = Cache::remember('cryptos:highlight-gecko-chart-'.$crypto->coin_id, (10+$cnt), function() use ($crypto) {
-                                return IEX::getCChart($crypto->coin_id, '5d');
+                                return ASX::getCChart($crypto->coin_id, '5d');
                             });
                         } catch(\Exception $e) {
                             $chart = [];
@@ -149,8 +150,8 @@ class CryptosController extends Controller
 
             case 'gecko':
                 try {
-                    $chart = Cache::remember('cryptos:widget-gecko-chart-'.$crypto->coin_id, 11, function() use ($crypto, $range) {
-                        return IEX::getCChart($crypto->coin_id, $range);
+                    $chart = Cache::remember('crypto:detail-gecko-chart-'.$crypto->coin_id, 11, function() use ($crypto, $range) {
+                        return ASX::getCChart($crypto->coin_id, $range);
                     });
                 } catch(\Exception $e) {
                     $chart= [];

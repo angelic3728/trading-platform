@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Fund;
 
 use IEX;
+use ASX;
 use CustomFundData;
-use Error;
 
 class FundsController extends Controller
 {
@@ -97,7 +97,7 @@ class FundsController extends Controller
         $account_manager = auth()->user()->account_manager;
 
         /**
-         * Get Stock
+         * Get fund
          */
         $fund = Fund::where('symbol', $symbol)->firstOrFail();
 
@@ -108,39 +108,112 @@ class FundsController extends Controller
         try {
             switch ($fund->data_source) {
                 case 'iex':
-                    $iex_data = IEX::getDetails($fund->symbol);
+                    $iex_data = [];
+                    $asx_data = [];
+                    try {
+                        if ($fund->exchange != "NAS")
+                            $iex_data = IEX::getDetails($fund->symbol);
+                        else
+                            $asx_data = ASX::getDetails($fund->symbol);
+                    } catch (\Exception $e) {
+                    }
+                    if ($fund->exchange != "NAS")
+                        $data = [
+                            'source' => 'iex',
+                            'symbol' => $fund->symbol,
+                            'company_name' => $fund->company_name,
+                            'data_source' => $fund->data_source,
+                            'currency' => $fund->gcurrency,
+                            'price' => array_get($iex_data, 'price'),
+                            'change_percentage' => array_get($iex_data, 'quote.changePercent'),
+                            'link' => $fund->link,
+                            'company' => [
+                                'description' => array_get($iex_data, 'company.description'),
+                                'exchange' => $fund->exchange,
+                                'industry' => array_get($iex_data, 'company.industry'),
+                                'sector' => array_get($iex_data, 'company.sector'),
+                                'website' => array_get($iex_data, 'company.website'),
+                            ],
+                            'numbers' => [
+                                'latest_price' => array_has($iex_data, 'quote.latestPrice') ? $fund->formatPrice(array_get($iex_data, 'quote.latestPrice')) : null,
+                                'previous_close' => array_has($iex_data, 'quote.previousClose') ? $fund->formatPrice(array_get($iex_data, 'quote.previousClose')) : null,
+                                'institutional_price' => array_has($iex_data, 'price') ? $fund->formatPrice($fund->institutionalPrice(array_get($iex_data, 'price'))) : null,
+                                'market_cap' => array_has($iex_data, 'quote.marketCap') ? $fund->formatPrice(array_get($iex_data, 'quote.marketCap'), 0) : null,
+                                'volume' => array_has($iex_data, 'quote.latestVolume') ? number_format(array_get($iex_data, 'quote.latestVolume')) : null,
+                                'avg_total_volume' => array_has($iex_data, 'quote.avgTotalVolume') ? number_format(array_get($iex_data, 'quote.avgTotalVolume')) : null,
+                                'pe_ratio' => array_has($iex_data, 'quote.peRatio') ? number_format(array_get($iex_data, 'quote.peRatio'), 2) : null,
+                            ],
+                        ];
+                    else
+                        $data = [
+                            'source' => 'asx',
+                            'symbol' => $fund->symbol,
+                            'company_name' => $fund->company_name,
+                            'data_source' => $fund->data_source,
+                            'currency' => $fund->gcurrency,
+                            'price' => array_get($asx_data, 'price'),
+                            'change_percentage' => array_get($asx_data, 'change_percentage'),
+                            'link' => $fund->link,
+                            'exchange' => $fund->exchange,
+                            'company' => [
+                                'description' => array_get($asx_data, 'description'),
+                                'exchange' => $fund->exchange,
+                                'industry' => array_get($asx_data, 'industry'),
+                                'sector' => array_get($asx_data, 'sector'),
+                                'website' => array_get($asx_data, 'website'),
+                            ],
+                            'numbers' => [
+                                'latest_price' => array_has($asx_data, 'latest_price') ? $fund->formatPrice(array_get($asx_data, 'latest_price')) : null,
+                                'previous_close' => array_has($asx_data, 'previous_close') ? $fund->formatPrice(array_get($asx_data, 'previous_close')) : null,
+                                'institutional_price' => array_has($asx_data, 'price') ? $fund->formatPrice($fund->institutionalPrice(array_get($asx_data, 'price'))) : null,
+                                'market_cap' => array_has($asx_data, 'market_cap') ? $fund->formatPrice(array_get($asx_data, 'market_cap'), 0) : null,
+                                'volume' => array_has($asx_data, 'volume') ? number_format(array_get($asx_data, 'volume')) : null,
+                                'avg_total_volume' => array_has($asx_data, 'avg_total_volume') ? number_format(array_get($asx_data, 'avg_total_volume')) : null,
+                                'pe_ratio' => array_has($asx_data, 'pe_ratio') ? number_format(array_get($asx_data, 'pe_ratio'), 2) : null,
+                            ],
+                        ];
+                    break;
+
+                case 'asx':
+                    $asx_data = [];
+                    try {
+                        $asx_data = ASX::getDetails($fund->symbol);
+                    } catch (\Exception $e) {
+                    }
                     $data = [
-                        'source' => 'iex',
+                        'source' => 'asx',
                         'symbol' => $fund->symbol,
                         'company_name' => $fund->company_name,
+                        'data_source' => $fund->data_source,
                         'currency' => $fund->gcurrency,
-                        'price' => array_get($iex_data, 'price'),
-                        'change_percentage' => array_get($iex_data, 'quote.changePercent'),
+                        'price' => array_get($asx_data, 'price'),
+                        'change_percentage' => array_get($asx_data, 'change_percentage'),
                         'link' => $fund->link,
+                        'exchange' => $fund->exchange,
                         'company' => [
-                            'description' => array_get($iex_data, 'company.description'),
-                            'exchange' => array_get($iex_data, 'company.exchange'),
-                            'industry' => array_get($iex_data, 'company.industry'),
-                            'sector' => array_get($iex_data, 'company.sector'),
-                            'website' => array_get($iex_data, 'company.website'),
+                            'description' => array_get($asx_data, 'description'),
+                            'exchange' => $fund->exchange,
+                            'industry' => array_get($asx_data, 'industry'),
+                            'sector' => array_get($asx_data, 'sector'),
+                            'website' => array_get($asx_data, 'website'),
                         ],
                         'numbers' => [
-                            'latest_price' => array_has($iex_data, 'quote.latestPrice') ? $fund->formatPrice(array_get($iex_data, 'quote.latestPrice')) : null,
-                            'previous_close' => array_has($iex_data, 'quote.previousClose') ? $fund->formatPrice(array_get($iex_data, 'quote.previousClose')) : null,
-                            'institutional_price' => array_has($iex_data, 'price') ? $fund->formatPrice($fund->institutionalPrice(array_get($iex_data, 'price'))) : null,
-                            'market_cap' => array_has($iex_data, 'quote.marketCap') ? $fund->formatPrice(array_get($iex_data, 'quote.marketCap'), 0) : null,
-                            'volume' => array_has($iex_data, 'quote.latestVolume') ? number_format(array_get($iex_data, 'quote.latestVolume')) : null,
-                            'avg_total_volume' => array_has($iex_data, 'quote.avgTotalVolume') ? number_format(array_get($iex_data, 'quote.avgTotalVolume')) : null,
-                            'pe_ratio' => array_has($iex_data, 'quote.peRatio') ? number_format(array_get($iex_data, 'quote.peRatio'), 2) : null,
+                            'latest_price' => array_has($asx_data, 'latest_price') ? $fund->formatPrice(array_get($asx_data, 'latest_price')) : null,
+                            'previous_close' => array_has($asx_data, 'previous_close') ? $fund->formatPrice(array_get($asx_data, 'previous_close')) : null,
+                            'institutional_price' => array_has($asx_data, 'price') ? $fund->formatPrice($fund->institutionalPrice(array_get($asx_data, 'price'))) : null,
+                            'market_cap' => array_has($asx_data, 'market_cap') ? $fund->formatPrice(array_get($asx_data, 'market_cap'), 0) : null,
+                            'volume' => array_has($asx_data, 'volume') ? number_format(array_get($asx_data, 'volume')) : null,
+                            'avg_total_volume' => array_has($asx_data, 'avg_total_volume') ? number_format(array_get($asx_data, 'avg_total_volume')) : null,
+                            'pe_ratio' => array_has($asx_data, 'pe_ratio') ? number_format(array_get($asx_data, 'pe_ratio'), 2) : null,
                         ],
                     ];
                     break;
-
                 case 'custom':
                     $data = [
                         'source' => 'custom',
                         'symbol' => $fund->symbol,
                         'company_name' => $fund->company_name,
+                        'data_source' => $fund->data_source,
                         'currency' => $fund->gcurrency,
                         'price' => CustomFundData::price($fund->symbol),
                         'change_percentage' => CustomFundData::changePercentage($fund->symbol),

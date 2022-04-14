@@ -85,7 +85,7 @@
                     <div class="loader-19"></div>
                 </div>
                 <div class="row news-content" style="min-height: 440px;">
-                    <div class="col-xl-3 col-md-6 news-0" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-0" style="display: none;">
                         <a href="" class="news-link-0" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -99,7 +99,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-3 col-md-6 news-1" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-1" style="display: none;">
                         <a href="" class="news-link-1" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -113,7 +113,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-3 col-md-6 news-2" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-2" style="display: none;">
                         <a href="" class="news-link-2" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">
@@ -127,7 +127,7 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-xl-3 col-md-6 news-3" style="display: none;">
+                    <div class="col-xl-3 col-md-6 des-xl-50 news-3" style="display: none;">
                         <a href="" class="news-link-3" target="_blank">
                             <div class="prooduct-details-box">
                                 <div class="media" style="text-align: center; padding:10px 0px; min-height:410px;">

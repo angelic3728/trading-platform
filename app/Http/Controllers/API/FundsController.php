@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use IEX;
-use Intrinio;
+use ASX;
 use Cache;
 use DB;
 use Mail;
@@ -76,7 +76,6 @@ class FundsController extends Controller
 
     public function details($symbol)
     {
-
         /**
          * Get Fund
          */
@@ -246,7 +245,7 @@ class FundsController extends Controller
         ]);
     }
 
-    public static function highlights($cnt=4)
+    public static function highlights($cnt = 4)
     {
 
         /**
@@ -260,6 +259,7 @@ class FundsController extends Controller
          * Get Prices and Chart from IEX
          */
         $data = IEX::getBatchData($funds->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
+        $fund_exchanges = [];
 
         /**
          * For each fund, add the price
@@ -275,21 +275,26 @@ class FundsController extends Controller
              * Add extra fields before returning it
              */
             switch ($fund['data_source']) {
-
                 case 'iex':
-                    $fund->put('price', array_get($data, $fund->get('symbol') . '.price'));
-                    $fund->put('chart', array_get($data, $fund->get('symbol') . '.chart'));
-                    $fund->put('change_percentage', array_get($data, $fund->get('symbol') . '.quote.changePercent'));
-                    break;
-
-                case 'asx':
-                    case 'asx':
+                    if ($fund->get('exchange') != "NAS") {
+                        $fund->put('price', array_get($data, $fund->get('symbol') . '.price'));
+                        $fund->put('chart', array_get($data, $fund->get('symbol') . '.chart'));
+                        $fund->put('change_percentage', array_get($data, $fund->get('symbol') . '.quote.changePercent'));
+                    } else {
                         $asx_data = ASX::getDetails($fund->get('symbol'));
                         $asx_chart = ASX::getChart($fund->get('symbol'), '1m');
                         $fund->put('price', array_get($asx_data, 'price'));
                         $fund->put('chart', $asx_chart);
                         $fund->put('change_percentage', array_get($asx_data, 'price'));
-                        break;
+                    }
+                    break;
+                case 'asx':
+                    $asx_data = ASX::getDetails($fund->get('symbol'));
+                    $asx_chart = ASX::getChart($fund->get('symbol'), '1m');
+                    $fund->put('price', array_get($asx_data, 'price'));
+                    $fund->put('chart', $asx_chart);
+                    $fund->put('change_percentage', array_get($asx_data, 'price'));
+                    break;
 
                 case 'custom':
                     $fund->put('price', CustomFundData::price($fund->get('symbol')));
@@ -307,7 +312,7 @@ class FundsController extends Controller
             /**
              * Return fund
              */
-            return $fund->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency');
+            return $fund->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source');
         });
 
         /**
@@ -316,6 +321,7 @@ class FundsController extends Controller
         return response()->json([
             'success' => true,
             'data' => $funds,
+            'exchange' => $fund_exchanges
         ]);
     }
 
@@ -332,7 +338,14 @@ class FundsController extends Controller
         switch ($fund->data_source) {
 
             case 'iex':
-                $chart = IEX::getChart($fund->symbol, $range);
+                if ($fund->exchange != "NAS")
+                    $chart = IEX::getChart($fund->symbol, $range);
+                else
+                    $chart = ASX::getChart($fund->symbol, $range);
+                break;
+
+            case 'asx':
+                $chart = ASX::getChart($fund->symbol, $range);
                 break;
 
             case 'custom':
@@ -350,6 +363,7 @@ class FundsController extends Controller
         return response()->json([
             'success' => true,
             'data' => $chart,
+            'exchange' => $fund->exchange
         ]);
     }
 
@@ -361,7 +375,7 @@ class FundsController extends Controller
          */
         $funds = Fund::select('symbol', 'company_name')->get();
 
-        foreach($funds as $fund) {
+        foreach ($funds as $fund) {
             $fund['wherefrom'] = 'funds';
         }
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\CryptoCurrency;
 
 use IEX;
+use ASX;
 use CustomCryptoData;
 use Cache;
 
@@ -94,7 +95,7 @@ class CryptosController extends Controller
 
                 case 'gecko':
                     $crypto_data = Cache::remember('crypto:detail-info'.$crypto->coin_id, 7, function() use ($crypto) {
-                        return IEX::getCDetails($crypto->coin_id);
+                        return ASX::getCDetails($crypto->coin_id);
                     });
                     
                     $data = [
