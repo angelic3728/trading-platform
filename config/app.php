@@ -192,6 +192,7 @@ return [
         App\Providers\ASXServiceProvider::class,
         App\Providers\CustomStockDataServiceProvider::class,
         App\Providers\CustomFundDataServiceProvider::class,
+        App\Providers\CustomBondDataServiceProvider::class,
         App\Providers\CustomCryptoDataServiceProvider::class,
 
     ],
@@ -228,6 +229,7 @@ return [
         'ASX' => App\Facades\ASX::class,
         'CustomStockData' => App\Facades\CustomStockData::class,
         'CustomFundData' => App\Facades\CustomFundData::class,
+        'CustomBondData' => App\Facades\CustomBondData::class,
         'CustomCryptoData' => App\Facades\CustomCryptoData::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,

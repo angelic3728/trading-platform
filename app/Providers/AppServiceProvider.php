@@ -36,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
             'dashboard.stocks.details',
             'dashboard.funds.search',
             'dashboard.funds.details',
+            'dashboard.bonds.search',
+            'dashboard.bonds.details',
             'dashboard.cryptos.search',
             'dashboard.cryptos.details',
             'dashboard.transactions.all',

@@ -6,20 +6,10 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\Password;
-use Laravel\Nova\Fields\Avatar;
-use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasOne;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Number;
-use Laravel\Nova\Fields\Currency;
 use Epartment\NovaDependencyContainer\NovaDependencyContainer;
 use Epartment\NovaDependencyContainer\HasDependencies;
 
@@ -72,7 +62,8 @@ class Transaction extends Resource
             Select::make('Resource', 'wherefrom')->options([
                 '0' => 'Stock',
                 '1' => 'Fund',
-                '2' => 'Crypto',
+                '2' => 'Bond',
+                '3' => 'Crypto',
             ])
                 ->displayUsingLabels()
                 ->rules('required')
@@ -99,14 +90,22 @@ class Transaction extends Resource
             ])->dependsOn('wherefrom', '1'),
 
             NovaDependencyContainer::make([
+                BelongsTo::make('Bond', 'bond', 'App\Nova\Bond')
+                    ->searchable()
+                    ->withMeta([
+                        'belongsToId' => $this->bond_id ?? $request->bond_id,
+                        'value' => $this->bond_id ? $this->bond->symbol : $request->bond_id,
+                    ]),
+            ])->dependsOn('wherefrom', '2'),
+
+            NovaDependencyContainer::make([
                 BelongsTo::make('Crypto', 'crypto', 'App\Nova\CryptoCurrency')
                     ->searchable()
                     ->withMeta([
                         'belongsToId' => $this->crypto_id ?? $request->crypto_id,
                         'value' => $this->crypto_id ? $this->crypto->symbol : $request->crypto_id,
                     ]),
-            ])->dependsOn('wherefrom', '2'),
-
+            ])->dependsOn('wherefrom', '3'),
 
             Select::make('Type')->options([
                 'sell' => 'SELL',
@@ -130,19 +129,25 @@ class Transaction extends Resource
                 ->withMeta([
                     'belongsToId' => $this->stock_id ?? $request->stock_id,
                     'value' => $this->stock_id ? $this->stock->gcurrency : $request->stock_id,
-                ]) : (($this->wherefrom == 1)?BelongsTo::make('Currency', 'fund', 'App\Nova\Fund')
-                ->hideWhenUpdating()
-                ->hideWhenCreating()
-                ->withMeta([
-                    'belongsToId' => $this->fund_id ?? $request->fund_id,
-                    'value' => $this->fund_id ? $this->fund->gcurrency : $request->fund_id,
-                ]):BelongsTo::make('Currency', 'crypto', 'App\Nova\CryptoCurrency')
-                ->hideWhenUpdating()
-                ->hideWhenCreating()
-                ->withMeta([
-                    'belongsToId' => $this->crypto_id ?? $request->crypto_id,
-                    'value' => $this->crypto_id ? $this->crypto->gcurrency : $request->crypto_id,
-                ])),
+                ]) : (($this->wherefrom == 1) ? BelongsTo::make('Currency', 'fund', 'App\Nova\Fund')
+                    ->hideWhenUpdating()
+                    ->hideWhenCreating()
+                    ->withMeta([
+                        'belongsToId' => $this->fund_id ?? $request->fund_id,
+                        'value' => $this->fund_id ? $this->fund->gcurrency : $request->fund_id,
+                    ]) : (($this->wherefrom == 2) ? BelongsTo::make('Currency', 'bond', 'App\Nova\Bond')
+                        ->hideWhenUpdating()
+                        ->hideWhenCreating()
+                        ->withMeta([
+                            'belongsToId' => $this->bond_id ?? $request->bond_id,
+                            'value' => $this->bond_id ? $this->bond->gcurrency : $request->bond_id,
+                        ]) : BelongsTo::make('Currency', 'crypto', 'App\Nova\CryptoCurrency')
+                        ->hideWhenUpdating()
+                        ->hideWhenCreating()
+                        ->withMeta([
+                            'belongsToId' => $this->crypto_id ?? $request->crypto_id,
+                            'value' => $this->crypto_id ? $this->crypto->gcurrency : $request->crypto_id,
+                        ]))),
 
             Number::make('Shares')
                 ->step(1)

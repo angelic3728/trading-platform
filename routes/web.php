@@ -136,6 +136,19 @@ Route::middleware(['auth', 'active'])->group(function () {
          */
         Route::post('funds/{symbol}/{action}', 'FundsController@trade');
 
+        /**
+         * Get bonds
+         */
+        Route::get('bonds/highlights', 'BondsController@highlights');
+        Route::get('bonds/all', 'BondsController@all');
+        Route::get('bonds/chart/{symbol}/{range}', 'BondsController@chart');
+        Route::get('bonds/{symbol}', 'BondsController@details');
+
+        /**
+         * Trading
+         */
+        Route::post('bonds/{symbol}/{action}', 'BondsController@trade');
+
         // Get cryptocurrencies
         Route::get('cryptos/investments', 'CryptosController@investments');
         Route::get('cryptos/highlights', 'CryptosController@highlights');

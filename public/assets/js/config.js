@@ -7,6 +7,7 @@ window.appConfig = {
 	// theme secondary color
 	secondary: secondary,
     fund: '#0d6efd',
+    bond: '#fd5e0d',
     crypto: '#ff3131',
 };
 localStorage.clear();

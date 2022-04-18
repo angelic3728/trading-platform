@@ -42,7 +42,7 @@
         </div>
         <div class="col-xl-12 box-col-12 des-xl-100">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header p-b-0">
                     <h2>Application Form</h2>
                     @if(session('success'))
                     <div class="alert alert-success">
@@ -50,7 +50,7 @@
                     </div>
                     @endif
                 </div>
-                <div class="card-body">
+                <div class="card-body p-t-0">
                     <p class="fw-semibold m-t-15 m-b-5 fs-6">Please use <b>BLOCK</b> letters and a black or blue pen to complete this Application Form.</p>
                     <p class="fw-semibold m-b-5 fs-6">Please make sure that all questions are answered. Please indicate using an ‘X’ where appropriate. If a section does not apply to you, please indicate using ‘N/A’.</p>
                     <p class="fw-bold m-b-5 fs-6">List both names where account is in joint names.</p>
@@ -90,7 +90,7 @@
                             <div class="col-md-12 m-t-15">
                                 <div class="row">
                                     <label class="col-md-2 col-sm-4 col-form-label fs-6">
-                                        SurName
+                                        Surname
                                     </label>
                                     <div class="col-md-10 col-sm-8">
                                         <input name="income_item_3" type="text" class="form-control">
@@ -100,7 +100,7 @@
                             <div class="col-md-12 m-t-15">
                                 <div class="row">
                                     <label class="col-md-2 col-sm-4 col-form-label fs-6">
-                                        Given Name(2)
+                                        Given Name(s)
                                     </label>
                                     <div class="col-md-10 col-sm-8">
                                         <input name="income_item_4" type="text" class="form-control">
@@ -253,7 +253,7 @@
                             <div class="col-md-12 m-t-15">
                                 <div class="row">
                                     <label class="col-md-2 col-sm-4 col-form-label fs-6">
-                                        Given Name(2)
+                                        Given Name(s)
                                     </label>
                                     <div class="col-md-10 col-sm-8">
                                         <input name="income_item_18" type="text" class="form-control">
@@ -374,7 +374,7 @@
                         </div>
                         <div class="col-md-12 m-t-15">
                             <div class="row m-t-25">
-                                <label class="col- md-2 col-sm-4 col-xs-12 col-form-label fs-6">
+                                <label class="col-md-2 col-sm-4 col-xs-12 col-form-label fs-6">
                                     Investment amount
                                 </label>
                                 <div class="col-md-4 col-sm-8 col-xs-12 d-flex">
@@ -447,16 +447,16 @@
                                 </label>
                                 <div class="col-md-12  m-checkbox-inline">
                                     <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="1" type="radio" required>
-                                        Mr
+                                        Quartely
                                     </label>
                                     <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="2" type="radio" required>
-                                        Mrs
+                                        Half Yearly
                                     </label>
                                     <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="3" type="radio" required>
-                                        Ms
+                                        Yearly
                                     </label>
                                     <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="4" type="radio" required>
-                                        Miss
+                                        Monthly
                                     </label>
                                 </div>
                             </div>
@@ -527,15 +527,15 @@
                                 <label class="col-form-label fs-6">
                                     Name of customer
                                 </label>
-                                <input name="income_item_41" type="text" class="form-control">
-                                <input name="income_item_42" type="text" class="form-control">
+                                <input name="income_item_41" type="text" class="form-control m-t-5">
+                                <input name="income_item_42" type="text" class="form-control m-t-10">
                             </div>
                             <div class="col-md-6">
                                 <label class="col-form-label fs-6">
                                     Name of joint customer
                                 </label>
-                                <input name="income_item_43" type="text" class="form-control">
-                                <input name="income_item_44" type="text" class="form-control">
+                                <input name="income_item_43" type="text" class="form-control m-t-5">
+                                <input name="income_item_44" type="text" class="form-control m-t-10">
                             </div>
                         </div>
                         <div class="row m-t-25">
@@ -548,43 +548,25 @@
                                 </div>
                             </div>
                         </div>
-                        <h5 class="p-t-10 p-b-10 w-full m-t-25 txt-white p-l-30 fw-bold" style="margin: 0 -30px; background:#ed5c6a;">Office Use Only</h5>
-                        <div class="row m-t-25">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <label class="col-md-4 col-xs-12 col-form-label fs-6">
-                                        Date Loaded
-                                    </label>
-                                    <div class="col-md-8 col-sm-8 col-xs-12">
-                                        <input name="income_item_46" type="date" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row m-t-20">
-                                    <label class="col-md-4 col-xs-12 col-form-label fs-6">
-                                        Investment type
-                                    </label>
-                                    <div class="col-md-8 col-sm-8 col-xs-12">
-                                        <input name="income_item_47" type="text" class="form-control">
-                                    </div>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6 class="m-b-5 m-t-20 fw-bold">Please choose at least 2 files. each file size must be less than 10M.</h6>
                             </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <label class="col-md-4 col-xs-12 col-form-label fs-6 text-center">
-                                        Deposit no.
-                                    </label>
-                                    <div class="col-md-8 col-sm-8 col-xs-12">
-                                        <input name="income_item_48" type="text" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="row m-t-20">
-                                    <label class="col-md-4 col-xs-12 col-form-label fs-6 text-center">
-                                        Loaded by
-                                    </label>
-                                    <div class="col-md-8 col-sm-8 col-xs-12">
-                                        <input name="income_item_49" type="text" class="form-control">
-                                    </div>
-                                </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <p class="fw-bold m-t-5 m-b-5">File 1</p>
+                                <input name="acc_item_69" class="form-control" type="file">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <p class="fw-bold m-t-5 m-b-5">File 2</p>
+                                <input name="acc_item_70" class="form-control" type="file">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <p class="fw-bold m-t-5 m-b-5">File 3</p>
+                                <input name="acc_item_71" class="form-control" type="file">
+                            </div>
+                            <div class="col-md-3 col-sm-6 col-xs-12">
+                                <p class="fw-bold m-t-5 m-b-5">File 4</p>
+                                <input name="acc_item_72" class="form-control" type="file">
                             </div>
                         </div>
                         <div class="d-flex justify-content-center m-t-50">

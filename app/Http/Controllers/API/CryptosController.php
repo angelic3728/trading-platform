@@ -139,10 +139,9 @@ class CryptosController extends Controller
     public function chart($symbol, $range)
     {
         /**
-         * Get Fund
+         * Get Crypto
          */
-        $crypto = CryptoCurrency::where('symbol', $symbol)->firstOrFail();
-
+        $crypto = CryptoCurrency::where('symbol', $symbol)->firstOrFail();        
         /**
          * Check the data source and get the chart data
          */
@@ -150,7 +149,7 @@ class CryptosController extends Controller
 
             case 'gecko':
                 try {
-                    $chart = Cache::remember('crypto:detail-gecko-chart-'.$crypto->coin_id, 11, function() use ($crypto, $range) {
+                    $chart = Cache::remember('crypto:detail-gecko-chart-'.$crypto->coin_id.$range, 11, function() use ($crypto, $range) {
                         return ASX::getCChart($crypto->coin_id, $range);
                     });
                 } catch(\Exception $e) {

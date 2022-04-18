@@ -8,6 +8,7 @@ use ASX;
 
 use App\Stock;
 use App\Fund;
+use App\Bond;
 
 class ImportStocks extends Command
 {
@@ -74,6 +75,20 @@ class ImportStocks extends Command
             $fund->gcurrency = $item['currency'];
             $fund->exchange = $item['exchange'];
             $fund->save();
+        }
+
+        $bonds = ASX::getAvailableBondCodes();
+
+        foreach ($bonds as $item) {
+            $bond = new Bond();
+            $bond->symbol = $item['code'];
+            $bond->name = $item['name'];
+            $bond->data_source = 'asx';
+            $bond->gcurrency = 'USD';
+            $bond->exchange = $item['exchange'];
+            $bond->link = ($item['exchange'] == "XTB")?'https://xtbs.com.au/xtbs-profile/'.$item['code']:'https://finance.yahoo.com/quote/'.$item['code'].'.AX';
+            $bond->is_indexed = $item['is_indexed'];
+            $bond->save();
         }
     }
 }

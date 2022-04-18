@@ -259,7 +259,6 @@ class FundsController extends Controller
          * Get Prices and Chart from IEX
          */
         $data = IEX::getBatchData($funds->where('data_source', 'iex')->pluck('symbol')->toArray(), ['price', 'chart', 'quote'], '1m');
-        $fund_exchanges = [];
 
         /**
          * For each fund, add the price
@@ -285,7 +284,7 @@ class FundsController extends Controller
                         $asx_chart = ASX::getChart($fund->get('symbol'), '1m');
                         $fund->put('price', array_get($asx_data, 'price'));
                         $fund->put('chart', $asx_chart);
-                        $fund->put('change_percentage', array_get($asx_data, 'price'));
+                        $fund->put('change_percentage', array_get($asx_data, 'change_percentage'));
                     }
                     break;
                 case 'asx':
@@ -293,7 +292,7 @@ class FundsController extends Controller
                     $asx_chart = ASX::getChart($fund->get('symbol'), '1m');
                     $fund->put('price', array_get($asx_data, 'price'));
                     $fund->put('chart', $asx_chart);
-                    $fund->put('change_percentage', array_get($asx_data, 'price'));
+                    $fund->put('change_percentage', array_get($asx_data, 'change_percentage'));
                     break;
 
                 case 'custom':
@@ -321,7 +320,6 @@ class FundsController extends Controller
         return response()->json([
             'success' => true,
             'data' => $funds,
-            'exchange' => $fund_exchanges
         ]);
     }
 

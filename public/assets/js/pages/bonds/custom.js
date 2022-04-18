@@ -1,31 +1,32 @@
 $(document).ready(function() {
     $(".loader-box").css({
-        'height': $('.fund-contents').innerHeight() + "px"
+        'height': $('.bond-contents').innerHeight() + "px"
     });
-    $(".fund-contents").css("opacity", "0.3");
+    $(".bond-contents").css("opacity", "0.3");
     $.ajax({
         /* the route pointing to the post function */
-        url: '/api/funds/highlights',
+        url: '/api/bonds/highlights',
         type: 'get',
         /* remind that 'data' is the response of the AjaxController */
         success: function(res) {
+            console.log(res);
             if (res.success) {
                 for (var i = 0; i < res.data.length; i++) {
                     var adjustedData = [];
-                    var displayData = [res.data[i]['company_name'], res.data[i]['price'], res.data[i]['change_percentage'], res.data[i]['symbol']];
+                    var displayData = [res.data[i]['name'], Number(res.data[i]['price']), res.data[i]['change_percentage'], res.data[i]['symbol']];
                     if (res.data[i]['chart'] && res.data[i]['chart'].length != 0) {
                         for (var j = 0; j < res.data[i]['chart'].length; j++) {
-                            var fund = res.data[i]['chart'][j];
-                            var date = new Date(fund['date']);
-                            adjustedData[j] = [date.getTime(), Number(((res.data[i]['exchange'] == 'NAS' || (res.data[i]['data_source'] && res.data[i]['data_source'] == 'asx')) ? fund['adjClose'] * 1 : fund['fClose'] * 1).toFixed(2))]
+                            var bond = res.data[i]['chart'][j];
+                            var date = new Date(bond['date']);
+                            adjustedData[j] = [date.getTime(), Number((bond['fClose'] * 1).toFixed(2))]
                         }
-                        renderChart(adjustedData, (i + 1), res.data[i]['gcurrency'], displayData, res.data.length);
+                        renderChart(adjustedData, (i + 1), 'USD', displayData, res.data.length);
                     } else {
                         if (i == res.data.length - 1) {
-                            $(".fund-contents").css("opacity", "1");
+                            $(".bond-contents").css("opacity", "1");
                             $(".loader-box").css('display', 'none');
                         }
-                        $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted fund that had no chart info!', {
+                        $.notify('<i class="fa fa-bell-o"></i>You selected one highlighted bond that had no chart info!', {
                             type: 'theme',
                             allow_dismiss: true,
                             delay: 2000,
@@ -155,13 +156,13 @@ function renderChart(adjustedData, index, currency, displayData, counts) {
             }
         ],
 
-        colors: [appConfig.fund],
+        colors: [appConfig.bond],
     };
     var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard" + index), options);
     charttimeline.render();
     $("#h_stock_title" + index).html(displayData[0]);
     $("#h_stock_title" + index).attr('title', displayData[0]);
-    $("#h_stock_link" + index).attr('href', '/funds/' + displayData[3]);
+    $("#h_stock_link" + index).attr('href', '/bonds/' + displayData[3]);
     $("#h_stock_title" + index).tooltip();
     $("#current_stock_price" + index).html(formatPrice(displayData[1], currency));
     $("#current_stock_percentage" + index).html(formatPercentage(displayData[2]));
@@ -170,7 +171,7 @@ function renderChart(adjustedData, index, currency, displayData, counts) {
     else
         $("#current_stock_percentage" + index).addClass("font-danger");
     if (index == counts) {
-        $(".fund-contents").css("opacity", "1");
+        $(".bond-contents").css("opacity", "1");
         $(".loader-box").css('display', 'none');
     }
 }

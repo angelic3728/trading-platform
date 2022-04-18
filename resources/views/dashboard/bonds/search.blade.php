@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'All Funds')
+@section('title', 'All Bonds')
 
 @push('css')
 <!-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}"> -->
@@ -37,10 +37,10 @@
     <div class="card">
         <div class="card-header">
             <div class="header-top">
-                <h5>Highlighted Funds</h5>
+                <h5>Highlighted Bonds</h5>
             </div>
         </div>
-        <div class="card-body col-sm-12 fund-contents">
+        <div class="card-body col-sm-12 bond-contents">
             <div class="loader-box justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
                 <div class="loader-19"></div>
             </div>
@@ -138,9 +138,9 @@
             <div class="row align-items-center">
                 <div class="col">
                     @if(request()->filled('q') || request()->filled('ex'))
-                    <h4 class="mb-2 sm:mb-0">Results ({{ $funds->total() }})</h4>
+                    <h4 class="mb-2 sm:mb-0">Results ({{ $bonds->total() }})</h4>
                     @else
-                    <h4 class="mb-2 sm:mb-0">All Funds ({{ $funds->total() }})</h4>
+                    <h4 class="mb-2 sm:mb-0">All Bonds ({{ $bonds->total() }})</h4>
                     @endif
                 </div>
                 <div class="col-auto d-flex justify-content-between">
@@ -158,7 +158,7 @@
                         @endif
                         @endforeach
                     </select>
-                    <form action="{{ route('funds.search') }}" class="ms-3" style="min-width: 200px;">
+                    <form action="{{ route('bonds.search') }}" class="ms-3" style="min-width: 200px;">
                         <div class="search d-flex">
                             <input type="text" class="form-control" placeholder="Search" name="q" value="{{ request()->q }}">
                             <input id="ex" type="hidden" class="form-control" placeholder="Search" name="ex" value="{{ request()->ex }}">
@@ -173,35 +173,35 @@
                 <table class="table">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">Symbol</th>
-                            <th scope="col">Company Name</th>
+                            <th scope="col">Bond Code</th>
+                            <th scope="col">Issuer/Description</th>
                             <th scope="col">Exchange</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($funds as $fund)
+                        @foreach($bonds as $bond)
                         <tr>
-                            <td width="10%">{{ $fund->symbol }}</td>
-                            <td>{{ $fund->company_name }}</td>
-                            <td>{{ $fund->exchange }}</td>
+                            <td width="10%">{{ $bond->symbol }}</td>
+                            <td>{{ $bond->name }}</td>
+                            <td>{{ $bond->exchange }}</td>
                             <td class="text-right" nowrap>
-                                <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('funds.show', ['symbol' => $fund->symbol]) }}">See More</a>
+                                <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('bonds.show', ['symbol' => $bond->symbol]) }}">See More</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
-                @if($funds->isEmpty())
+                @if($bonds->isEmpty())
                 <div class="p-10 d-flex justify-content-center">
-                    There are no mutual funds that match your search result
+                    There are no bonds that match your search result
                 </div>
                 @endif
             </div>
         </div>
     </div>
     <div class="d-flex justify-content-end pb-3">
-        {{ $funds->appends(request()->query())->links() }}
+        {{ $bonds->appends(request()->query())->links() }}
     </div>
     <div class="col-xl-12 box-col-12 des-xl-100 mt-3">
         <div class="card news-container">
@@ -285,10 +285,10 @@
     </div>
 </div>
 @push('scripts')
-<script src="{{asset('assets/js/pages/funds/custom.js')}}"></script>
+<script src="{{asset('assets/js/pages/bonds/custom.js')}}"></script>
 <script>
     if ("{{session('error')}}" == "unknown") {
-        $.notify('<i class="fa fa-bell-o"></i>The fund data is not providing right now.', {
+        $.notify('<i class="fa fa-bell-o"></i>The bond data is not providing right now.', {
             type: 'theme',
             allow_dismiss: true,
             delay: 2000,

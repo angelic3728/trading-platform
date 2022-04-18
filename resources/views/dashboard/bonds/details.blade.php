@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('title', array_get($data, 'company_name'))
+@section('title', array_get($data, 'name'))
 
 @push('css')
 <link rel="stylesheet" type="text/css" href="{{asset('assets/css/chartist.css')}}">
@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="col-md-12 fund-details dashboard-content-wrapper">
+<div class="col-md-12 bond-details dashboard-content-wrapper">
     <div class="col-xl-12">
         <div class="d-flex justify-content-center align-items-center" id="ad1_container">
             @if($ads[0])
@@ -39,14 +39,14 @@
                 <div class="card-header">
                     <div class="header-top d-flex justify-content-between">
                         <div class="title-content">
-                            <h5>{{ array_get($data, 'company_name') }}</h5>
+                            <h5>{{ array_get($data, 'name') }}</h5>
                             <div class="center-content">
                                 <p class="d-sm-flex align-items-center">
-                                    <span class="font-primary m-r-10 f-22 f-w-700" id="current_fund_price"></span>
-                                    @if((float)array_get($data, 'change_percentage', 'null') >= 0)
-                                    <span class="font-primary" id="current_fund_percentage"></span>
+                                    <span class="font-primary m-r-10 f-22 f-w-700" id="current_bond_price"></span>
+                                    @if((float)array_get($data, 'changePercentage', 'null') >= 0)
+                                    <span class="font-primary" id="current_bond_percentage"></span>
                                     @else
-                                    <span class="font-danger" id="current_fund_percentage"></span>
+                                    <span class="font-danger" id="current_bond_percentage"></span>
                                     @endif
                                 </p>
                             </div>
@@ -83,68 +83,135 @@
     @if(array_get($data, 'source') != 'custom')
     <div class="row">
         <div class="col">
-            <h2 class="title">Fund Details</h2>
+            <h2 class="title">Bond Details</h2>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <div class="card">
                 <div class="card-body">
+                    @if(array_get($data, 'exchange') == 'XTB')
                     <div class="row">
-                        <div class="col-lg-6">
-                            <h4>Company Information</h4>
-                            <p>{{ (array_get($data, 'company.description', '-'))?array_get($data, 'company.description', '-'):"No Information." }}</p>
+                        <div class="col-lg-4 col-md-12">
+                            <h4>Bond Code</h4>
+                            <h6>{{ array_get($data, 'symbol', '-') }}</h6>
                         </div>
-
-                        <div class="col-lg-6 d-flex flex-column justify-content-between">
+                        <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-between">
                             <div class="row">
-                                <div class="col-sm-6 col-md-4">
+                                <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
                                         <strong>Latest Price</strong>
-                                        <span>{{ array_get($data, 'numbers.latest_price', '-') }}</span>
+                                        <span>{{ '$'.array_get($data, 'price', '-') }}</span>
                                     </div>
                                     <div class="detail">
-                                        <strong>Market Cap</strong>
-                                        <span>{{ array_get($data, 'numbers.market_cap', '-') }}</span>
+                                        <strong>Maturity Date</strong>
+                                        <span>{{ array_get($data, 'dateMaturity', '-') }}</span>
                                     </div>
                                     <div class="detail">
-                                        <strong>P/E Ratio</strong>
-                                        <span>{{ array_get($data, 'numbers.pe_ratio', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Exchange</strong>
-                                        <span>{{ array_get($data, 'company.exchange', '-') }}</span>
+                                        <strong>Nexr Ex.Date</strong>
+                                        <span>{{ array_get($data, 'dateNextEx', '-') }}</span>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6 col-md-4">
+                                <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
-                                        <strong>Previous Close</strong>
-                                        <span>{{ array_get($data, 'numbers.previous_close', '-') }}</span>
+                                        <strong>Coupon PA</strong>
+                                        <span>{{ array_get($data, 'couponPa', '-').'%' }}</span>
                                     </div>
                                     <div class="detail">
-                                        <strong>Volume</strong>
-                                        <span>{{ array_get($data, 'numbers.volume', '-') }}</span>
+                                        <strong>Coupon Type</strong>
+                                        <span>{{ array_get($data, 'couponType', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>YTM</strong>
+                                        <span>{{ array_get($data, 'ytm', '-') }}</span>
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6 col-md-4">
+                                <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
-                                        <strong>Institutional Price</strong>
-                                        <span>{{ array_get($data, 'numbers.institutional_price', '-') }}</span>
+                                        <strong>Running/Current Yield</strong>
+                                        <span>{{ '$'.array_get($data, 'currentYield', '-') }}</span>
                                     </div>
                                     <div class="detail">
-                                        <strong>AVG Total Volume</strong>
-                                        <span>{{ array_get($data, 'numbers.avg_total_volume', '-') }}</span>
+                                        <strong>Trading Margin</strong>
+                                        <span>{{ '$'.array_get($data, 'tradingMargin', '-') }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @elseif(array_get($data, 'exchange') == 'ETB')
+                    <div class="row">
+                        <div class="col-lg-4 col-md-12">
+                            <h4>Bond Name</h4>
+                            <h6>{{ (array_get($data, 'bondName'))?array_get($data, 'bondName', '-'):"No Bond Name." }}</h6>
+                        </div>
+                        <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-between">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                    <div class="detail">
+                                        <strong>Latest Price</strong>
+                                        <span>{{ '$'.array_get($data, 'price', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Coupon Percent</strong>
+                                        <span>{{ array_get($data, 'couponPercent', '-').'%' }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Maturity Date</strong>
+                                        <span>{{ array_get($data, 'dateMaturity', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Nexr Ex.Date</strong>
+                                        <span>{{ array_get($data, 'dateNextEx', '-') }}</span>
+                                    </div>
+                                </div>
 
+                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                    <div class="detail">
+                                        <strong>Pay Frequency</strong>
+                                        <span>{{ array_get($data, 'payFrequency', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Payment Type</strong>
+                                        <span>{{ array_get($data, 'paymentType', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Price Ask</strong>
+                                        <span>{{ (array_get($data, 'priceAsk'))?'$'.array_get($data, 'priceAsk', '-'):"-" }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Bid Price</strong>
+                                        <span>{{ (array_get($data, 'priceBid'))?'$'.array_get($data, 'priceBid', '-'):"-" }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-md-4 col-xs-12">
+                                    <div class="detail">
+                                        <strong>Status Code</strong>
+                                        <span>{{ array_get($data, 'statusCode', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Volume</strong>
+                                        <span>{{ array_get($data, 'volume', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Face Value</strong>
+                                        <span>{{ array_get($data, 'faceValue', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
+                                        <strong>Yield Percent</strong>
+                                        <span>{{ array_get($data, 'yieldPercent', '-') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <div class="row link">
-                        <div class="col text-right">
-                            <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this fund</a>
+                        <div class="col d-flex justify-content-end m-t-25">
+                            <a href=" {{ array_get($data, 'link') }}" target="_blank">Click here for more information about this bond</a>
                         </div>
                     </div>
                 </div>
@@ -157,8 +224,8 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-6">
-                    <h4>Company Information</h4>
-                    <p>{{ (array_get($data, 'company.description', '-'))?array_get($data, 'company.description', '-'):"No Information." }}</p>
+                    <h4>Bond Name</h4>
+                    <h6>{{ (array_get($data, 'name', '-'))?array_get($data, 'name', '-'):"No Bond Name" }}</h6>
                     <hr class="d-lg-none d-xl-none">
                 </div>
 
@@ -167,13 +234,13 @@
                         <div class="col-md-6">
                             <div class="detail">
                                 <strong>Latest Price</strong>
-                                <span>{{ array_get($data, 'numbers.latest_price', '-') }}</span>
+                                <span>{{ array_get($data, 'price', '-') }}</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="detail">
-                                <strong>Institutional Price</strong>
-                                <span>{{ array_get($data, 'numbers.institutional_price', '-') }}</span>
+                                <strong>Market Price</strong>
+                                <span>{{ array_get($data, 'institutionalPrice', '-') }}</span>
                             </div>
                         </div>
                     </div>
@@ -184,7 +251,7 @@
     @if(array_get($data, 'link'))
     <div class="row link">
         <div class="col d-flex justify-content-end">
-            <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this fund</a>
+            <a href="{{ array_get($data, 'link') }}" target="_blank">Click here for more information about this bond</a>
         </div>
     </div>
     @endif
@@ -277,7 +344,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Below you will find the most recent information about the fund you would like to buy shares from</h6>
+                    <h6>Below you will find the most recent information about the bond you would like to buy shares from</h6>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -288,31 +355,24 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Company</strong>
+                                    <strong>Issuer/Description</strong>
                                 </td>
-                                <td>{{array_get($data, "company_name")}}</td>
+                                <td>{{array_get($data, "name")}}</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Retail Price</strong>
                                 </td>
-                                @if(array_get($data, 'currency') == 'USD')
                                 <td>${{array_get($data, "price")}}</td>
-                                @else
-                                <td>{{array_get($data, "price")}}p</td>
-                                @endif
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Institutional Price</strong>
+                                    <strong>Market Price</strong>
                                 </td>
-                                <td>{{ array_get($data, 'numbers.institutional_price', '-') }}</td>
+                                <td>{{ '$'.array_get($data, 'institutionalPrice', '-') }}</td>
                             </tr>
                         </tbody>
                     </table>
-                    @if(array_get($data, 'exchange') == 'LSE')
-                    <small class="d-block mb-3">We don't have real time prices for this fund at the moment. All prices here are based on the last close price. When submitting an trade, we will confirm the actual price with you.</small>
-                    @endif
                     <div class="form-group">
                         <label class="form-label">Shares</label>
                         <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
@@ -347,16 +407,17 @@
 
     function renderChart(range) {
         $.ajax({
-            url: '/api/funds/chart/{{ array_get($data, "symbol") }}/' + range,
+            url: '/api/bonds/chart/{{ array_get($data, "symbol") }}/' + range,
             type: 'get',
             success: function(res) {
+                debugger;
                 if (res.success && res.data.length != 0) {
                     var times = 1;
-                    var currency = "{{ array_get($data, 'currency') }}";
+                    var currency = "USD";
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {
                         var date = new Date(res.data[i]['date']);
-                        adjustedData[i] = [date.getTime(), ((res.exchange == 'NAS' || (res.data[i]['data_source'] && res.data[i]['data_source'] != "asx")) ? res.data[i]['adjClose'] * times : res.data[i]['fClose'] * times).toFixed(2)]
+                        adjustedData[i] = [date.getTime(), Number((res.data[i]['fClose'] * times).toFixed(2))]
                     }
                     var options = {
                         series: [{
@@ -461,7 +522,7 @@
                             }
                         ],
 
-                        colors: [appConfig.fund],
+                        colors: [appConfig.bond],
                     };
                     $("#chart-timeline-dashboard").empty();
                     var charttimeline = new ApexCharts(document.querySelector("#chart-timeline-dashboard"), options);
@@ -481,10 +542,10 @@
     function buyShares(obj) {
         var shares_amount = $("#shares_amount").val();
         var csrf_token = $('meta[name="csrf-token"]').attr('content');
-        var institutional_price = "{{ array_get($data, 'numbers.institutional_price', '-') }}";
-        institutional_price = institutional_price.replace("$", "");
-        institutional_price = institutional_price.replace("p", "");
-        institutional_price = Number(institutional_price);
+        var institutionalPrice = "{{ array_get($data, 'institutionalPrice', '-') }}";
+        institutionalPrice = institutionalPrice.replace("$", "");
+        institutionalPrice = institutionalPrice.replace("p", "");
+        institutionalPrice = Number(institutionalPrice);
 
         if (Number(shares_amount) == 0) {
             $(".alert-wrapper").html('<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">The shares must be at least 1.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>');
@@ -493,11 +554,11 @@
             $(obj).html('<i class="fa fa-spin fa-spinner"></i>');
             $.ajax({
                     method: 'post',
-                    url: '/api/funds/{{array_get($data, "symbol")}}/buy',
+                    url: '/api/bonds/{{array_get($data, "symbol")}}/buy',
                     data: {
                         shares: shares_amount,
                         price: "{{array_get($data, 'price')}}",
-                        institutional_price: institutional_price,
+                        institutionalPrice: institutionalPrice,
                         _token: csrf_token
                     },
                 })
@@ -537,8 +598,8 @@
         renderChart(range);
     }
 
-    $("#current_fund_price").html(formatPrice(Number("{{ array_get($data, 'price') }}"), "{{ array_get($data, 'currency') }}"));
-    $("#current_fund_percentage").html(formatPercentage(Number("{{ array_get($data, 'change_percentage', 'null') }}")));
+    $("#current_bond_price").html(formatPrice(Number("{{ array_get($data, 'price') }}"), "USD"));
+    $("#current_bond_percentage").html(formatPercentage(Number("{{ array_get($data, 'changePercentage', 'null') }}")));
 </script>
 @endpush
 @endsection

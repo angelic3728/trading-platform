@@ -39,6 +39,13 @@ class TransactionController extends Controller
 
         $transactions3 = Transaction::where('user_id', auth()->id())
             ->where('wherefrom', '=', 2)
+            ->with('bond')
+            ->join('bonds', 'transactions.bond_id', '=', 'bonds.id')
+            ->select('transactions.*', 'bonds.symbol', 'bonds.name')
+            ->get();
+
+        $transactions4 = Transaction::where('user_id', auth()->id())
+            ->where('wherefrom', '=', 3)
             ->with('crypto')
             ->join('crypto_currencies', 'transactions.crypto_id', '=', 'crypto_currencies.id')
             ->select('transactions.*', 'crypto_currencies.symbol', 'crypto_currencies.name')
@@ -46,6 +53,7 @@ class TransactionController extends Controller
 
         $merged = $transactions1->merge($transactions2);
         $transactions = $merged->merge($transactions3);
+        $transactions = $transactions->merge($transactions4);
         $transactions = $transactions->all();
         /**
          * Return view
@@ -54,71 +62,5 @@ class TransactionController extends Controller
             'transactions' => $transactions,
             'account_manager' => $account_manager,
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

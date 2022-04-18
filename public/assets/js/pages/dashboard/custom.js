@@ -1,6 +1,5 @@
 $(document).ready(function() {
     var monthProfits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
     for (var i = 0; i < chartData.length; i++) {
         var current_date = new Date();
         var action_date = new Date(chartData[i]["created_at"]);
@@ -29,20 +28,26 @@ $(document).ready(function() {
     var fundData = $.grep(chartData, function(v) {
         return v.wherefrom == 1;
     });
-    var cryptoData = $.grep(chartData, function(v) {
+    var bondData = $.grep(chartData, function(v) {
         return v.wherefrom == 2;
+    });
+    var cryptoData = $.grep(chartData, function(v) {
+        return v.wherefrom == 3;
     });
 
     stockData = stockData.reverse();
     fundData = fundData.reverse();
+    bondData = bondData.reverse();
     cryptoData = cryptoData.reverse();
 
     adjustedStockData = [];
     adjustedFundData = [];
+    adjustedBondData = [];
     adjustedCryptoData = [];
     total1 = 0;
     total2 = 0;
     total3 = 0;
+    total4 = 0;
 
     for (var i = 0; i < stockData.length; i++) {
         total1 =
@@ -66,14 +71,25 @@ $(document).ready(function() {
         ];
     }
 
-    for (var i = 0; i < cryptoData.length; i++) {
+    for (var i = 0; i < bondData.length; i++) {
         total3 =
+            bondData[i]["type"] == "buy"
+                ? total3 + Number(bondData[i]["realPrice"])
+                : total3 - number(bondData[i]["realPrice"]);
+        adjustedBondData[i] = [
+            bondData[i]["created_at"],
+            Number(total3.toFixed())
+        ];
+    }
+
+    for (var i = 0; i < cryptoData.length; i++) {
+        total4 =
             cryptoData[i]["type"] == "buy"
-                ? total3 + Number(cryptoData[i]["realPrice"])
-                : total3 - number(cryptoData[i]["realPrice"]);
+                ? total4 + Number(cryptoData[i]["realPrice"])
+                : total4 - number(cryptoData[i]["realPrice"]);
         adjustedCryptoData[i] = [
             cryptoData[i]["created_at"],
-            Number(total3.toFixed())
+            Number(total4.toFixed())
         ];
     }
 
@@ -93,15 +109,23 @@ $(document).ready(function() {
         );
     else $("#chart-timeline-dashbord2").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
 
-    if (cryptoData.length != 0)
+    if (bondData.length != 0)
         renderChart(
-            adjustedCryptoData,
+            adjustedBondData,
             "#chart-timeline-dashbord3",
-            appConfig.crypto
+            appConfig.bond
         );
     else $("#chart-timeline-dashbord3").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
 
-    if ((!stockData || stockData.length == 0) && (fundData || fundData.length == 0) && (cryptoData || crytoData.length == 0))
+    if (cryptoData.length != 0)
+        renderChart(
+            adjustedCryptoData,
+            "#chart-timeline-dashbord4",
+            appConfig.crypto
+        );
+    else $("#chart-timeline-dashbord4").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+
+    if ((!stockData || stockData.length == 0) && (fundData || fundData.length == 0) && (bondData || bondData.length == 0) && (cryptoData || crytoData.length == 0))
         $("#month_profit_dash").append("<div class='d-flex justify-content-center align-items-center' style='min-height:470px;'><h4>No Chart Data!</h4></div>");
     else renderBarChart(monthProfits, "#month_profit_dash");
 
@@ -264,6 +288,83 @@ $(document).ready(function() {
                 } else {
                     $("#highlight_chart_" + i).text("No Chart Data!");
                 }
+            } else if (all_highlights[i]["wherefrom"] == "bond") {
+                var bond_carousel = $("#bond_carousel");
+                var item = $("<div>")
+                    .appendTo(bond_carousel)
+                    .attr("class", "item");
+                var card = $("<div>")
+                    .appendTo(item)
+                    .attr("class", "card");
+                var chart_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "chart-content");
+                $("<div>")
+                    .appendTo(chart_content)
+                    .attr("id", "highlight_chart_" + i);
+                var detail_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "d-flex-column p-2");
+                var title = $("<a>")
+                    .appendTo(detail_content)
+                    .attr("href", "/funds/" + all_highlights[i]["symbol"]);
+                var h6 = $("<h6>")
+                    .appendTo(title)
+                    .attr({
+                        title: all_highlights[i]["name"],
+                        style:
+                            "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+                    })
+                    .text(all_highlights[i]["name"]);
+                h6.tooltip();
+                var center_content = $("<div>")
+                    .appendTo(detail_content)
+                    .attr("class", "center-content");
+                var smalls = $("<p>")
+                    .appendTo(center_content)
+                    .attr("class", "d-sm-flex align-items-end");
+                $("<span>")
+                    .appendTo(smalls)
+                    .attr("class", "font-primary m-r-10 f-16 f-w-700")
+                    .text(
+                        formatPrice(
+                            Number(all_highlights[i]["price"]),
+                            all_highlights[i]["gcurrency"]
+                        )
+                    );
+                var percent = $("<span>")
+                    .appendTo(smalls)
+                    .text(
+                        formatPercentage(all_highlights[i]["change_percentage"])
+                    );
+                if (all_highlights[i]["change_percentage"] >= 0)
+                    percent.addClass("font-primary");
+                else percent.addClass("font-danger");
+                if (
+                    all_highlights[i]["chart"] &&
+                    all_highlights[i]["chart"].length != 0
+                ) {
+                    var adjustedData = [];
+                    for (
+                        var j = 0;
+                        j < all_highlights[i]["chart"].length;
+                        j++
+                    ) {
+                        var unit = all_highlights[i]["chart"][j];
+                        var date = new Date(unit["date"]);
+                        adjustedData[j] = [date.getTime(), Number((unit['fClose'] * 1).toFixed(2))];
+                    }
+                    renderChart(
+                        adjustedData,
+                        "#highlight_chart_" + i,
+                        appConfig.bond,
+                        false,
+                        3,
+                        200
+                    );
+                } else {
+                    $("#highlight_chart_" + i).text("No Chart Data!");
+                }
             } else if (all_highlights[i]["wherefrom"] == "crypto") {
                 var crypto_carousel = $("#crypto_carousel");
                 var item = $("<div>")
@@ -400,7 +501,7 @@ function renderChart(
     chart_color,
     lineLabel = true,
     width = 3,
-    height = 425
+    height = 375
 ) {
     var options = {
         series: [
@@ -626,7 +727,7 @@ function confirmTrade(
         var url =
             wherefrom == 0
                 ? "/api/stocks/" + symbol + "/" + type.toLowerCase()
-                : "/api/mfds/" + symbol + "/" + type.toLowerCase();
+                : (wherefrom == 1?"/api/fund/" + symbol + "/" + type.toLowerCase():wherefrom == 2?"/api/bond/" + symbol + "/" + type.toLowerCase():"/api/crypto/" + symbol + "/" + type.toLowerCase());
         $.ajax({
             method: "post",
             url: url,

@@ -18,6 +18,7 @@ class Transactions extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('stock_id')->nullable();
             $table->unsignedInteger('fund_id')->nullable();
+            $table->unsignedInteger('bond_id')->nullable();
             $table->unsignedInteger('crypto_id')->nullable();
             $table->enum('type', ['buy', 'sell']);
             $table->decimal('price', 8, 2);
@@ -27,6 +28,7 @@ class Transactions extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('stock_id')->references('id')->on('stocks');
             $table->foreign('fund_id')->references('id')->on('funds');
+            $table->foreign('bond_id')->references('id')->on('bonds');
             $table->foreign('crypto_id')->references('id')->on('crypto_currencies');
         });
     }

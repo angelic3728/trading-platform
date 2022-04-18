@@ -5,15 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CryptoCurrency extends Model
+class Bond extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
         'name',
         'symbol',
-        'coin_id',
-        'link',
         'data_source',
         'discount_percentage',
         'gcurrency'
@@ -26,12 +24,9 @@ class CryptoCurrency extends Model
      */
     protected $dates = ['deleted_at'];
 
-    /**
-     * Get the crypto prices.
-     */
-    public function cryptoCurrencyPrices()
+    public function bondPrices()
     {
-        return $this->hasMany('App\CryptoCurrencyPrice');
+        return $this->hasMany('App\BondPrice');
     }
 
     /**
@@ -39,24 +34,9 @@ class CryptoCurrency extends Model
      *
      * @return string price
      */
-    public function formatPrice($price)
+    public function formatPrice($price, $decimals = 2)
     {
-        $decimal = 2;
-        if ($price > 10) {
-            $decimal = 2;
-        } else if ($price > 1) {
-            $decimal = 3;
-        } else if ($price > 0.1) {
-            $decimal = 4;
-        } else if ($price > 0.01) {
-            $decimal = 5;
-        } else if ($price > 0.001) {
-            $decimal = 6;
-        } else {
-            $decimal = 10;
-        }
-        
-        return '$'.number_format($price, $decimal);
+        return '$'.number_format($price, $decimals);
     }
 
     /**

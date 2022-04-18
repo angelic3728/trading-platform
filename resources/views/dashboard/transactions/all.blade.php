@@ -59,12 +59,12 @@
                             <td class="type">{{ $transaction->symbol }}</td>
                             <td class="type">{{ $transaction->type }}</td>
                             <td class="symbol-with-company-name">
-                                <small>{{ $transaction->wherefrom=="2"?$transaction->name:$transaction->company_name }}</small>
+                                <small>{{ ($transaction->wherefrom=="2" || $transaction->wherefrom=="3")?$transaction->name:$transaction->company_name }}</small>
                             </td>
                             <td class="text-nowrap">{{ $transaction->formatPrice($transaction->price) }}</td>
                             <td class="text-nowrap">{{ $transaction->shares }}</td>
                             <td class="text-nowrap">{{ $transaction->created_at }}</td>
-                            <td class="text-nowrap">{{ $transaction->wherefrom=="0"?"Stock":($transaction->wherefrom=="1"?"Fund":"Crypto") }}</td>
+                            <td class="text-nowrap">{{ $transaction->wherefrom=="0"?"Stock":($transaction->wherefrom=="1"?"Fund":($transaction->wherefrom=="2"?"Bond":"Crypto")) }}</td>
                         </tr>
                         @endforeach
                     </tbody>

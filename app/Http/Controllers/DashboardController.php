@@ -9,11 +9,14 @@ use IEX;
 use ASX;
 use CustomStockData;
 use CustomFundData;
+use CustomBondData;
+use CustomCryptoData;
 use Cache;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\API\StockController;
 use App\Http\Controllers\API\FundsController;
+use App\Http\Controllers\API\BondsController;
 use App\Http\Controllers\API\CryptosController;
 
 class DashboardController extends Controller
@@ -144,7 +147,7 @@ class DashboardController extends Controller
                             case 'custom':
                                 $transaction->latest_price = round(CustomFundData::price($transaction->fund->symbol), 3);
                                 $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->fund->symbol), 4);
-                                $transaction->institutional_price = round(CustomFundData::price($transaction->fund->symbol), 3);
+                                $transaction->institutional_price = CustomFundData::price($transaction->fund->symbol)?round($transaction->fund->institutionalPrice(CustomFundData::price($transaction->fund->symbol)), 3):null;
                         }
                         // add real price and total prices
                         if ($transaction->fund->gcurrency != "USD") {
@@ -162,7 +165,34 @@ class DashboardController extends Controller
                                 $total_transaction_price -= $transaction->realPrice;
                         }
                     }
-                } else {
+                } else if ($transaction->wherefrom == 2) {
+                    if ($transaction->bond) {
+                        // add detailed info
+                        $transaction->symbol = $transaction->bond->symbol;
+                        $transaction->name = $transaction->bond->name;
+                        $transaction->gcurrency = $transaction->bond->gcurrency;
+                        $transaction->data_source = $transaction->bond->data_source;
+                        switch ($transaction->bond->data_source) {
+                            case 'asx':
+                                $price = ASX::getBPrice($transaction->bond->symbol);
+                                $changePercentage = ASX::changePercentage($transaction->bond->symbol);
+                                $transaction->latest_price = $price;
+                                $transaction->change_percentage = $changePercentage;
+                                $transaction->institutional_price = $price ? $transaction->bond->institutionalPrice($price) : null;
+                                break;
+                            case 'custom':
+                                $transaction->latest_price = CustomBondData::price($transaction->bond->symbol);
+                                $transaction->change_percentage = CustomBondData::changePercentage($transaction->bond->symbol);
+                                $transaction->institutional_price = CustomBondData::price($transaction->bond->symbol)?round($transaction->bond->institutionalPrice(CustomBondData::price($transaction->bond->symbol)), 3):null;
+                        }
+                        // add real price and total prices
+                        $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
+                        if ($transaction->type == "buy")
+                            $total_transaction_price += $transaction->realPrice;
+                        else
+                            $total_transaction_price -= $transaction->realPrice;
+                    }
+                } else if ($transaction->wherefrom == 3) {
                     if ($transaction->crypto) {
                         // add detailed info
                         $transaction->symbol = $transaction->crypto->symbol;
@@ -183,9 +213,9 @@ class DashboardController extends Controller
                                 $transaction->institutional_price = array_get($crypto_data, 'market_data.current_price.usd') ? $transaction->crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null;
                                 break;
                             case 'custom':
-                                $transaction->latest_price = CustomFundData::price($transaction->crypto->symbol);
-                                $transaction->change_percentage = CustomFundData::changePercentage($transaction->crypto->symbol);
-                                $transaction->institutional_price = CustomFundData::price($transaction->crypto->symbol);
+                                $transaction->latest_price = CustomCryptoData::price($transaction->crypto->symbol);
+                                $transaction->change_percentage = CustomCryptoData::changePercentage($transaction->crypto->symbol);
+                                $transaction->institutional_price = CustomCryptoData::price($transaction->crypto->symbol)?round($transaction->crypto->institutionalPrice(CustomBondData::price($transaction->crypto->symbol)), 3):null;
                         }
                         // add real price and total prices
                         $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
@@ -202,9 +232,11 @@ class DashboardController extends Controller
         // Get all highlights
         $stock_highlights = StockController::highlights(4)->getData();
         $fund_highlights = FundsController::highlights(4)->getData();
+        $bond_highlights = BondsController::highlights(4)->getData();
         $crypto_highlights = CryptosController::highlights(4)->getData();
 
         $all_highlights = array_merge($stock_highlights->data, $fund_highlights->data);
+        $all_highlights = array_merge($all_highlights, $bond_highlights->data);
         $all_highlights = array_merge($all_highlights, $crypto_highlights->data);
 
         $user_currency = '';

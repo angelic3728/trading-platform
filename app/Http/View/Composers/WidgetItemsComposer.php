@@ -10,12 +10,14 @@ use Cache;
 
 use App\Stock;
 use App\Fund;
+use App\Bond;
 use App\CryptoCurrency;
 use App\Transaction;
 use App\Advertise;
 
 use CustomStockData;
 use CustomFundData;
+use CustomBondData;
 use CustomCryptoData;
 
 class WidgetItemsComposer
@@ -51,6 +53,8 @@ class WidgetItemsComposer
         $funds = Cache::remember('funds:widget', 15, function () {
             return Fund::where('widget', true)->take(4)->get();
         });
+
+        $bonds = Bond::where('widget', true)->take(4)->get();
 
         $cryptos = Cache::remember('cryptos:widget', 15, function () {
             return CryptoCurrency::where('widget', true)->take(4)->get();
@@ -182,6 +186,46 @@ class WidgetItemsComposer
             return $c_fund->only('wherefrom', 'symbol', 'company_name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source');
         });
 
+        $bond_results = (count($bonds) == 0) ? [] : $bonds->map(function ($bond) {
+            /**
+             * Make collection of bond
+             */
+            $c_bond = collect($bond);
+            $c_bond->put('wherefrom', 'bond');
+
+            /**
+             * Add extra fields before returning it
+             */
+            switch ($c_bond['data_source']) {
+                case 'asx':
+                    $price = ASX::getBPrice($c_bond->get('symbol'));
+                    $changePercentage = ASX::changePercentage($c_bond->get('symbol'));
+                    $chart = ASX::getBChart($c_bond->get('id'), '1m');
+
+                    $c_bond->put('price', $price);
+                    $c_bond->put('chart', $chart);
+                    $c_bond->put('change_percentage', $changePercentage);
+                    break;
+
+                case 'custom':
+                    $c_bond->put('price', $c_bond->formatPrice(CustomBondData::price($c_bond->get('symbol'))));
+                    $c_bond->put('chart', CustomBondData::chart($c_bond->get('id'), '1m'));
+                    $c_bond->put('change_percentage', CustomBondData::changePercentage($c_bond->get('symbol')));
+                    break;
+
+                default:
+                    $c_bond->put('price', null);
+                    $c_bond->put('chart', null);
+                    $c_bond->put('change_percentage', null);
+                    break;
+            }
+
+            /**
+             * Return bond
+             */
+            return $c_bond->only('wherefrom', 'symbol', 'name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source');
+        });
+
         $crypto_results = [];
         $cnt = 0;
         if (count($cryptos) != 0)
@@ -231,6 +275,7 @@ class WidgetItemsComposer
         $crypto_results = collect($crypto_results);
 
         $results = $stock_results->merge($fund_results);
+        $results = $results->merge($bond_results);
         $results = $results->merge($crypto_results);
 
         /**

@@ -141,7 +141,7 @@
                     <div class="card income-card">
                         <div class="card-header">
                             <div class="header-top d-sm-flex align-items-center">
-                                <h5 class="md:d-block lg:d-none">Account performance</h5>
+                                <h5 class="md:d-block lg:d-none">Performance</h5>
                             </div>
                         </div>
                         <div class="card-body p-0">
@@ -162,6 +162,13 @@
                                         <div class="material-border"></div>
                                     </li>
                                     <li class="nav-item">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#bond_chart" role="tab" aria-controls="crypto-chart" aria-selected="true" style="cursor: pointer;">
+                                            <i class="fa fa-certificate"></i>
+                                            Bonds
+                                        </a>
+                                        <div class="material-border"></div>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" data-bs-toggle="tab" href="#crypto_chart" role="tab" aria-controls="crypto-chart" aria-selected="true" style="cursor: pointer;">
                                             <i class="fa fa-btc"></i>
                                             Cryptos
@@ -176,8 +183,11 @@
                                     <div class="tab-pane fade" id="fund_chart" role="tabpanel" aria-labelledby="fund-chart">
                                         <div id="chart-timeline-dashbord2"></div>
                                     </div>
-                                    <div class="tab-pane fade" id="crypto_chart" role="tabpanel" aria-labelledby="crypto-chart">
+                                    <div class="tab-pane fade" id="bond_chart" role="tabpanel" aria-labelledby="crypto-chart">
                                         <div id="chart-timeline-dashbord3"></div>
+                                    </div>
+                                    <div class="tab-pane fade" id="crypto_chart" role="tabpanel" aria-labelledby="crypto-chart">
+                                        <div id="chart-timeline-dashbord4"></div>
                                     </div>
                                 </div>
                             </div>
@@ -213,6 +223,13 @@
                                                 <div class="material-border"></div>
                                             </li>
                                             <li class="nav-item">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#bond_portfolio" role="tab" aria-controls="bond-portfolio" aria-selected="true" style="cursor: pointer;">
+                                                    <i class="fa fa-certificate"></i>
+                                                    Bonds
+                                                </a>
+                                                <div class="material-border"></div>
+                                            </li>
+                                            <li class="nav-item">
                                                 <a class="nav-link" data-bs-toggle="tab" href="#crypto_portfolio" role="tab" aria-controls="fund-portfolio" aria-selected="true" style="cursor: pointer;">
                                                     <i class="fa fa-btc"></i>
                                                     Cryptos
@@ -242,8 +259,10 @@
                                                                 @if($transaction->wherefrom == 0)
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->company_name}}</small>
+                                                                        <a href="{{ route('stocks.show', ['symbol' => $transaction->symbol]) }}">
+                                                                            <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                            <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->company_name}}</p>
+                                                                        </a>
                                                                     </td>
                                                                     <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
                                                                     <td style="vertical-align: middle;">
@@ -292,8 +311,10 @@
                                                                 @if($transaction->wherefrom == 1)
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->company_name}}</small>
+                                                                        <a href="{{ route('funds.show', ['symbol' => $transaction->symbol]) }}">
+                                                                            <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                            <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->company_name}}</p>
+                                                                        </a>
                                                                     </td>
                                                                     <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
                                                                     <td style="vertical-align: middle;">
@@ -321,13 +342,65 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="tab-pane fade" id="bond_portfolio" role="tabpanel" aria-labelledby="bond-portfolio">
+                                                <div class="vertical-scroll scroll-demo p-0" style="height: 350px;">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-responsive table-responsive-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="font-size:13px;">Bond</th>
+                                                                    <th style="font-size:13px;">Last Price</th>
+                                                                    <th style="font-size:13px;">Change</th>
+                                                                    <th style="font-size:13px;">Institutional Price</th>
+                                                                    <th style="font-size:13px;">Shares</th>
+                                                                    <th style="font-size:13px;">Value</th>
+                                                                    <th class="text-center table-secondary" style="right: 0px; width:140px;">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @if(count($transactions) != 0)
+                                                                @foreach($transactions as $transaction)
+                                                                @if($transaction->wherefrom == 2)
+                                                                <tr>
+                                                                    <td class="d-flex flex-column">
+                                                                        <a href="{{ route('bonds.show', ['symbol' => $transaction->symbol]) }}">
+                                                                            <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                            <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->name}}</p>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">
+                                                                        <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                            {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->bond->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                    <td style="vertical-align: middle;">{{ $transaction->shares }}</td>
+                                                                    <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                    <td class="text-center table-secondary" style="right: 0px; width:140px;">
+                                                                        <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Buy</button>
+                                                                        <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Sell</button>
+                                                                    </td>
+                                                                </tr>
+                                                                @endif
+                                                                @endforeach
+                                                                @else
+                                                                <tr>
+                                                                    <td colspan="7" class="text-center">No Data!</td>
+                                                                </tr>
+                                                                @endif
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="tab-pane fade" id="crypto_portfolio" role="tabpanel" aria-labelledby="crypto-portfolio">
                                                 <div class="sm:vertical-scroll scroll-demo p-0" style="height: 350px;">
                                                     <div class="table-responsive">
                                                         <table class="table table-responsive table-responsive-sm">
                                                             <thead>
                                                                 <tr>
-                                                                    <th style="font-size:13px;">Company</th>
+                                                                    <th style="font-size:13px;">Coin</th>
                                                                     <th style="font-size:13px;">Last Price</th>
                                                                     <th style="font-size:13px;">Change</th>
                                                                     <th style="font-size:13px;">Institutional Price</th>
@@ -339,11 +412,13 @@
                                                             <tbody>
                                                                 @if(count($transactions) != 0)
                                                                 @foreach($transactions as $transaction)
-                                                                @if($transaction->wherefrom == 2)
+                                                                @if($transaction->wherefrom == 3)
                                                                 <tr>
                                                                     <td class="d-flex flex-column">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <small style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->name}}</small>
+                                                                        <a href="{{ route('cryptos.show', ['symbol' => $transaction->symbol]) }}">
+                                                                            <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                            <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$transaction->name}}</p>
+                                                                        </a>
                                                                     </td>
                                                                     <td style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
                                                                     <td style="vertical-align: middle;">
@@ -455,9 +530,9 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-top d-sm-flex align-items-center">
-                                <h5>Available XTB's</h5>
+                                <h5>Available Bonds</h5>
                             </div>
-                            <a class="btn btn-outline-success btn-xs" href="{{ route('xtbs') }}">see more</a>
+                            <a class="btn btn-outline-success btn-xs" href="{{ route('bonds.search') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
                             <div class="vertical-scroll scroll-demo p-0">
@@ -569,6 +644,14 @@
                                 <div class="item">
                                     <div class="row">
                                         <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="bond_carousel">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
                                             <div class="owl-carousel-16 owl-carousel owl-theme" id="crypto_carousel">
                                             </div>
                                         </div>
@@ -604,7 +687,7 @@
                                             <tr>
                                                 <td class="text-center f-w-600">{{ $transaction->symbol }}</td>
                                                 <td class="text-center">{{ $transaction->type }}</td>
-                                                <td class="text-center">{{ $transaction->wherefrom=="0"?$transaction->stock->formatPrice($transaction->price):($transaction->wherefrom=="1"?$transaction->fund->formatPrice($transaction->price):$transaction->crypto->formatPrice($transaction->price))}}</td>
+                                                <td class="text-center">{{ $transaction->wherefrom=="0"?$transaction->stock->formatPrice($transaction->price):($transaction->wherefrom=="1"?$transaction->fund->formatPrice($transaction->price):($transaction->wherefrom=="2"?$transaction->bond->formatPrice($transaction->price):$transaction->crypto->formatPrice($transaction->price)))}}</td>
                                                 <td class="text-center">{{ $transaction->shares }}</td>
                                             </tr>
                                             @endforeach
@@ -757,6 +840,7 @@
     var all_highlights = {!!json_encode($all_highlights) !!}; 
     var news_symbols = {!!json_encode($news_symbols) !!}
     var total_value = "{{ $total_transaction_price }}";
+
     $('#total_profile_value').text(formatPrice(Number(total_value)));
     $('#cash_on_account').text(formatPrice(Number('{{ (auth()->user()->getBalance())?auth()->user()->getBalance()->amount:0 }}')));
 </script>

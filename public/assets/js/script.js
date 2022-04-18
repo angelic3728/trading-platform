@@ -464,6 +464,70 @@ $(document).ready(function() {
                     '<span class="p-3">No Chart Data!</span>'
                 );
             }
+        } else if (ticker_data[i]["wherefrom"] == "bond") {
+            var item_content = $("<a>")
+                .appendTo(ticker_item)
+                .attr("href", "/bonds/" + ticker_data[i]["symbol"]);
+            $("<h6>")
+                .appendTo(item_content)
+                .css({
+                    "margin-bottom": "5px",
+                    "font-size": "14px",
+                    "text-overflow": "ellipsis",
+                    overflow: "hidden",
+                    "white-space": "nowrap",
+                    "max-width": "200px"
+                })
+                .text(ticker_data[i]["name"]);
+            var info_wrapper = $("<div>")
+                .appendTo(item_content)
+                .attr("class", "d-flex");
+            var ticker_wrapper = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex flex-column");
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .text(
+                    formatPrice(
+                        Number(ticker_data[i]["price"]),
+                        ticker_data[i]["gcurrency"]
+                    )
+                )
+                .css({ "font-size": "12px" });
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .attr(
+                    "class",
+                    ticker_data[i]["change_percentage"] > 0
+                        ? "text-success"
+                        : "text-danger"
+                )
+                .text(formatPercentage(ticker_data[i]["change_percentage"]));
+            var chart_con = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex")
+                .css("top", "-30px");
+            $("<div>")
+                .appendTo(chart_con)
+                .attr("id", "chart_wrapper_" + i);
+            var chartData = ticker_data[i]["chart"];
+            if (chartData && chartData.length != 0) {
+                var adjustedData = [];
+                for (var j = 0; j < chartData.length; j++) {
+                    var date = new Date(chartData[j]["date"]);
+                    adjustedData[j] = [
+                        date.getTime(),
+                        Number((chartData[j]["fClose"] * 1).toFixed(2))
+                    ];
+                }
+                ticker_item.appendTo("#forward_ticker_wrapper");
+                renderChart(adjustedData, "#chart_wrapper_" + i, "bond");
+            } else {
+                ticker_item.appendTo("#forward_ticker_wrapper");
+                $("#chart_wrapper_" + i).append(
+                    '<span class="p-3">No Chart Data!</span>'
+                );
+            }
         } else if (ticker_data[i]["wherefrom"] == "crypto") {
             var item_content = $("<a>")
                 .appendTo(ticker_item)
@@ -543,6 +607,7 @@ $(document).ready(function() {
 
     // add back ticker feeds
     for (var i = 0; i < ticker_data.length; i++) {
+        debugger;
         var ticker_item = $("<li>");
         if (ticker_data[i]["wherefrom"] == "stock") {
             var item_content = $("<a>")
@@ -662,6 +727,65 @@ $(document).ready(function() {
                 }
                 ticker_item.appendTo("#back_ticker_wrapper");
                 renderChart(adjustedData, "#chart_wrapper2_" + i, "fund");
+            } else {
+                ticker_item.appendTo("#back_ticker_wrapper");
+                $("#chart_wrapper2_" + i).append(
+                    '<span class="p-3">No Chart Data!</span>'
+                );
+            }
+        } else if (ticker_data[i]["wherefrom"] == "bond") {
+            var item_content = $("<a>")
+                .appendTo(ticker_item)
+                .attr("href", "/bonds/" + ticker_data[i]["symbol"]);
+            $("<h6>")
+                .appendTo(item_content)
+                .css({
+                    "margin-bottom": "5px",
+                    "font-size": "14px",
+                    "text-overflow": "ellipsis",
+                    overflow: "hidden",
+                    "white-space": "nowrap",
+                    "max-width": "200px"
+                })
+                .text(ticker_data[i]["name"]);
+            var info_wrapper = $("<div>")
+                .appendTo(item_content)
+                .attr("class", "d-flex");
+            var ticker_wrapper = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex flex-column");
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .text(ticker_data[i]["price"])
+                .css({ "font-size": "12px" });
+            $("<span>")
+                .appendTo(ticker_wrapper)
+                .attr(
+                    "class",
+                    ticker_data[i]["change_percentage"] > 0
+                        ? "text-success"
+                        : "text-danger"
+                )
+                .text(formatPercentage(ticker_data[i]["change_percentage"]));
+            var chart_con = $("<div>")
+                .appendTo(info_wrapper)
+                .attr("class", "d-flex")
+                .css("top", "-30px");
+            $("<div>")
+                .appendTo(chart_con)
+                .attr("id", "chart_wrapper2_" + i);
+            var chartData = ticker_data[i]["chart"];
+            if (chartData && chartData.length != 0) {
+                var adjustedData = [];
+                for (var j = 0; j < chartData.length; j++) {
+                    var date = new Date(chartData[j]["date"]);
+                    adjustedData[j] = [
+                        date.getTime(),
+                        Number((chartData[j]["fClose"] * 1).toFixed(2))
+                    ];
+                }
+                ticker_item.appendTo("#back_ticker_wrapper");
+                renderChart(adjustedData, "#chart_wrapper2_" + i, "bond");
             } else {
                 ticker_item.appendTo("#back_ticker_wrapper");
                 $("#chart_wrapper2_" + i).append(
@@ -816,6 +940,7 @@ $(document).ready(function() {
 
         if (wherefrom == "stock") options["colors"] = [appConfig.primary];
         else if (wherefrom == "fund") options["colors"] = [appConfig.fund];
+        else if (wherefrom == "bond") options["colors"] = [appConfig.bond];
         else if (wherefrom == "crypto") options["colors"] = [appConfig.crypto];
 
         var charttimeline = new ApexCharts(
