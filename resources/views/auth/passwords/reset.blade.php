@@ -1,7 +1,7 @@
 @extends('layouts.authentication')
 
 @section('content')
-<div class="container login">
+<div class="container login d-flex flex-column justify-content-center align-items-center" style="height:100vh;">
     <div class="card mt-10 p-5">
         <div class="card-header">Reset Password</div>
         <div class="card-body">

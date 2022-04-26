@@ -92,22 +92,21 @@ class CryptosController extends Controller
                             $chart = Cache::remember('cryptos:highlight-gecko-chart-'.$crypto->coin_id, (10+$cnt), function() use ($crypto) {
                                 return ASX::getCChart($crypto->coin_id, '5d');
                             });
+
+                            $crypto_data = Cache::remember('crypto:highlight-detail-info'.$crypto->coin_id, 15, function() use ($crypto) {
+                                return ASX::getCDetails($crypto->coin_id);
+                            });
                         } catch(\Exception $e) {
-                            $chart = [];
-                        }
-                        $price = 0;
-                        $change_percentage = 0;
-                        if(count($chart) != 0) {
-                            $price = $chart[count($chart)-1][1];
-                            $change_percentage = number_format(($chart[count($chart)-1][1] - $chart[count($chart)-2][1])/100, 2);
+                            $chart = null;
+                            $crypto_data = null;
                         }
 
                         array_push($results, collect([
                             'wherefrom' => 'crypto',
                             'symbol' => $crypto['symbol'],
                             'name' => $crypto['name'],
-                            'price' => $price,
-                            'change_percentage' => $change_percentage,
+                            'price' => $crypto_data?array_get($crypto_data, 'market_data.current_price.usd'):0,
+                            'change_percentage' => $crypto_data?array_get($crypto_data, 'market_data.price_change_percentage_24h'):0,
                             'chart' => $chart,
                         ]));
                         break;

@@ -113,11 +113,7 @@
                                 <td>
                                     <strong>Retail Price</strong>
                                 </td>
-                                @if(array_get($data, 'currency') == 'USD')
-                                <td>${{array_get($data, "price")}}</td>
-                                @else
-                                <td>{{array_get($data, "price")}}p</td>
-                                @endif
+                                <td>{{ array_get($data, 'numbers.latest_price', '-') }}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -133,7 +129,7 @@
                     <div class="form-group">
                         <label class="form-label">Shares</label>
                         <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
-                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
+                        <small style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
                     <div class="alert-wrapper"></div>
                     <div class="d-flex justify-content-end">
@@ -334,53 +330,7 @@
 <script src="{{asset('assets/js/chart/apex-chart/apex-chart.js')}}"></script>
 <script>
     $(document).ready(function() {
-        // var symbol = "{{ array_get($data, 'symbol') }}";
-        // $(".chart-loader").css({
-        //     'top': $('.card-header').innerHeight() + "px",
-        //     'height': $('.chart-content').innerHeight() + "px"
-        // });
-        // $(".news-loader").css({
-        //     'height': $('.news-content').innerHeight() + "px"
-        // });
-        // $(".chart-content").css("opacity", "0.3");
-        // $(".news-content").css("opacity", "0.3");
         renderChart('1m');
-        // if ("{{array_get($data, 'source')}}" == 'iex') {
-        //     $.ajax({
-        //         method: 'get',
-        //         url: '/api/news?symbols=' + symbol + '&&limit=3',
-        //         success: function(res) {
-        //             if (res.success) {
-        //                 var artiles = res.data;
-        //                 if (artiles.length > 0) {
-        //                     for (var i = 0; i < artiles.length; i++) {
-        //                         $('.news-' + i).css('display', 'block');
-        //                         $('.news-img-' + i).attr('src', artiles[i]['image']);
-        //                         $('.news-link-' + i).attr('href', artiles[i]['url']);
-        //                         $('.news-date-' + i).html(dateStr(new Date(artiles[i].datetime)));
-        //                         $('.news-headline-' + i).html(artiles[i]['headline']);
-        //                         if (artiles[i]['summary'].length > 150)
-        //                             $('.news-summary-' + i).html(artiles[i]['summary'].substr(0, 150 - 3) + "...");
-        //                         else
-        //                             $('.news-summary-' + i).html(artiles[i]['summary']);
-
-        //                         if (i == 2) {
-        //                             $('.see-more').removeClass('d-none');
-        //                             $('.see-more').addClass('d-block');
-        //                         }
-        //                     }
-        //                 } else {
-        //                     $('.news-content').css('display', 'none');
-        //                     $('.no-news').css('display', 'block');
-        //                 }
-        //                 $(".news-content").css("opacity", "1");
-        //                 $(".news-loader").css('display', 'none');
-        //             }
-        //         }
-        //     });
-        // } else {
-        //     $('.news-container').css('display', 'none');
-        // }
     });
 
     function renderChart(range) {
@@ -430,6 +380,10 @@
                             axisBorder: {
                                 show: true
                             },
+                        },
+                        yaxis: {
+                            min: 0,
+                            tickAmount: 5
                         },
                         tooltip: {
                             x: {

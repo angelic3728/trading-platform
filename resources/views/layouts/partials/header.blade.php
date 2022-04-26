@@ -11,7 +11,7 @@
           <li>
             <div class="search-form">
               <div class="search-bg"><i class="fa fa-search"></i>
-                <input type="text" id="search_stocks" placeholder="Stocks, Funds, Cryptos" class="form-control" autocomplete="off">
+                <input type="text" id="search_stocks" placeholder="Stocks, Funds Bonds, Cryptos" style="font-size: 13px; width:200px; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
                 <div class="search-results d-none shadow shadow-showcase bg-white flex-column" style="position: absolute; top:25px; z-index:99; padding:10px 15px; min-width:100%;">
                 </div>
               </div>

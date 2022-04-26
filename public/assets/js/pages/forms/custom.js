@@ -158,6 +158,83 @@ $(document).ready(function() {
                 } else {
                     $("#highlight_chart_" + i).text("No Chart Data!");
                 }
+            } else if (all_highlights[i]["wherefrom"] == "bond") {
+                var bond_carousel = $("#bond_carousel");
+                var item = $("<div>")
+                    .appendTo(bond_carousel)
+                    .attr("class", "item");
+                var card = $("<div>")
+                    .appendTo(item)
+                    .attr("class", "card");
+                var chart_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "chart-content");
+                $("<div>")
+                    .appendTo(chart_content)
+                    .attr("id", "highlight_chart_" + i);
+                var detail_content = $("<div>")
+                    .appendTo(card)
+                    .attr("class", "d-flex-column p-2");
+                var title = $("<a>")
+                    .appendTo(detail_content)
+                    .attr("href", "/funds/" + all_highlights[i]["symbol"]);
+                var h6 = $("<h6>")
+                    .appendTo(title)
+                    .attr({
+                        title: all_highlights[i]["name"],
+                        style:
+                            "text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
+                    })
+                    .text(all_highlights[i]["name"]);
+                h6.tooltip();
+                var center_content = $("<div>")
+                    .appendTo(detail_content)
+                    .attr("class", "center-content");
+                var smalls = $("<p>")
+                    .appendTo(center_content)
+                    .attr("class", "d-sm-flex align-items-end");
+                $("<span>")
+                    .appendTo(smalls)
+                    .attr("class", "font-primary m-r-10 f-16 f-w-700")
+                    .text(
+                        formatPrice(
+                            Number(all_highlights[i]["price"]),
+                            all_highlights[i]["gcurrency"]
+                        )
+                    );
+                var percent = $("<span>")
+                    .appendTo(smalls)
+                    .text(
+                        formatPercentage(all_highlights[i]["change_percentage"])
+                    );
+                if (all_highlights[i]["change_percentage"] >= 0)
+                    percent.addClass("font-primary");
+                else percent.addClass("font-danger");
+                if (
+                    all_highlights[i]["chart"] &&
+                    all_highlights[i]["chart"].length != 0
+                ) {
+                    var adjustedData = [];
+                    for (
+                        var j = 0;
+                        j < all_highlights[i]["chart"].length;
+                        j++
+                    ) {
+                        var unit = all_highlights[i]["chart"][j];
+                        var date = new Date(unit["date"]);
+                        adjustedData[j] = [date.getTime(), Number((unit['fClose'] * 1).toFixed(2))];
+                    }
+                    renderChart(
+                        adjustedData,
+                        "#highlight_chart_" + i,
+                        appConfig.bond,
+                        false,
+                        3,
+                        200
+                    );
+                } else {
+                    $("#highlight_chart_" + i).text("No Chart Data!");
+                }
             } else if (all_highlights[i]["wherefrom"] == "crypto") {
                 var crypto_carousel = $("#crypto_carousel");
                 var item = $("<div>")
@@ -236,7 +313,7 @@ $(document).ready(function() {
                         } else if (Number(unit[1] * 1) > 0.0001) {
                             unit_price = Number((unit[1] * 1).toFixed(7));
                         } else {
-                            unit_price = Number((unit[1] * 1).toFixed(8));
+                            unit_price = Number((unit[1] * 1).toFixed(10));
                         }
                         adjustedData[j] = [date.getTime(), unit_price];
                     }

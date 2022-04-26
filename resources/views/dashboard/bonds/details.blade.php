@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal">Buy Shares</button>
+                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal">Buy Bonds</button>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
                                         <strong>Coupon PA</strong>
-                                        <span>{{ array_get($data, 'couponPa', '-').'%' }}</span>
+                                        <span>{{ array_get($data, 'couponPa', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Coupon Type</strong>
@@ -131,11 +131,11 @@
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
                                         <strong>Running/Current Yield</strong>
-                                        <span>{{ '$'.array_get($data, 'currentYield', '-') }}</span>
+                                        <span>{{ array_get($data, 'currentYield', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Trading Margin</strong>
-                                        <span>{{ '$'.array_get($data, 'tradingMargin', '-') }}</span>
+                                        <span>{{ array_get($data, 'tradingMargin', '-') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -144,8 +144,8 @@
                     @elseif(array_get($data, 'exchange') == 'ETB')
                     <div class="row">
                         <div class="col-lg-4 col-md-12">
-                            <h4>Bond Name</h4>
-                            <h6>{{ (array_get($data, 'bondName'))?array_get($data, 'bondName', '-'):"No Bond Name." }}</h6>
+                            <h4>Bond Code</h4>
+                            <h6>{{ (array_get($data, 'symbol'))?array_get($data, 'symbol', '-'):"No Bond Code." }}</h6>
                         </div>
                         <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-between">
                             <div class="row">
@@ -344,7 +344,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Below you will find the most recent information about the bond you would like to buy shares from</h6>
+                    <h6>Below you will find the most recent information about the bond you would like to buy units from</h6>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -375,8 +375,8 @@
                     </table>
                     <div class="form-group">
                         <label class="form-label">Shares</label>
-                        <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
-                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
+                        <input type="number" class="form-control" placeholder="Enter the amount of units" required id="shares_amount">
+                        <small  style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
                     <div class="alert-wrapper"></div>
                     <div class="d-flex justify-content-end">
@@ -452,6 +452,10 @@
                             axisBorder: {
                                 show: true
                             },
+                        },
+                        yaxis: {
+                            min: 0,
+                            tickAmount: 5
                         },
                         tooltip: {
                             x: {

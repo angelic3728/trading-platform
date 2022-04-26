@@ -103,7 +103,7 @@ class DashboardController extends Controller
                             else
                                 $total_transaction_price -= $transaction->realPrice;
                         } else {
-                            $transaction->realPrice = $transaction->price;
+                            $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
@@ -147,7 +147,7 @@ class DashboardController extends Controller
                             case 'custom':
                                 $transaction->latest_price = round(CustomFundData::price($transaction->fund->symbol), 3);
                                 $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->fund->symbol), 4);
-                                $transaction->institutional_price = CustomFundData::price($transaction->fund->symbol)?round($transaction->fund->institutionalPrice(CustomFundData::price($transaction->fund->symbol)), 3):null;
+                                $transaction->institutional_price = CustomFundData::price($transaction->fund->symbol) ? round($transaction->fund->institutionalPrice(CustomFundData::price($transaction->fund->symbol)), 3) : null;
                         }
                         // add real price and total prices
                         if ($transaction->fund->gcurrency != "USD") {
@@ -158,7 +158,7 @@ class DashboardController extends Controller
                             else
                                 $total_transaction_price -= $transaction->realPrice;
                         } else {
-                            $transaction->realPrice = $transaction->price;
+                            $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
@@ -183,7 +183,7 @@ class DashboardController extends Controller
                             case 'custom':
                                 $transaction->latest_price = CustomBondData::price($transaction->bond->symbol);
                                 $transaction->change_percentage = CustomBondData::changePercentage($transaction->bond->symbol);
-                                $transaction->institutional_price = CustomBondData::price($transaction->bond->symbol)?round($transaction->bond->institutionalPrice(CustomBondData::price($transaction->bond->symbol)), 3):null;
+                                $transaction->institutional_price = CustomBondData::price($transaction->bond->symbol) ? round($transaction->bond->institutionalPrice(CustomBondData::price($transaction->bond->symbol)), 3) : null;
                         }
                         // add real price and total prices
                         $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
@@ -215,10 +215,24 @@ class DashboardController extends Controller
                             case 'custom':
                                 $transaction->latest_price = CustomCryptoData::price($transaction->crypto->symbol);
                                 $transaction->change_percentage = CustomCryptoData::changePercentage($transaction->crypto->symbol);
-                                $transaction->institutional_price = CustomCryptoData::price($transaction->crypto->symbol)?round($transaction->crypto->institutionalPrice(CustomBondData::price($transaction->crypto->symbol)), 3):null;
+                                $transaction->institutional_price = CustomCryptoData::price($transaction->crypto->symbol) ? round($transaction->crypto->institutionalPrice(CustomBondData::price($transaction->crypto->symbol)), 3) : null;
                         }
                         // add real price and total prices
-                        $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
+                        $token_amount = $transaction->latest_price * $transaction->shares;
+                        $decimal = 2;
+                        if ($token_amount > 0.1)
+                            $decimal = 2;
+                        else if ($token_amount > 0.01)
+                            $decimal = 3;
+                        else if ($token_amount > 0.001)
+                            $decimal = 4;
+                        else if ($token_amount > 0.0001)
+                            $decimal = 5;
+                        else if ($token_amount > 0.00001)
+                            $decimal = 6;
+                        else
+                            $decimal = 10;
+                        $transaction->realPrice = round($token_amount, $decimal);
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;
                         else

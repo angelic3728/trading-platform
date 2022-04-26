@@ -115,7 +115,8 @@ class CryptosController extends Controller
                         ],
                         'numbers' => [
                             'ath' => array_get($crypto_data, 'market_data.ath.usd'),
-                            'institutional_price' => array_get($crypto_data, 'market_data.current_price.usd') ? '$' . $crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null,
+                            'latest_price' => array_get($crypto_data, 'market_data.current_price.usd') ? $crypto->formatPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null,
+                            'institutional_price' => array_get($crypto_data, 'market_data.current_price.usd') ? $crypto->formatPrice($crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd'))) : null,
                             'market_cap' => array_get($crypto_data, 'market_data.market_cap.usd'),
                             'total_volume' => array_get($crypto_data, 'market_data.total_volume.usd'),
                             'total_supply' => array_get($crypto_data, 'market_data.total_supply'),

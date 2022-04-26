@@ -128,6 +128,10 @@
 
                                 <div class="col-sm-6">
                                     <div class="detail">
+                                        <strong>Institutional Price</strong>
+                                        <span>{{ array_get($data, 'numbers.institutional_price', '-') }}</span>
+                                    </div>
+                                    <div class="detail">
                                         <strong>Genesis Date</strong>
                                         <span>{{ array_get($data, 'info.genesis_date', '-') }}</span>
                                     </div>
@@ -138,10 +142,6 @@
                                     <div class="detail">
                                         <strong>Hashing Algorithm</strong>
                                         <span>{{ array_get($data, 'info.hashing_algorithm', '-') }}</span>
-                                    </div>
-                                    <div class="detail">
-                                        <strong>Institutional Price</strong>
-                                        <span>{{ array_get($data, 'numbers.institutional_price', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Website</strong>
@@ -281,7 +281,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Below you will find the most recent information about the crypto you would like to buy shares from</h6>
+                    <h6>Below you will find the most recent information about the crypto you would like to buy units from</h6>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -300,7 +300,7 @@
                                 <td>
                                     <strong>Retail Price</strong>
                                 </td>
-                                <td>${{(array_get($data, "price")*1>10)?number_format(array_get($data, "price"), 2):((array_get($data, "price")*1>1)?number_format(array_get($data, "price"), 3):number_format(array_get($data, "price"), 6))}}</td>
+                                <td>${{(array_get($data, "price")*1>1)?number_format(array_get($data, "price"), 2):((array_get($data, "price")*1>0.1)?number_format(array_get($data, "price"), 3):number_format(array_get($data, "price"), 6))}}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -312,8 +312,8 @@
                     </table>
                     <div class="form-group">
                         <label class="form-label">Amount</label>
-                        <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
-                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
+                        <input type="number" class="form-control" placeholder="Enter the amount of units" required id="shares_amount">
+                        <small style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
                     <div class="alert-wrapper"></div>
                     <div class="d-flex justify-content-end">
@@ -404,6 +404,10 @@
                             axisBorder: {
                                 show: true
                             },
+                        },
+                        yaxis: {
+                            min: 0,
+                            tickAmount: 5
                         },
                         tooltip: {
                             x: {

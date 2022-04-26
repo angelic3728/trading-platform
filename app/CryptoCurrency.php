@@ -67,21 +67,22 @@ class CryptoCurrency extends Model
     public function institutionalPrice($last_price)
     {
         $decimal = 2;
-        if ($last_price > 10) {
+        if ($last_price > 1) {
             $decimal = 2;
-        } else if ($last_price > 1) {
-            $decimal = 3;
         } else if ($last_price > 0.1) {
-            $decimal = 4;
+            $decimal = 3;
         } else if ($last_price > 0.01) {
-            $decimal = 5;
+            $decimal = 4;
         } else if ($last_price > 0.001) {
+            $decimal = 5;
+        } else if ($last_price > 0.0001) {
             $decimal = 6;
         } else {
             $decimal = 10;
         }
-        
-        return round($last_price - ($last_price * ($this->discount_percentage / 100)), $decimal);
+
+        $insti_price = number_format($last_price - ($last_price * ($this->discount_percentage / 100)), $decimal);
+        return $insti_price;
     }
 
 

@@ -82,6 +82,8 @@ function renderChart(adjustedData, index, currency, displayData, counts) {
             }
         },
         yaxis: {
+            min: 0,
+            tickAmount: 5,
             labels: {
                 show: false
             }

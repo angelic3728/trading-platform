@@ -1,5 +1,5 @@
 <footer>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-between">
             <div class="col-sm-auto">
                 © {{ date('Y') }} {{ config('app.name') }}

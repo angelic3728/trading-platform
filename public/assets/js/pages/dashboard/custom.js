@@ -99,7 +99,7 @@ $(document).ready(function() {
             "#chart-timeline-dashbord1",
             appConfig.primary
         );
-    else $("#chart-timeline-dashbord1").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+    else $("#chart-timeline-dashbord1").append("<div class='d-flex justify-content-center align-items-center' style='min-height:335px; width:100%'><h4>No Chart Data!</h4></div>");
 
     if (fundData.length != 0)
         renderChart(
@@ -107,7 +107,7 @@ $(document).ready(function() {
             "#chart-timeline-dashbord2",
             appConfig.fund
         );
-    else $("#chart-timeline-dashbord2").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+    else $("#chart-timeline-dashbord2").append("<div class='d-flex justify-content-center align-items-center' style='min-height:335px; width:100%'><h4>No Chart Data!</h4></div>");
 
     if (bondData.length != 0)
         renderChart(
@@ -115,7 +115,7 @@ $(document).ready(function() {
             "#chart-timeline-dashbord3",
             appConfig.bond
         );
-    else $("#chart-timeline-dashbord3").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+    else $("#chart-timeline-dashbord3").append("<div class='d-flex justify-content-center align-items-center' style='min-height:335px; width:100%'><h4>No Chart Data!</h4></div>");
 
     if (cryptoData.length != 0)
         renderChart(
@@ -123,7 +123,7 @@ $(document).ready(function() {
             "#chart-timeline-dashbord4",
             appConfig.crypto
         );
-    else $("#chart-timeline-dashbord4").append("<div class='d-flex justify-content-center align-items-center' style='min-height:440px;'><h4>No Chart Data!</h4></div>");
+    else $("#chart-timeline-dashbord4").append("<div class='d-flex justify-content-center align-items-center' style='min-height:335px; width:100%'><h4>No Chart Data!</h4></div>");
 
     if ((!stockData || stockData.length == 0) && (fundData || fundData.length == 0) && (bondData || bondData.length == 0) && (cryptoData || crytoData.length == 0))
         $("#month_profit_dash").append("<div class='d-flex justify-content-center align-items-center' style='min-height:470px;'><h4>No Chart Data!</h4></div>");
@@ -483,10 +483,6 @@ $(document).ready(function() {
                     mergeFit: true
                 },
                 1280: {
-                    items: 2,
-                    mergeFit: true
-                },
-                1670: {
                     items: 4,
                     mergeFit: true
                 }
@@ -501,7 +497,7 @@ function renderChart(
     chart_color,
     lineLabel = true,
     width = 3,
-    height = 375
+    height = 340
 ) {
     var options = {
         series: [
@@ -545,6 +541,10 @@ function renderChart(
             labels: {
                 show: lineLabel
             }
+        },
+        yaxis: {
+            min: 0,
+            tickAmount: 5
         },
         yaxis: {
             labels: {
@@ -632,7 +632,7 @@ function renderChart(
 function renderBarChart(data, obj) {
     var options = {
         chart: {
-            height: 395,
+            height: 385,
             type: "bar",
             toolbar: {
                 show: false

@@ -134,6 +134,14 @@
                                 <div class="item">
                                     <div class="row">
                                         <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="bond_carousel">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
                                             <div class="owl-carousel-16 owl-carousel owl-theme" id="crypto_carousel">
                                             </div>
                                         </div>

@@ -296,11 +296,7 @@
                                 <td>
                                     <strong>Retail Price</strong>
                                 </td>
-                                @if(array_get($data, 'currency') == 'USD')
-                                <td>${{array_get($data, "price")}}</td>
-                                @else
-                                <td>{{array_get($data, "price")}}p</td>
-                                @endif
+                                <td>{{ array_get($data, 'numbers.latest_price', '-') }}</td>
                             </tr>
                             <tr>
                                 <td>
@@ -316,7 +312,7 @@
                     <div class="form-group">
                         <label class="form-label">Shares</label>
                         <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
-                        <small>Your account manager will contact you as soon as possible to confirm best price.</small>
+                        <small style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
                     <div class="alert-wrapper"></div>
                     <div class="d-flex justify-content-end">
@@ -391,6 +387,10 @@
                             axisBorder: {
                                 show: true
                             },
+                        },
+                        yaxis: {
+                            min: 0,
+                            tickAmount: 5
                         },
                         tooltip: {
                             x: {

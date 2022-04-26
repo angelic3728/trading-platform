@@ -279,12 +279,12 @@ $(".show-hide").show();
 $(".show-hide span").addClass("show");
 
 $(".show-hide span").click(function() {
-    if ($(this).hasClass("show")) {
-        $('input[name="login[password]"]').attr("type", "text");
-        $(this).removeClass("show");
+    if ($("#twc_pwd").hasClass("show_as_pwd")) {
+        $("#twc_pwd").attr("type", "text");
+        $("#twc_pwd").removeClass("show_as_pwd");
     } else {
-        $('input[name="login[password]"]').attr("type", "password");
-        $(this).addClass("show");
+        $("#twc_pwd").attr("type", "password");
+        $("#twc_pwd").addClass("show_as_pwd");
     }
 });
 $('form button[type="submit"]').on("click", function() {
@@ -607,7 +607,6 @@ $(document).ready(function() {
 
     // add back ticker feeds
     for (var i = 0; i < ticker_data.length; i++) {
-        debugger;
         var ticker_item = $("<li>");
         if (ticker_data[i]["wherefrom"] == "stock") {
             var item_content = $("<a>")
@@ -918,6 +917,10 @@ $(document).ready(function() {
                 }
             },
             yaxis: {
+                min: 0,
+                tickAmount: 5
+            },
+            yaxis: {
                 labels: {
                     show: false
                 },
@@ -961,7 +964,10 @@ $(document).ready(function() {
                 if (artiles.length > 0) {
                     for (var i = 0; i < artiles.length; i++) {
                         $(".news-" + i).css("display", "block");
-                        $(".news-img-" + i).attr("src", artiles[i]["image"]);
+                        if(artiles[i]["image"] == 'https://cloud.iexapis.com/v1/news/image/1cIjKAGx5QKpUuzPWkij')
+                            $(".news-img-" + i).attr("src", "/assets/images/pros/default_news.png");
+                        else
+                            $(".news-img-" + i).attr("src", artiles[i]["image"]);
                         $(".news-link-" + i).attr("href", artiles[i]["url"]);
                         $(".news-date-" + i).html(
                             dateStr(new Date(artiles[i].datetime))
@@ -1132,3 +1138,4 @@ $(".ticker2").on("mouseleave", function() {
     $(".ticker").css("animation-play-state", "running");
     $(".ticker").css("-webkit-animation-play-state", "running");
 });
+

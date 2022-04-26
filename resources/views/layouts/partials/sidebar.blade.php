@@ -12,8 +12,8 @@
                     @else
                     <img src="{{asset('assets/images/avtar/default.png')}}" class="img-90 rounded-circle" style="display: initial;" />
                     @endif
-                    <h6 class="mt-3 f-16 f-w-800" style="color:#24695c">Account Manager</h6>
-                    <h6 class="mt-1 f-16 f-w-800">{{ $account_manager->first_name." ".$account_manager->last_name }}</h6>
+                    <h6 class="mt-3 f-16 f-w-600" style="color:#24695c">Account Manager</h6>
+                    <h6 class="mt-1 f-16 f-w-700">{{ $account_manager->first_name." ".$account_manager->last_name }}</h6>
                     <h6 class="mt-3 f-14 f-w-600" style="color:#24695c">{{ $account_manager->email }}</h6>
                     <h6 class="mt-1 f-14 f-w-600" style="color:#24695c">{{ $account_manager->phone }}</h6>
                     <h6 class="mt-1 f-14 f-w-600 text-secondary">{{ array_get($account_manager->extra, 'availability', 'Unknown') }}</h6>
@@ -42,7 +42,7 @@
                         <div class="mobile-back text-end link-nav"><span>Back</span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('overview') ? 'active' : '' }}" href="{{ route('overview') }}"><i data-feather="home"></i><span>Dashboard</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('overview') ? 'active' : '' }}" href="{{ route('overview') }}"><i data-feather="bar-chart"></i><span>Dashboard</span></a>
                     </li>
                     <li class="dropdown">
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('transactions') ? 'active' : '' }}" href="{{ route('transactions') }}"><i data-feather="zap"></i><span>Transactions</span></a>
@@ -51,16 +51,16 @@
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('documents.index') ? 'active' : '' }}" href="{{ route('documents.index') }}"><i data-feather="file-text"></i><span>Documents</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('stocks.search') ? 'active' : '' }}" href="{{ route('stocks.search') }}"><i data-feather="bar-chart"></i><span>All Stocks</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('stocks.search') ? 'active' : '' }}" href="{{ route('stocks.search') }}"><i class="icofont icofont-ui-home" style="margin-right:15px;"></i><span>All Stocks</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('funds.search') ? 'active' : '' }}" href="{{ route('funds.search') }}"><i data-feather="bar-chart"></i><span>All Funds</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('funds.search') ? 'active' : '' }}" href="{{ route('funds.search') }}"><i class="fa fa-cloud" style="margin-right:15px;"></i><span>All Funds</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('bonds.search') ? 'active' : '' }}" href="{{ route('bonds.search') }}"><i data-feather="aperture"></i><span>All Bonds</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('bonds.search') ? 'active' : '' }}" href="{{ route('bonds.search') }}"><i class="fa fa-certificate" style="margin-right:15px;"></i><span>All Bonds</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i data-feather="bar-chart"></i><span>All Crypto</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i class="fa fa-btc" style="margin-right:15px;"></i><span>All Cryptos</span></a>
                     </li>
                 </ul>
             </div>

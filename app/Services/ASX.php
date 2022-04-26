@@ -219,8 +219,8 @@ class ASX
         foreach ($x1->query("//ul[@id='counter']/li") as $li) {
             $span = $x1->query('./div/span', $li);
             $type = $x1->query('./div/span/i', $li);
-            $code = $span->item(0)->nodeValue;
-            if ($code == $code) {
+            $mcode = $span->item(0)->nodeValue;
+            if ($mcode == $code) {
                 $result['code'] = $span->item(0)->nodeValue;
                 $result['issuer'] = trim($span->item(1)->nodeValue);
                 $result['maturity_date'] = $span->item(2)->nodeValue;

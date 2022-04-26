@@ -13,6 +13,7 @@ Login
         <div class="row">
             <div class="col-12">
                 <div class="login-card">
+                    <img class="m-b-30" src="{{asset('assets/images/logo/logo.png')}}" alt="logo" style="width: 280px;">
                     <form class="theme-form login-form" method="POST" action="{{ route('login') }}">
                         @csrf
                         <h4>Login</h4>
@@ -28,7 +29,7 @@ Login
                             <label>Password</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="icon-lock"></i></span>
-                                <input class="form-control" type="password" name="password" required="" placeholder="*********" />
+                                <input class="form-control" type="password" id="twc_pwd" name="password" required="" placeholder="*********" />
                                 <div class="show-hide"><span class="show"> </span></div>
                             </div>
                         </div>

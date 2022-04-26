@@ -5,14 +5,14 @@
       <h1>Privacy Policy & Cookies</h1>
       <div class="card">
           <div class="card-body">
-              At Hoover Hyfield, accessible from <a href="https://hooverhyfield.com">hooverhyfield.com</a>, one of our main priorities is the
+              At Watchstone Capital, accessible from <a href="https://hooverhyfield.com">hooverhyfield.com</a>, one of our main priorities is the
               privacy of our visitors. This Privacy Policy document contains types of information that
-              are collected and recorded by Hoover Hyfield and how we use it. If you have additional
+              are collected and recorded by Watchstone Capital and how we use it. If you have additional
               questions or require more information about our Privacy Policy, do not hesitate to contact
               us through email at <a href="mailto:info@hooverhyfield.com.">info@hooverhyfield.com.</a><br><br>
 
             <h3>1. Log Files </h3>
-              Hoover Hyfield follows a standard procedure of using log files. These files log visitors
+              Watchstone Capital follows a standard procedure of using log files. These files log visitors
               when they visit websites. All hosting companies do this and a part of hosting services'
               analytics. The information collected by log files includes internet protocol, addresses,
               browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages,
@@ -23,7 +23,7 @@
               <br><br>
 
             <h3>2. Cookies and Web Beacons</h3>
-              Like any other website, Hoover Hyfield uses 'cookies'. These cookies are used to store
+              Like any other website, Watchstone Capital uses 'cookies'. These cookies are used to store
               information including visitors' preferences, and the pages on the website that the visitor
               accessed or visited. The information is used to optimize the users' experience by
               customizing our web page content based on visitors' browser type and/or other
@@ -32,17 +32,17 @@
 
             <h3>3. Privacy Policies</h3>
               You may consult this list to find the Privacy Policy for each of the advertising partners of
-              Hoover Hyfield. Third-party ad servers or ad networks uses technologies like cookies,
+              Watchstone Capital. Third-party ad servers or ad networks uses technologies like cookies,
               JavaScript, or Web Beacons that are used in their respective advertisements and links
-              that appear on Hoover Hyfield, which are sent directly to users' browser. They
+              that appear on Watchstone Capital, which are sent directly to users' browser. They
               automatically receive your IP address when this occurs. These technologies are used to
               measure the effectiveness of their advertising campaigns and/or to personalize the
-              advertising content that you see on websites that you visit. Note that Hoover Hyfield has
+              advertising content that you see on websites that you visit. Note that Watchstone Capital has
               no access to or control over these cookies that are used by third-party advertisers.<br><br>
 
             <h3>4. Third Party Privacy Policies</h3>
 
-              Hoover Hyfield Privacy Policy does not apply to other advertisers or websites. Thus, we
+              Watchstone Capital Privacy Policy does not apply to other advertisers or websites. Thus, we
               are advising you to consult the respective Privacy Policies of these third-party ad servers
               for more detailed information. It may include their practices and instructions about how to
               opt-out of certain options. You may find a complete list of these Privacy Policies and their
@@ -53,14 +53,14 @@
             <h3>5. Children's Information</h3>
               Another part of our priority is adding protection for children while using the internet. We
               encourage parents and guardians to observe, participate in, and/or monitor and guide
-              their online activity. Hoover Hyfield does not knowingly collect any Personal Identifiable
+              their online activity. Watchstone Capital does not knowingly collect any Personal Identifiable
               Information from children under the age of 16. If you think that your child provided this
               kind of information on our website, we strongly encourage you to contact us immediately
               and we will do our best efforts to promptly remove such information from our records.<br><br>
 
             <h3>6. Online Privacy Policy Only</h3>
               This Privacy Policy applies only to our online activities and is valid for visitors to our
-              website with regards to the information that they shared and/or collect in Hoover Hyfield.
+              website with regards to the information that they shared and/or collect in Watchstone Capital.
               This policy is not applicable to any information collected offline or via channels other than
               this website.<br><br>
 

@@ -290,9 +290,7 @@ class IEX
         $data->each(function ($item, $key) use ($news) {
 
             if (isset($item['news'])) {
-
                 foreach ($item['news'] as $article) {
-
                     $news->push($article);
                 }
             }
@@ -311,7 +309,7 @@ class IEX
         /**
          * Limit the results
          */
-        $news = $news->take($limit);
+        // $news = $news->take($limit);
 
         /**
          * Return news

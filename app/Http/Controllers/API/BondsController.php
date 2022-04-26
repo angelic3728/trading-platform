@@ -172,7 +172,7 @@ class BondsController extends Controller
         /**
          * Get all bonds and cache for an hour
          */
-        $bonds = Bond::select('symbol', 'company_name')->get();
+        $bonds = Bond::select('symbol', 'name')->get();
 
         foreach ($bonds as $bond) {
             $bond['wherefrom'] = 'bonds';

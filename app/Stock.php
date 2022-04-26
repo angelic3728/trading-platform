@@ -126,7 +126,7 @@ class Stock extends Model
     public function institutionalPrice($last_price)
     {
 
-        return round($last_price - ($last_price * ($this->discount_percentage / 100)), 2);
+        return number_format($last_price - ($last_price * ($this->discount_percentage / 100)), 2);
     }
 
     /**

@@ -370,9 +370,7 @@ class StockController extends Controller
         /**
          * Get all stocks and cache for an hour
          */
-        $stocks = Cache::remember('stocks:all', 60, function () {
-            return Stock::select('symbol', 'company_name', 'exchange')->get();
-        });
+        $stocks = Stock::select('symbol', 'company_name', 'exchange')->get();
 
         foreach($stocks as $stock) {
             $stock['wherefrom'] = 'stocks';

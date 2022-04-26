@@ -213,21 +213,26 @@ $toggle_nav_top = $("#sidebar-toggle");
 $toggle_nav_top.click(function() {
     $this = $(this);
     $nav = $(".main-nav");
+    if($nav.hasClass('close_icon')) {
+        $('#ad1_container').css('width', 'calc(100% - 420px)');
+    } else {
+        $('#ad1_container').css('width', 'calc(100% - 130px)');
+    }
     $nav.toggleClass("close_icon");
     $header.toggleClass("close_icon");
 });
 
-$(window).resize(function() {
-    $nav = $(".main-nav");
-    $header = $(".page-main-header");
-    $toggle_nav_top = $("#sidebar-toggle");
-    $toggle_nav_top.click(function() {
-        $this = $(this);
-        $nav = $(".main-nav");
-        $nav.toggleClass("close_icon");
-        $header.toggleClass("close_icon");
-    });
-});
+// $(window).resize(function() {
+//     $nav = $(".main-nav");
+//     $header = $(".page-main-header");
+//     $toggle_nav_top = $("#sidebar-toggle");
+//     $toggle_nav_top.click(function() {
+//         $this = $(this);
+//         $nav = $(".main-nav");
+//         $nav.toggleClass("close_icon");
+//         $header.toggleClass("close_icon");
+//     });
+// });
 
 $body_part_side = $(".body-part");
 $body_part_side.click(function() {
