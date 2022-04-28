@@ -606,6 +606,7 @@ function renderChart(
             {
                 breakpoint: 551,
                 options: {
+
                     grid: {
                         padding: {
                             bottom: 10
@@ -617,7 +618,7 @@ function renderChart(
                 breakpoint: 535,
                 options: {
                     chart: {
-                        height: (lineLabel)?280:250
+                        height: 250
                     }
                 }
             }
@@ -690,6 +691,16 @@ function renderBarChart(data, obj) {
                 }
             }
         },
+        responsive: [
+            {
+                breakpoint: 575,
+                options: {
+                    chart: {
+                        height: 250
+                    }
+                }
+            }
+        ],
         colors: [appConfig.secondary]
     };
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use Redirect;
 use Codenixsv\CoinGeckoApi\CoinGeckoClient;
 use Carbon\Carbon;
 
@@ -271,7 +272,7 @@ class IEX
         return $result['prices'];
     }
 
-    public function getRecentNews(array $symbols, int $limit)
+    public function getRecentNews(array $symbols, int $limit = 18)
     {
 
         /**
@@ -309,7 +310,7 @@ class IEX
         /**
          * Limit the results
          */
-        // $news = $news->take($limit);
+        $news = $news->take($limit);
 
         /**
          * Return news

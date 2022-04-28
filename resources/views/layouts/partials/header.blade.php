@@ -5,13 +5,14 @@
       <div class="dark-logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" src="{{asset('assets/images/logo/dark-logo.png')}}" alt=""></a></div>
       <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"> </i></div>
     </div>
-    <div class="d-flex col header-wrapper">
+    <div class="d-flex col header-wrapper" style="justify-content: space-between;">
       <div class="left-menu-header" style="padding: 24px 10px;">
         <ul style="width: 210px;">
           <li>
             <div class="search-form">
               <div class="search-bg"><i class="fa fa-search"></i>
-                <input type="text" id="search_stocks" placeholder="Stocks, Funds Bonds, Cryptos" style="font-size: 13px; width:200px; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
+                <input type="text" class="search_stocks d-none d-sm-block" placeholder="Stocks, Funds Bonds, Cryptos" style="font-size: 13px; width:200px; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
+                <input type="text" class="search_stocks d-sm-none" placeholder="Search..." style="font-size: 13px; width:150px!important; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
                 <div class="search-results d-none shadow shadow-showcase bg-white flex-column" style="position: absolute; top:25px; z-index:99; padding:10px 15px; min-width:100%;">
                 </div>
               </div>
@@ -19,7 +20,7 @@
           </li>
         </ul>
       </div>
-      <div class="nav-ticker col p-0 sm:d-none">
+      <div class="nav-ticker col p-0 d-none d-sm-block">
         <div class="ticker-wrap">
           <div class="ticker">
             <ul class="ticker__item" id="forward_ticker_wrapper">
@@ -42,7 +43,7 @@
           </li>
         </ul>
       </div>
+      <div class="d-lg-none mobile-toggle pull-right w-auto p-t-25 p-l-5"><i data-feather="more-horizontal"></i></div>
     </div>
-    <div class="d-lg-none mobile-toggle pull-right w-auto"><i data-feather="more-horizontal"></i></div>
   </div>
 </div>

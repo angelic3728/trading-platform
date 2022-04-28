@@ -5,7 +5,6 @@
     <img class="m-b-30" src="{{asset('assets/images/logo/logo.png')}}" alt="logo" style="width: 250px;">
     <div class="card" style="min-width: 400px; max-height:300px;">
         <div class="card-header p-b-20"><h6><span>Reset Password</span></h6></div>
-
         <div class="card-body p-t-0">
             @if (session('status'))
             <div class="alert alert-success" role="alert">

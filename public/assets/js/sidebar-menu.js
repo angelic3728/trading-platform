@@ -242,9 +242,9 @@ $body_part_side.click(function() {
 });
 
 // document sidebar
-$(".mobile-sidebar").click(function() {
-    $(".document").toggleClass("close");
-});
+// $(".mobile-sidebar").click(function() {
+//     $(".document").toggleClass("close");
+// });
 
 // $(".mobile-sidebar").click(function(){
 //   $("p").toggleClass("main");

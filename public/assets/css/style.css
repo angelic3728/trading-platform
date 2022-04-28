@@ -103,6 +103,7 @@
 /**=====================
      01. General CSS Start
 ==========================**/
+
 html {
     max-width: 100vw;
     overflow-x: hidden;
@@ -15706,7 +15707,6 @@ strong ~ p {
 
 .login-card {
     background-color: rgba(36, 105, 92, 0.1);
-    height: 100vh;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -15724,7 +15724,7 @@ strong ~ p {
 
 .login-form {
     padding: 30px;
-    width: 450px;
+    width: 380px;
     background-color: #fff;
     -webkit-box-pack: center;
     -ms-flex-pack: center;

@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="container login d-flex flex-column justify-content-center align-items-center" style="height:100vh;">
-    <div class="card mt-10 p-5">
+    <img class="m-b-30" src="{{asset('assets/images/logo/logo.png')}}" alt="logo" style="width: 280px;">
+    <div class="card p-5">
         <div class="card-header">Reset Password</div>
         <div class="card-body">
             <form method="POST" action="{{ route('password.update') }}">

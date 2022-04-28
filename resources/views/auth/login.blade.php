@@ -8,7 +8,7 @@ Login
 @endpush
 
 @section('content')
-<section>
+<section class="login-wrapper">
     <div class="container-fluid p-0">
         <div class="row">
             <div class="col-12">
@@ -52,6 +52,14 @@ Login
     </div>
 </section>
 @push('scripts')
+<script>
+    $(document).ready(function() {
+        // set app height
+        const innerHeight = window.innerHeight;
+        $('body').css('height', innerHeight+"px");
+        $('.login-card').css('min-height', innerHeight+"px");        
+    });
+</script>
 @endpush
 
 @endsection

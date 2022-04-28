@@ -31,6 +31,7 @@
     z-index: 8;
     position: fixed;
     margin-left: -27px;
+    padding-top: 10px;
 }
 
 #ad2_container {
@@ -56,13 +57,6 @@
 .scrollY {
     overflow-x: hidden;
     overflow-y: scroll;
-}
-
-@media (max-width: 1629px) {
-    .card.profile-greeting {
-        padding-top: 12px !important;
-        padding-bottom: 12px !important;
-    }
 }
 
 @media (max-width: 1200px) {
@@ -197,7 +191,63 @@ table .py-03 {
 
 /* responsive part */
 
+@media screen and (max-width: 575px) {
+    .border-tab.nav-tabs .nav-item {
+        width: initial !important;
+    }
+    .amount-board {
+        width: 50%;
+    }
+
+    .tabbed-card ul.border-tab.nav-tabs .nav-item {
+        float: left;
+    }
+
+    .tabbed-card ul.border-tab.nav-tabs .nav-item .nav-link {
+        padding: 18px 4px;
+        font-size: 13px;
+    }
+
+    .header-wrapper {
+        width: calc(100% - 300px);
+    }
+
+    .left-menu-header ul {
+        width: 160px!important;
+    }
+
+    .left-menu-header {
+        padding: 24px 0px!important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .page-main-header .main-header-right .main-header-left {
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    footer {
+        margin-left: 0px;
+    }
+}
+
+@media screen and (max-width: 1470px) {
+    .page-main-header .main-header-right .left-menu-header {
+        flex: 0;
+    }
+}
+
 @media (max-width: 1580px) {
+
+    body {
+        zoom: 85%;
+    }
+
+    .modal-backdrop {
+        zoom: 120%;
+    }
 
     .page-wrapper.compact-wrapper .page-body-wrapper .page-body {
         margin-left: 230px;
@@ -205,7 +255,7 @@ table .py-03 {
 
     .dashboard-content-wrapper {
         padding-right: 105px;
-        padding-top: 70px;
+        padding-top: 90px;
     }
 
     .page-body-wrapper footer {
@@ -237,38 +287,8 @@ table .py-03 {
     }
 }
 
-@media screen and (max-width: 767px) {
-    .page-main-header .main-header-right .main-header-left {
-        width: auto;
-    }
-}
-
 @media (max-width: 1200px) {
     .dashboard-content-wrapper {
         padding: 0px 15px;
-    }
-}
-
-@media screen and (max-width: 1580px) {
-    body {
-        zoom: 85%;
-    }
-}
-
-@media screen and (max-width: 1470px) {
-    .page-main-header .main-header-right .left-menu-header {
-        flex: 0;
-    }
-}
-
-@media screen and (max-width: 767px) {
-    .page-main-header .main-header-right .left-menu-header ul li .search-form input {
-        width: 200px;
-    }
-}
-
-@media screen and (max-width: 575px) {
-    .border-tab.nav-tabs .nav-item {
-        width: initial !important;
     }
 }

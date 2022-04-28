@@ -33,7 +33,7 @@ class NewsController extends Controller
         /**
          * Get recent news
          */
-        $news = IEX::getRecentNews($symbols, 100);
+        $news = IEX::getRecentNews($symbols);
 
         /**
          * Return news

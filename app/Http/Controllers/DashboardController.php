@@ -196,7 +196,7 @@ class DashboardController extends Controller
                     if ($transaction->crypto) {
                         // add detailed info
                         $transaction->symbol = $transaction->crypto->symbol;
-                        $transaction->company_name = $transaction->crypto->company_name;
+                        $transaction->name = $transaction->crypto->name;
                         $transaction->gcurrency = $transaction->crypto->gcurrency;
                         $transaction->data_source = $transaction->crypto->data_source;
                         switch ($transaction->crypto->data_source) {

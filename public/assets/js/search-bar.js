@@ -42,7 +42,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#search_stocks").on("input", function() {
+    $(".search_stocks").on("input", function() {
         $(".search-results").empty();
         var search_query = this.value;
         var search_regex = new RegExp(search_query, "i");

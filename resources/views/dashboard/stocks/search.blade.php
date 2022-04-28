@@ -176,7 +176,6 @@
                             <th scope="col">Symbol</th>
                             <th scope="col">Company Name</th>
                             <th scope="col">Exchange</th>
-                            <th scope="col">Currency</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -186,7 +185,6 @@
                             <td width="10%">{{ $stock->symbol }}</td>
                             <td>{{ $stock->company_name }}</td>
                             <td>{{ $stock->exchange }}</td>
-                            <td>{{ $stock->currency }}</td>
                             <td class="text-right" nowrap>
                                 <a type="button" class="btn btn-outline-success btn-xs" href="{{ route('stocks.show', ['symbol' => $stock->symbol]) }}">See More</a>
                             </td>

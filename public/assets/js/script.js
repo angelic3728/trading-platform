@@ -960,14 +960,20 @@ $(document).ready(function() {
             method: "get",
             url: "/api/news?symbols=" + joinedSymbols + "&&limit=4",
             success: function(res) {
+                console.log(res.data);
                 var artiles = res.data;
                 if (artiles.length > 0) {
                     for (var i = 0; i < artiles.length; i++) {
                         $(".news-" + i).css("display", "block");
-                        if(artiles[i]["image"] == 'https://cloud.iexapis.com/v1/news/image/1cIjKAGx5QKpUuzPWkij')
+                        if (
+                            artiles[i]["image"] == "https://cloud.iexapis.com/v1/news/image/1cIjKAGx5QKpUuzPWkij"
+                        )
                             $(".news-img-" + i).attr("src", "/assets/images/pros/default_news.png");
                         else
-                            $(".news-img-" + i).attr("src", artiles[i]["image"]);
+                            $(".news-img-" + i).attr(
+                                "src",
+                                artiles[i]["image"]
+                            );
                         $(".news-link-" + i).attr("href", artiles[i]["url"]);
                         $(".news-date-" + i).html(
                             dateStr(new Date(artiles[i].datetime))
@@ -1138,4 +1144,3 @@ $(".ticker2").on("mouseleave", function() {
     $(".ticker").css("animation-play-state", "running");
     $(".ticker").css("-webkit-animation-play-state", "running");
 });
-

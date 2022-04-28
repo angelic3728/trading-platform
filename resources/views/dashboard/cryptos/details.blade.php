@@ -65,8 +65,8 @@
                         </div>
                         <div class="d-flex justify-content-end p-10" id="range_btn_group">
                             <div class="btn-group btn-group-square" id="range_group" role="group">
-                                <button class="btn btn-outline-dark active" type="button" onclick="updateChart('1d', this)" style="padding: 0.3rem 0.8rem;">1d</button>
-                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('5d', this)" style="padding: 0.3rem 0.8rem;">5d</button>
+                                <button class="btn btn-outline-dark" type="button" onclick="updateChart('1d', this)" style="padding: 0.3rem 0.8rem;">1d</button>
+                                <button class="btn btn-outline-dark active" type="button" onclick="updateChart('5d', this)" style="padding: 0.3rem 0.8rem;">5d</button>
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('1m', this)" style="padding: 0.3rem 0.8rem;">1m</button>
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('6m', this)" style="padding: 0.3rem 0.8rem;">6m</button>
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('ytd', this)" style="padding: 0.3rem 0.8rem;">ytd</button>
@@ -340,7 +340,7 @@
             'height': $('.chart-content').innerHeight() + "px"
         });
         $(".chart-content").css("opacity", "0.3");
-        renderChart('1d');
+        renderChart('5d');
 
     });
 

@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-xl-12 col-md-6 box-col-6">
                             <div class="card profile-greeting p-t-25 p-b-25">
-                                <div class="card-body text-center p-t-10 p-b-10">
+                                <div class="card-body text-center" style="padding: 10px!important;">
                                     <h3 class="font-light f-w-600">Welcome back {{auth()->user()->first_name}}!</h3>
                                     <p class="font-light" style="font-size: 11px;">Your account manager is available from 05:00am to 17:00pm Monday to Friday. If you need to speak to somebody outside of these hours, please click below.</p>
                                     <a class="btn btn-light" href="mailto://{{ config('app.email') }}">Click Here</a>
@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 rate-sec">
+                        <div class="col-xl-6 col-md-3 col-sm-6 rate-sec amount-board">
                             <div class="card income-card card-primary  p-t-10 p-b-10">
                                 <div class="card-body text-center">
                                     <div class="round-box">
@@ -94,11 +94,11 @@
                                         @endif
                                         <span class="counter" id="total_profile_value"></span>
                                     </h5>
-                                    <p>Total Portfolio Value</p>
+                                    <p>Portfolio Value</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 rate-sec">
+                        <div class="col-xl-6 col-md-3 col-sm-6 rate-sec amount-board">
                             <div class="card income-card card-secondary p-t-10 p-b-10">
                                 <div class="card-body text-center">
                                     <div class="round-box">
@@ -164,8 +164,7 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link f-w-500" data-bs-toggle="tab" href="#crypto_chart" role="tab" aria-controls="crypto-chart" aria-selected="true" style="cursor: pointer;">
-                                            <i class="fa fa-btc"></i>
-                                            Cryptos
+                                            <i class="fa fa-btc"></i>Cryptos
                                         </a>
                                         <div class="material-border"></div>
                                     </li>
@@ -234,7 +233,7 @@
                                         <div class="tab-content" id="portfolio_content">
                                             <div class="tab-pane fade active show" id="stock_portfolio" role="tabpanel" aria-labelledby="stock-portfolio">
                                                 <div class="table-responsive" style="min-height: 350px; width:100%;">
-                                                    <table class="table table-responsive-sm">
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-sm-none">
                                                         <thead>
                                                             <tr>
                                                                 <th style="font-size:13px;">Company</th>
@@ -246,7 +245,7 @@
                                                                 <th class="text-center table-secondary" style="right: 0px; width:120px; position: sticky;">Action</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody class="d-sm-none">
                                                             @if(count($transactions) != 0)
                                                             <?php $cnt = 0 ?>
                                                             @foreach($transactions as $transaction)
@@ -285,11 +284,57 @@
                                                             @endif
                                                         </tbody>
                                                     </table>
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-none d-sm-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="font-size:13px;">Company</th>
+                                                                <th style="font-size:13px; min-width:100px;">Last Price</th>
+                                                                <th style="font-size:13px;">Change</th>
+                                                                <th style="font-size:13px; min-width:100px;">Inst. Price</th>
+                                                                <th style="font-size:13px;">Shares</th>
+                                                                <th style="font-size:13px;">Value</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:120px; position: sticky;">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if(count($transactions) != 0)
+                                                            @foreach($transactions as $transaction)
+                                                            @if($transaction->wherefrom == 0)
+                                                            <tr>
+                                                                <td class="py-03">
+                                                                    <a href="{{ route('stocks.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
+                                                                    </a>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">
+                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{$transaction->shares}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                </td>
+                                                            </tr>
+                                                            @endif
+                                                            @endforeach
+                                                            @else
+                                                                <tr>
+                                                                    <td colspan="7" class="text-center">No Data!</td>
+                                                                </tr>
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="fund_portfolio" role="tabpanel" aria-labelledby="fund-portfolio">
                                                 <div class="table-responsive" style="min-height: 350px; width:100%;">
-                                                    <table class="table table-responsive-sm">
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-sm-none">
                                                         <thead>
                                                             <tr>
                                                                 <th style="font-size:13px;">Company</th>
@@ -309,7 +354,7 @@
                                                             <?php $cnt++; ?>
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('funds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
+                                                                    <a href="{{ route('bonds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
                                                                         <span class="f-w-600">{{$transaction->symbol}}</span>
                                                                         <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
                                                                     </a>
@@ -340,11 +385,103 @@
                                                             @endif
                                                         </tbody>
                                                     </table>
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-none d-sm-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="font-size:13px;">Company</th>
+                                                                <th style="font-size:13px; min-width:100px;">Last Price</th>
+                                                                <th style="font-size:13px;">Change</th>
+                                                                <th style="font-size:13px; min-width:100px;">Inst. Price</th>
+                                                                <th style="font-size:13px;">Shares</th>
+                                                                <th style="font-size:13px;">Value</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:120px;">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if(count($transactions) != 0)
+                                                            @foreach($transactions as $transaction)
+                                                            @if($transaction->wherefrom == 1)
+                                                            <tr>
+                                                                <td class="py-03">
+                                                                    <a href="{{ route('funds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
+                                                                    </a>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">
+                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->fund->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ $transaction->shares }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; right:0px;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
+                                                                </td>
+                                                            </tr>
+                                                            @endif
+                                                            @endforeach
+                                                            @else
+                                                            <tr>
+                                                                <td colspan="7" class="text-center">No Data!</td>
+                                                            </tr>
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="bond_portfolio" role="tabpanel" aria-labelledby="bond-portfolio">
                                                 <div class="table-responsive" style="min-height: 350px; width:100%;">
-                                                    <table class="table table-responsive-sm">
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-sm-none">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="font-size:13px;">Bond</th>
+                                                                <th style="font-size:13px; min-width:100px;">Last Price</th>
+                                                                <th style="font-size:13px;">Change</th>
+                                                                <th style="font-size:13px; min-width:100px;">Inst. Price</th>
+                                                                <th style="font-size:13px;">Shares</th>
+                                                                <th style="font-size:13px;">Value</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:120px;">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if(count($transactions) != 0)
+                                                            @foreach($transactions as $transaction)
+                                                            @if($transaction->wherefrom == 2)
+                                                            <tr>
+                                                                <td class="py-03">
+                                                                    <a href="{{ route('bonds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->name}}</p>
+                                                                    </a>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">
+                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($transaction->change_percentage)?(($transaction->change_percentage*100)."%"):"-"}}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->bond->formatPrice($transaction->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ $transaction->shares }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; right:0px;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Sell</button>
+                                                                </td>
+                                                            </tr>
+                                                            @endif
+                                                            @endforeach
+                                                            @else
+                                                            <tr>
+                                                                <td colspan="7" class="text-center">No Data!</td>
+                                                            </tr>
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-none d-sm-table">
                                                         <thead>
                                                             <tr>
                                                                 <th style="font-size:13px;">Bond</th>
@@ -379,8 +516,8 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ $transaction->shares }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; right:0px;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -399,7 +536,7 @@
                                             </div>
                                             <div class="tab-pane fade" id="crypto_portfolio" role="tabpanel" aria-labelledby="crypto-portfolio">
                                                 <div class="table-responsive" style="min-height: 350px; width:100%;">
-                                                    <table class="table table-responsive-sm">
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-sm-none">
                                                         <thead>
                                                             <tr>
                                                                 <th style="font-size:13px;">Coin</th>
@@ -450,6 +587,52 @@
                                                             @endif
                                                         </tbody>
                                                     </table>
+                                                    <table style="white-space: nowrap;" class="table table-responsive-sm d-none d-sm-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="font-size:13px;">Coin</th>
+                                                                <th style="font-size:13px; min-width:100px;">Last Price</th>
+                                                                <th style="font-size:13px;">Change</th>
+                                                                <th style="font-size:13px; min-width:100px;">Inst. Price</th>
+                                                                <th style="font-size:13px;">Amount</th>
+                                                                <th style="font-size:13px;">Value</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:120px;">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @if(count($transactions) != 0)
+                                                            @foreach($transactions as $transaction)
+                                                            @if($transaction->wherefrom == 3)
+                                                            <tr>
+                                                                <td class="py-03">
+                                                                    <a href="{{ route('cryptos.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->name}}</p>
+                                                                    </a>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">
+                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($transaction->change_percentage)?(($transaction->change_percentage)."%"):"-"}}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->institutional_price:"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ $transaction->shares }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; right:0px;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
+                                                                </td>
+                                                            </tr>
+                                                            @endif
+                                                            @endforeach
+                                                            @else
+                                                            <tr>
+                                                                <td colspan="7" class="text-center">No Data!</td>
+                                                            </tr>
+                                                            @endif
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                             <div class="modal fade" id="tradeModal" tabindex="-1" role="dialog" aria-labelledby="Trade Shares Modal" aria-hidden="true">
@@ -461,7 +644,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <h6>Below you will find the most recent information about the stock you would like to <span id="trade_type">buy</span> shares from</h6>
-                                                            <table class="table">
+                                                            <table style="white-space: nowrap;" class="table">
                                                                 <tbody>
                                                                     <tr>
                                                                         <td>
@@ -541,8 +724,8 @@
                             <a class="btn btn-outline-success btn-xs" href="{{ route('bonds.search') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                        <div class="table-responsive" style="height: 324px; width:100%;">
-                            <table class="table table-responsive-sm">
+                        <div class="table-responsive" style="height: 354px; width:100%;">
+                            <table style="white-space: nowrap;" class="table table-responsive-sm">
                                 <thead>
                                     <tr>
                                         <th class="text-center">Name</th>
@@ -584,13 +767,13 @@
                             <a class="btn btn-outline-success btn-xs" href="{{ route('cryptos.search') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                            <div class="table-responsive" style="height: 350px; width:100%;">
-                                <table class="table table-responsive-sm table-sm">
+                            <div class="table-responsive" style="height: 380px; width:100%; overflow-y:hidden;">
+                                <table style="white-space: nowrap;" class="table table-responsive-sm table-sm">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Logo</th>
                                             <th class="text-center">Coin</th>
-                                            <th class="text-center">Current Price</th>
+                                            <th class="text-center" style="width: 200px!important;">Current Price</th>
                                             <th class="text-center">Market Cap</th>
                                         </tr>
                                     </thead>
@@ -675,7 +858,7 @@
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive" style="height: 317px; width:100%;">
-                                <table class="table table-responsive-sm">
+                                <table style="white-space: nowrap;" class="table table-responsive-sm">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Symbol</th>
@@ -715,7 +898,7 @@
                         </div>
                         <div class="card-body p-0">
                             <div class="table-responsive" style="height: 317px; width:100%;">
-                                <table class="table table-responsive-sm">
+                                <table style="white-space: nowrap;" class="table table-responsive-sm">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Type</th>

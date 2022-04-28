@@ -69,7 +69,7 @@
                         </div>
                         <div class="d-flex justify-content-end p-10" id="range_btn_group">
                             <div class="btn-group btn-group-square" id="range_group" role="group">
-                                @if(array_get($data, 'exchange') == 'NYSE')
+                                @if(array_get($data, 'exchange') == 'XNYS')
                                 <button class="btn btn-outline-dark" type="button" onclick="updateChart('1d', this)" style="padding: 0.3rem 0.8rem;">1d</button>
                                 @endif
                                 <button class="btn btn-outline-dark active btn-sm" type="button" onclick="updateChart('1m', this)" style="padding: 0.3rem 0.8rem;">1m</button>
