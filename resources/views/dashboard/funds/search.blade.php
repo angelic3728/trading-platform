@@ -3,7 +3,7 @@
 @section('title', 'All Funds')
 
 @push('css')
-<!-- <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}"> -->
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/owlcarousel.css')}}">
 @endpush
 
 @section('content')
@@ -44,7 +44,7 @@
             <div class="loader-box justify-content-center align-items-center w-full" style="inset:0px; position:absolute; z-index:10; display:flex;">
                 <div class="loader-19"></div>
             </div>
-            <div class="row">
+            <div class="row d-none d-sm-flex">
                 <div class="col-sm-3">
                     <div class="card income-card shadow shadow-showcase">
                         <div class="card-body p-0">
@@ -125,6 +125,40 @@
                                         <span class="" id="current_stock_percentage4"></span>
                                     </p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="owl-carousel owl-theme d-sm-none" id="owl-carousel-14">
+                <div class="item">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="owl-carousel-16 owl-carousel owl-theme" id="fund_carousel0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="owl-carousel-16 owl-carousel owl-theme" id="fund_carousel1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="owl-carousel-16 owl-carousel owl-theme" id="fund_carousel2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="owl-carousel-16 owl-carousel owl-theme" id="fund_carousel3">
                             </div>
                         </div>
                     </div>
@@ -285,6 +319,7 @@
     </div>
 </div>
 @push('scripts')
+<script src="{{asset('assets/js/owlcarousel/owl.carousel.js')}}"></script>
 <script src="{{asset('assets/js/pages/funds/custom.js')}}"></script>
 <script>
     if ("{{session('error')}}" == "unknown") {

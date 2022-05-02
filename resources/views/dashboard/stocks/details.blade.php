@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal">Buy Shares</button>
+                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal" style="white-space: nowrap;">Buy Shares</button>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Below you will find the most recent information about the stock you would like to buy shares from</h6>
+                    <h6>Below you will find the most recent information about the stock you would like to buy shares from.</h6>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -127,7 +127,6 @@
                     <small class="d-block mb-3">We don't have real time prices for this stock at the moment. All prices here are based on the last close price. When submitting an trade, we will confirm the actual price with you.</small>
                     @endif
                     <div class="form-group">
-                        <label class="form-label">Shares</label>
                         <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
                         <small style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
@@ -156,7 +155,7 @@
                         <div class="col-lg-6">
                             <h4>Company Information</h4>
                             <p>{{ (array_get($data, 'company.description', '-'))?array_get($data, 'company.description', '-'):"No Information." }}</p>
-                            <hr class="d-lg-none d-xl-none">
+                            <hr class="d-lg-none">
                         </div>
 
                         <div class="col-lg-6 d-flex flex-column justify-content-between">
@@ -197,8 +196,12 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row link">
+                        <div class="col" style="text-align: right; padding-top:10px;">
+                            <a href="{{ array_get($data, 'link') }}" target="_blank" style="font-size: 12px;">Click here for more information about this fund</a>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col">
                             <hr>
                         </div>
@@ -382,7 +385,6 @@
                             },
                         },
                         yaxis: {
-                            min: 0,
                             tickAmount: 5
                         },
                         tooltip: {

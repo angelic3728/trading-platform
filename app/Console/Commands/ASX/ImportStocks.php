@@ -84,7 +84,7 @@ class ImportStocks extends Command
             $bond->symbol = $item['code'];
             $bond->name = $item['name'];
             $bond->data_source = 'asx';
-            $bond->gcurrency = 'USD';
+            $bond->gcurrency = 'AUD';
             $bond->exchange = $item['exchange'];
             $bond->link = ($item['exchange'] == "XTB")?'https://xtbs.com.au/xtbs-profile/'.$item['code']:'https://finance.yahoo.com/quote/'.$item['code'].'.AX';
             $bond->is_indexed = $item['is_indexed'];

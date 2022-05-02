@@ -338,7 +338,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <h6 class="m-b-5 m-t-25">Please choose at least 2 files. each file size must be less than 10M.</h6> 
+                                        <h6 class="m-b-5 m-t-25">Please upload the documents requested by your representative below.</h6> 
                                     </div>
                                     <div class="col-md-3 col-sm-6 col-xs-12">
                                         <p class="fw-bold m-t-5 m-b-5">File 1</p>
@@ -359,7 +359,7 @@
                                 </div>
                                 <p class="fw-bold m-t-20 m-b-5">Please state the relationship between the account applicants:</p>
                                 <textarea name="acc_item_73" class="form-control" rows="5" cols="5" placeholder="..."></textarea>
-                                <p class="m-t-30">Watchstone Capital is a business name of Watchstone Capital Group, Watchstone Capital is licensed by the Securities and Exchange Commission, National Association of Securities Dealers and the Financial Conduct Authority in the UK. Watchstone Capital is a corporation providing investment products. Watchstone Capital is authorised and regulated by the Securities and Exchange Commission with Reference number: SEC CIK #0001302604; and we adhere to strict regulatory requirement set out by the National Association of Securities Dealers. Registered office: Watchstone Capital, 185 Hudson St, Floors 6 - 8, New York, NY 10013. Email: info@faberlangdale.com.</p>
+                                <p class="m-t-30">Watchstone Capital is a business name of Watchstone Capital Pty Ltd, Watchstone Capital is licensed by the Australian Securities and Investments Commission. Watchstone Capital is a corporation providing investment products. Watchstone Capital is authorized and regulated by the Australian Securities and Investments Commission with Reference numbers: AFSL 518338 ABN 34 629 445 718 ACN 629 445 718; and we adhere to strict regulatory requirements set out by the Australian Securities and Investments Commission. Registered office: Watchstone Capital, 22/31 Market Street Sydney NSW 2000 Australia. Email: info@watchstonecapital.com.</p>
                                 <div class="d-flex justify-content-center m-t-50">
                                     <input class="btn btn-primary btn-lg" type="submit" value="Submit">
                                 </div>

@@ -87,6 +87,7 @@ class User extends Resource
                     'USD' => 'USD',
                     'GBP' => 'GBP',
                     'EUR' => 'EUR',
+                    'AUD' => 'AUD',
                 ])
                     ->displayUsingLabels(),
 

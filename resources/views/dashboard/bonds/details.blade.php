@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal">Buy Bonds</button>
+                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buySharesModal" style="white-space: nowrap;">Buy Units</button>
                         </div>
                     </div>
                 </div>
@@ -95,13 +95,14 @@
                         <div class="col-lg-4 col-md-12">
                             <h4>Bond Code</h4>
                             <h6>{{ array_get($data, 'symbol', '-') }}</h6>
+                            <hr class="d-lg-none">
                         </div>
                         <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-between">
                             <div class="row">
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
                                         <strong>Latest Price</strong>
-                                        <span>{{ '$'.array_get($data, 'price', '-') }}</span>
+                                        <span>{{ 'A$'.array_get($data, 'price', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Maturity Date</strong>
@@ -146,13 +147,14 @@
                         <div class="col-lg-4 col-md-12">
                             <h4>Bond Code</h4>
                             <h6>{{ (array_get($data, 'symbol'))?array_get($data, 'symbol', '-'):"No Bond Code." }}</h6>
+                            <hr class="d-lg-none">
                         </div>
                         <div class="col-lg-8 col-md-12 d-flex flex-column justify-content-between">
                             <div class="row">
                                 <div class="col-sm-6 col-md-4 col-xs-12">
                                     <div class="detail">
                                         <strong>Latest Price</strong>
-                                        <span>{{ '$'.array_get($data, 'price', '-') }}</span>
+                                        <span>{{ 'A$'.array_get($data, 'price', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Coupon Percent</strong>
@@ -179,11 +181,11 @@
                                     </div>
                                     <div class="detail">
                                         <strong>Price Ask</strong>
-                                        <span>{{ (array_get($data, 'priceAsk'))?'$'.array_get($data, 'priceAsk', '-'):"-" }}</span>
+                                        <span>{{ (array_get($data, 'priceAsk'))?'A$'.array_get($data, 'priceAsk', '-'):"-" }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Bid Price</strong>
-                                        <span>{{ (array_get($data, 'priceBid'))?'$'.array_get($data, 'priceBid', '-'):"-" }}</span>
+                                        <span>{{ (array_get($data, 'priceBid'))?'A$'.array_get($data, 'priceBid', '-'):"-" }}</span>
                                     </div>
                                 </div>
 
@@ -198,7 +200,7 @@
                                     </div>
                                     <div class="detail">
                                         <strong>Face Value</strong>
-                                        <span>{{ array_get($data, 'faceValue', '-') }}</span>
+                                        <span>{{ "A$".array_get($data, 'faceValue', '-') }}</span>
                                     </div>
                                     <div class="detail">
                                         <strong>Yield Percent</strong>
@@ -210,8 +212,13 @@
                     </div>
                     @endif
                     <div class="row link">
-                        <div class="col d-flex justify-content-end m-t-25">
-                            <a href=" {{ array_get($data, 'link') }}" target="_blank">Click here for more information about this bond</a>
+                        <div class="col d-flex justify-content-end" style="text-align: right; padding-top:10px;">
+                            <a href=" {{ array_get($data, 'link') }}" target="_blank" style="font-size: 12px;">Click here for more information about this bond</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <hr>
                         </div>
                     </div>
                 </div>
@@ -340,11 +347,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Buy Shares from {{array_get($data, "symbol")}}</h5>
+                    <h5 class="modal-title">Buy units from {{array_get($data, "symbol")}}</h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Below you will find the most recent information about the bond you would like to buy units from</h6>
+                    <h6>Below you will find the most recent information about the bond you would like to buy units from.</h6>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -361,20 +368,19 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <strong>Retail Price</strong>
+                                    <strong>Unit Price</strong>
                                 </td>
-                                <td>${{array_get($data, "price")}}</td>
+                                <td>A${{array_get($data, "price")}}</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Market Price</strong>
                                 </td>
-                                <td>{{ '$'.array_get($data, 'institutionalPrice', '-') }}</td>
+                                <td>{{ 'A$'.array_get($data, 'institutionalPrice', '-') }}</td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="form-group">
-                        <label class="form-label">Shares</label>
                         <input type="number" class="form-control" placeholder="Enter the amount of units" required id="shares_amount">
                         <small  style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
@@ -413,7 +419,7 @@
                 debugger;
                 if (res.success && res.data.length != 0) {
                     var times = 1;
-                    var currency = "USD";
+                    var currency = "AUD";
                     var adjustedData = [];
                     for (var i = 0; i < res.data.length; i++) {
                         var date = new Date(res.data[i]['date']);
@@ -454,7 +460,6 @@
                             },
                         },
                         yaxis: {
-                            min: 0,
                             tickAmount: 5
                         },
                         tooltip: {
@@ -602,7 +607,7 @@
         renderChart(range);
     }
 
-    $("#current_bond_price").html(formatPrice(Number("{{ array_get($data, 'price') }}"), "USD"));
+    $("#current_bond_price").html(formatPrice(Number("{{ array_get($data, 'price') }}"), "AUD"));
     $("#current_bond_percentage").html(formatPercentage(Number("{{ array_get($data, 'changePercentage', 'null') }}")));
 </script>
 @endpush

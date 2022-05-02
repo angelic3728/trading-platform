@@ -48,7 +48,7 @@
                             <th scope="col">Type</th>
                             <th scope="col">Company Name / Crypto Name</th>
                             <th scope="col">Price</th>
-                            <th scope="col">Shares/Coin Amounts</th>
+                            <th scope="col">Shares/Units</th>
                             <th scope="col">Date</th>
                             <th scope="col">Market</th>
                         </tr>
@@ -62,7 +62,7 @@
                                 <small>{{ ($transaction->wherefrom=="2" || $transaction->wherefrom=="3")?$transaction->name:$transaction->company_name }}</small>
                             </td>
                             <td class="text-nowrap">{{ $transaction->formatPrice($transaction->price) }}</td>
-                            <td class="text-nowrap">{{ $transaction->shares }}</td>
+                            <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
                             <td class="text-nowrap">{{ $transaction->created_at }}</td>
                             <td class="text-nowrap">{{ $transaction->wherefrom=="0"?"Stock":($transaction->wherefrom=="1"?"Fund":($transaction->wherefrom=="2"?"Bond":"Crypto")) }}</td>
                         </tr>

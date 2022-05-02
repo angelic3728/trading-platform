@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.page-wrapper .page-body-wrapper .page-body {
+    background-color: #e9f0ee;
+}
+
 .single-stock-link:hover {
     color: black !important;
 }
@@ -24,7 +28,7 @@
 
 #ad1_container {
     height: 110px;
-    background-color: #f5f7fb;
+    background-color: #e9f0ee;
     margin-bottom: 10px;
     width: calc(100% - 420px);
     top: 82px;
@@ -40,7 +44,7 @@
     right: 0px;
     height: calc(100vh - 91px);
     width: 130px;
-    background-color: #f5f7fb;
+    background-color: #e9f0ee;
     z-index: 8;
     padding: 50px 0px;
 }
@@ -189,6 +193,18 @@ table .py-03 {
     max-width: 100%;
 }
 
+.search-form .search-bg > i {
+    display: block!important;
+}
+
+.page-main-header .main-header-right .main-header-left {
+    padding: 24px 20px;
+}
+
+.page-wrapper.compact-wrapper .page-body-wrapper.sidebar-icon header.main-nav {
+    box-shadow: 0 0 0 0 green;
+}
+
 /* responsive part */
 
 @media screen and (max-width: 575px) {
@@ -219,6 +235,35 @@ table .py-03 {
     .left-menu-header {
         padding: 24px 0px!important;
     }
+
+    .page-wrapper.compact-wrapper .page-body-wrapper header.main-nav .sidebar-user ul li + li::before {
+        display: none!important;
+    }
+
+    .sidebar-top-navs {
+        display: none!important;
+    }
+
+    .page-wrapper .page-main-header .main-header-left .logo-wrapper img {
+        height: 30px;
+    }
+
+    .nav-tabs .nav-link, .nav-tabs .nav-link:hover, .nav-tabs .nav-link.active, .nav-tabs .nav-link:focus{
+        border-top: 1px solid;
+    }
+    
+    #stock_portfolio .table-responsive, #fund_portfolio .table-responsive, #bond_portfolio .table-responsive, #crypto_portfolio .table-responsive {
+        overflow-y: hidden;
+    }
+
+    footer nav a {
+        font-size: 12px;
+    }
+
+    table .py-03 {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
 }
 
 @media screen and (max-width: 767px) {
@@ -245,8 +290,12 @@ table .py-03 {
         zoom: 85%;
     }
 
+    #chart-timeline-dashboard, #chart-timeline-dashboard1, #chart-timeline-dashboard2, #chart-timeline-dashboard3, #chart-timeline-dashboard4{
+        zoom: 117%;
+    }
+
     .modal-backdrop {
-        zoom: 120%;
+        zoom: 117%;
     }
 
     .page-wrapper.compact-wrapper .page-body-wrapper .page-body {
@@ -265,7 +314,7 @@ table .py-03 {
 
     .page-main-header .main-header-right .main-header-left {
         width: 240px;
-        padding: 24px 6px;
+        padding: 24px 14px;
     }
 
     .page-wrapper.compact-wrapper .page-body-wrapper header.main-nav {

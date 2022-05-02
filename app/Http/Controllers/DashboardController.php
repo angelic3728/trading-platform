@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Xtbs;
 
 use IEX;
 use ASX;
@@ -33,10 +32,7 @@ class DashboardController extends Controller
          * Get Latest Documents
          */
         $documents = auth()->user()->documents()->orderBy('id', 'DESC')->latest()->take(5)->get();
-        /**
-         * Get Latest Xtbs
-         */
-        $xtbs = Xtbs::query()->orderBy('id', 'DESC')->latest()->take(5)->get();
+        
         /**
          * Get All transaction
          */
@@ -55,6 +51,9 @@ class DashboardController extends Controller
                     if ($transaction->fund && $transaction->fund->gcurrency != "USD" && !in_array("USD" . $transaction->fund->gcurrency, $used_currencies)) {
                         array_push($used_currencies, "USD" . $transaction->fund->gcurrency);
                     }
+                } else if($transaction->wherefrom == 2) {
+                    if(!in_array("USDAUD", $used_currencies))
+                        array_push($used_currencies, "USDAUD");
                 }
             }
 
@@ -152,7 +151,7 @@ class DashboardController extends Controller
                         // add real price and total prices
                         if ($transaction->fund->gcurrency != "USD") {
                             $rate = $all_rates['USD' . $transaction->fund->gcurrency];
-                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->latest_price * $transaction->shares / $rate, 2) : $transaction->price;
+                            $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->latest_price * $transaction->shares / $rate, 2) : $transaction->latest_price;
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
@@ -186,7 +185,8 @@ class DashboardController extends Controller
                                 $transaction->institutional_price = CustomBondData::price($transaction->bond->symbol) ? round($transaction->bond->institutionalPrice(CustomBondData::price($transaction->bond->symbol)), 3) : null;
                         }
                         // add real price and total prices
-                        $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
+                        $rate = $all_rates['USDAUD'];
+                        $transaction->realPrice =($rate && $rate != 0) ? round($transaction->latest_price * $transaction->shares / $rate, 2) : $transaction->latest_price;
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;
                         else
@@ -253,12 +253,14 @@ class DashboardController extends Controller
         $all_highlights = array_merge($all_highlights, $bond_highlights->data);
         $all_highlights = array_merge($all_highlights, $crypto_highlights->data);
 
+        $available_bonds = BondsController::highlights(5)->getData()->data;
         $user_currency = '';
+        $currency_rate = 1;
         if (auth()->user()->balance) {
             $user_currency = json_decode(auth()->user()->balance, 'true')['currency'];
             if ($user_currency != 'USD') {
                 $user_currency_rate = IEX::getRates('USD' . $user_currency);
-                $total_transaction_price = $total_transaction_price * $user_currency_rate['USD' . $user_currency];
+                $currency_rate = $user_currency_rate['USD' . $user_currency];
             }
         }
 
@@ -280,9 +282,10 @@ class DashboardController extends Controller
             'account_manager' => $account_manager,
             'documents' => $documents,
             'total_transaction_price' => $total_transaction_price,
+            'currency_rate' => $currency_rate,
             'user_currency' => $user_currency,
             'transactions' => $transactions,
-            'xtbs' => $xtbs,
+            'bonds' => $available_bonds,
             'all_highlights' => $all_highlights,
             'top_cryptos' => $top_cryptos,
         ]);

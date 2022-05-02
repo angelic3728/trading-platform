@@ -1,8 +1,12 @@
 <header class="main-nav">
     <div class="sidebar-user px-2 pt-0 pb-2">
-        <ul class="nav nav-tabs nav-primary nav-justified justify-content-evenly" id="myTab" role="tablist">
+        <ul class="nav nav-tabs nav-primary nav-justified justify-content-evenly d-none d-sm-flex sidebar-top-navs" id="myTab" role="tablist">
             <li class="nav-item"><a class="nav-link active" id="manager-tab" data-bs-toggle="tab" href="#manager" role="tab" aria-controls="manager" aria-selected="true" style="border-color: #e9ecef #e9ecef #dee2e6; margin-right:10px;">Manager</a></li>
             <li class="nav-item"><a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false" style="border-color: #e9ecef #e9ecef #dee2e6; margin-left:10px;">Profile</a></li>
+        </ul>
+        <ul class="nav nav-tabs nav-primary d-block d-sm-none" id="myTab" role="tablist">
+            <li class="nav-item" style="width:45%; float:left; margin-bottom:5px;"><a class="nav-link active" id="manager-tab" data-bs-toggle="tab" href="#manager" role="tab" aria-controls="manager" aria-selected="true" style="border-color: #e9ecef #e9ecef #dee2e6; margin-right:10px; font-size:10px;">Manager</a></li>
+            <li class="nav-item" style="width:45%; float:right; margin-bottom:5px;"><a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false" style="border-color: #e9ecef #e9ecef #dee2e6; margin-left:10px; font-size:10px;">Profile</a></li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="home-tab">
@@ -60,7 +64,7 @@
                         <a class="nav-link menu-title link-nav {{ request()->route()->named('bonds.search') ? 'active' : '' }}" href="{{ route('bonds.search') }}"><i class="fa fa-certificate" style="margin-right:15px;"></i><span>All Bonds</span></a>
                     </li>
                     <li class="dropdown">
-                        <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i class="fa fa-btc" style="margin-right:15px;"></i><span>All Cryptos</span></a>
+                        <a class="nav-link menu-title link-nav {{ request()->route()->named('cryptos.search') ? 'active' : '' }}" href="{{ route('cryptos.search') }}"><i class="fa fa-btc" style="margin-right:15px;"></i><span>All Crypto</span></a>
                     </li>
                 </ul>
             </div>

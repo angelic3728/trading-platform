@@ -353,10 +353,6 @@ $(document).ready(function() {
                     mergeFit: true
                 },
                 1280: {
-                    items: 2,
-                    mergeFit: true
-                },
-                1670: {
                     items: 4,
                     mergeFit: true
                 }

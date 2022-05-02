@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buyCryptosModal">Buy Cryptos</button>
+                            <button class="btn btn-danger-gradien" type="button" data-bs-toggle="modal" data-bs-target="#buyCryptosModal"  style="white-space: nowrap;">Buy Units</button>
                         </div>
                     </div>
                 </div>
@@ -95,6 +95,7 @@
                             <div class="crypto-information">
                                 {{ array_get($data, "info.description", "-") }}
                             </div>
+                            <hr class="d-lg-none">
                         </div>
 
                         <div class="col-lg-6 d-flex flex-column justify-content-between">
@@ -149,6 +150,16 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row link">
+                        <div class="col d-flex justify-content-end" style="text-align: right; padding-top:10px;">
+                            <a href=" {{ array_get($data, 'link') }}" target="_blank" style="font-size: 12px;">Click here for more information about this bond</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <hr>
                         </div>
                     </div>
                 </div>
@@ -277,11 +288,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Buy {{array_get($data, "name")}}</h5>
+                    <h5 class="modal-title">Buy units from {{array_get($data, "name")}}</h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Below you will find the most recent information about the crypto you would like to buy units from</h6>
+                    <h6>Below you will find the most recent information about the crypto you would like to buy units from.</h6>
                     <table class="table">
                         <tbody>
                             <tr>
@@ -311,7 +322,6 @@
                         </tbody>
                     </table>
                     <div class="form-group">
-                        <label class="form-label">Amount</label>
                         <input type="number" class="form-control" placeholder="Enter the amount of units" required id="shares_amount">
                         <small style="color:#24695c">Your account manager will contact you as soon as possible to confirm best price.</small>
                     </div>
@@ -406,7 +416,6 @@
                             },
                         },
                         yaxis: {
-                            min: 0,
                             tickAmount: 5
                         },
                         tooltip: {

@@ -5,11 +5,11 @@
       <h1>Privacy Policy & Cookies</h1>
       <div class="card">
           <div class="card-body">
-              At Watchstone Capital, accessible from <a href="https://hooverhyfield.com">hooverhyfield.com</a>, one of our main priorities is the
+              At Watchstone Capital, accessible from <a href="https://watchstoncapital.com">watchstonecapital.com</a>, one of our main priorities is the
               privacy of our visitors. This Privacy Policy document contains types of information that
               are collected and recorded by Watchstone Capital and how we use it. If you have additional
               questions or require more information about our Privacy Policy, do not hesitate to contact
-              us through email at <a href="mailto:info@hooverhyfield.com.">info@hooverhyfield.com.</a><br><br>
+              us through email at <a href="mailto:info@watchstoncapital.com.">info@watchstoncapital.com.</a><br><br>
 
             <h3>1. Log Files </h3>
               Watchstone Capital follows a standard procedure of using log files. These files log visitors

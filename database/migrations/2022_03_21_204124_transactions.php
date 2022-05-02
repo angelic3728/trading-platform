@@ -22,7 +22,7 @@ class Transactions extends Migration
             $table->unsignedInteger('crypto_id')->nullable();
             $table->enum('type', ['buy', 'sell']);
             $table->decimal('price', 8, 2);
-            $table->decimal('shares', 8, 2);
+            $table->decimal('shares', 8, 3);
             $table->tinyInteger('wherefrom')->default(0);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');

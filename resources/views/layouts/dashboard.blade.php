@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
   <meta name="description" content="This is really useful trading platform.">
   <meta name="keywords" content="trading stock, fund, crypto, cryptocurrency">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -51,9 +51,9 @@
             </div>
             <div class="col-sm-auto pt-2 pt-sm-0">
               <nav>
-                <a href="mailto://{{ config('app.email') }}" class="m-r-10">Contact Us</a>
-                <a href="{{ route('legal.terms-and-conditions') }}" class="m-r-10">Terms & Conditions</a>
-                <a href="{{ route('legal.privacy-policy') }}" class="m-r-10">Privacy Policy</a>
+                <a class="text-success m-r-10" href="mailto://{{ config('app.email') }}">Contact Us</a>
+                <a class="text-success m-r-10" href="{{ route('legal.terms-and-conditions') }}">Terms & Conditions</a>
+                <a class="text-success m-r-10" href="{{ route('legal.privacy-policy') }}">Privacy Policy</a>
               </nav>
             </div>
           </div>

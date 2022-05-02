@@ -1,7 +1,7 @@
 <div class="page-main-header">
   <div class="main-header-right row m-0">
     <div class="main-header-left">
-      <div class="logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" src="{{asset('assets/images/logo/logo.png')}}" alt=""></a></div>
+      <div class="logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" style="max-height: 30px;" src="{{asset('assets/images/logo/logo.png')}}" alt=""></a></div>
       <div class="dark-logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" src="{{asset('assets/images/logo/dark-logo.png')}}" alt=""></a></div>
       <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"> </i></div>
     </div>
@@ -11,7 +11,7 @@
           <li>
             <div class="search-form">
               <div class="search-bg"><i class="fa fa-search"></i>
-                <input type="text" class="search_stocks d-none d-sm-block" placeholder="Stocks, Funds Bonds, Cryptos" style="font-size: 13px; width:200px; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
+                <input type="text" class="search_stocks d-none d-sm-block" placeholder="Stocks, Funds, Bonds, Crypto" style="font-size: 13px; width:200px; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
                 <input type="text" class="search_stocks d-sm-none" placeholder="Search..." style="font-size: 13px; width:150px!important; padding-left:10px; padding-right:5px;" class="form-control" autocomplete="off">
                 <div class="search-results d-none shadow shadow-showcase bg-white flex-column" style="position: absolute; top:25px; z-index:99; padding:10px 15px; min-width:100%;">
                 </div>

@@ -7612,9 +7612,11 @@ table tbody .border-bottom-warning td {
     ul {
     display: -webkit-box;
     display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     -ms-flex-pack: distribute;
     justify-content: space-around;
+    justify-content: space-between!important;
     margin-top: 20px;
 }
 .page-wrapper.compact-wrapper

@@ -960,14 +960,11 @@ $(document).ready(function() {
             method: "get",
             url: "/api/news?symbols=" + joinedSymbols + "&&limit=4",
             success: function(res) {
-                console.log(res.data);
                 var artiles = res.data;
                 if (artiles.length > 0) {
                     for (var i = 0; i < artiles.length; i++) {
                         $(".news-" + i).css("display", "block");
-                        if (
-                            artiles[i]["image"] == "https://cloud.iexapis.com/v1/news/image/1cIjKAGx5QKpUuzPWkij"
-                        )
+                        if (artiles[i]["source"] == "SBWire" || artiles[i]["source"] == "PR Newswire")
                             $(".news-img-" + i).attr("src", "/assets/images/pros/default_news.png");
                         else
                             $(".news-img-" + i).attr(
@@ -1009,26 +1006,27 @@ $(document).ready(function() {
 
 // format Price and Percentage functions
 function formatPrice(price, currency) {
-    if (typeof Number(price) == "number") {
+    adj_price = Number(price.toString().replace(/,/g, ''));
+    if (typeof Number(adj_price) == "number") {
         var decimal = 2;
-        if (Number(price) > 10) {
+        if (Number(adj_price) > 10) {
             decimal = 2;
-        } else if (Number(price) > 1) {
+        } else if (Number(adj_price) > 1) {
             decimal = 3;
-        } else if (Number(price) > 0.1) {
+        } else if (Number(adj_price) > 0.1) {
             decimal = 4;
-        } else if (Number(price) > 0.01) {
+        } else if (Number(adj_price) > 0.01) {
             decimal = 5;
         } else {
             decimal = 6;
         }
 
         var amount =
-            Number(price) > 999
-                ? Number(price.toFixed(decimal))
+            Number(adj_price) > 999
+                ? Number(adj_price.toFixed(decimal))
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                : Number(price.toFixed(decimal)).toString();
+                : Number(adj_price.toFixed(decimal)).toString();
 
         switch (currency) {
             case "USD":
@@ -1036,11 +1034,11 @@ function formatPrice(price, currency) {
 
             case "GBP":
                 return (
-                    (Number(price) * 100 > 999
-                        ? (price.toFixed(decimal) * 100)
+                    (Number(adj_price) * 100 > 999
+                        ? (adj_price.toFixed(decimal) * 100)
                               .toString()
                               .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        : (price.toFixed(decimal) * 100).toString()) + "p"
+                        : (adj_price.toFixed(decimal) * 100).toString()) + "p"
                 );
 
             case "EUR":
@@ -1089,7 +1087,7 @@ function formatPrice(price, currency) {
                 return amount;
         }
     } else {
-        return price;
+        return adj_price;
     }
 }
 

@@ -90,7 +90,7 @@ class CryptoCurrency extends Resource
                 ->step(0.001)
                 ->sortable(),
 
-            Textarea::make('Company Information', 'information')
+            Textarea::make('Crypto Information', 'information')
                 ->hideFromIndex(),
 
             Text::make('Link')

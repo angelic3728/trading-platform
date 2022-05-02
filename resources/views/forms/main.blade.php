@@ -44,11 +44,11 @@
                 </div>
                 <div class="col-sm-6 col-xl-3 col-lg-6 p-3">
                     <a href="{{ route('forms.equities') }}">
-                        <div class="card o-hidden border-0" style="cursor: pointer;">
+                        <div class="card o-hidden border-0 m-b-0" style="cursor: pointer;">
                             <div class="bg-primary b-r-4 card-body">
                                 <div class="media static-top-widget">
                                     <div class="align-self-center text-center"><i data-feather="layers"></i></div>
-                                    <h4 class="mb-0 m-l-10">Equities</h4>
+                                    <h6 class="mb-0 m-l-10 m-t-5">Equities</h6>
                                     <div class="media-body">
                                         <i class="icon-bg" data-feather="layers"></i>
                                     </div>
@@ -59,11 +59,11 @@
                 </div>
                 <div class="col-sm-6 col-xl-3 col-lg-6 p-3">
                     <a href="{{ route('forms.fixed_income') }}">
-                        <div class="card o-hidden border-0" style="cursor: pointer;">
+                        <div class="card o-hidden border-0 m-b-0" style="cursor: pointer;">
                             <div class="bg-secondary b-r-4 card-body">
                                 <div class="media static-top-widget">
                                     <div class="align-self-center text-center"><i data-feather="shopping-bag"></i></div>
-                                    <h4 class="mb-0 m-l-10">Fixed Income</h4>
+                                    <h6 class="mb-0 m-l-10 m-t-5">Fixed Income</h6>
                                     <div class="media-body">
                                         <i class="icon-bg" data-feather="shopping-bag"></i>
                                     </div>
@@ -74,11 +74,11 @@
                 </div>
                 <div class="col-sm-6 col-xl-3 col-lg-6 p-3">
                     <a href="#">
-                        <div class="card o-hidden border-0" style="cursor: pointer;">
+                        <div class="card o-hidden border-0 m-b-0" style="cursor: pointer;">
                             <div class="bg-secondary b-r-4 card-body">
                                 <div class="media static-top-widget">
                                     <div class="align-self-center text-center"><i data-feather="credit-card"></i></div>
-                                    <h4 class="mb-0 m-l-10">Funds</h4>
+                                    <h6 class="mb-0 m-l-10 m-t-5">Funds</h6>
                                     <div class="media-body">
                                         <i class="icon-bg" data-feather="credit-card"></i>
                                     </div>
@@ -89,11 +89,11 @@
                 </div>
                 <div class="col-sm-6 col-xl-3 col-lg-6 p-3">
                     <a href="#">
-                        <div class="card o-hidden border-0" style="cursor: pointer;">
+                        <div class="card o-hidden border-0 m-b-0" style="cursor: pointer;">
                             <div class="bg-primary b-r-4 card-body">
                                 <div class="media static-top-widget">
                                     <div class="align-self-center text-center"><i data-feather="aperture"></i></div>
-                                    <h4 class="mb-0 m-l-10">Crypto</h4>
+                                    <h6 class="mb-0 m-l-10 m-t-5">Crypto</h6>
                                     <div class="media-body">
                                         <i class="icon-bg" data-feather="aperture"></i>
                                     </div>

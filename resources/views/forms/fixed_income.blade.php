@@ -51,12 +51,12 @@
                     @endif
                 </div>
                 <div class="card-body p-t-0">
-                    <p class="fw-semibold m-t-15 m-b-5 fs-6">Please use <b>BLOCK</b> letters and a black or blue pen to complete this Application Form.</p>
-                    <p class="fw-semibold m-b-5 fs-6">Please make sure that all questions are answered. Please indicate using an ‘X’ where appropriate. If a section does not apply to you, please indicate using ‘N/A’.</p>
+                    <!-- <p class="fw-semibold m-t-15 m-b-5 fs-6">Please use <b>BLOCK</b> letters and a black or blue pen to complete this Application Form.</p> -->
+                    <p class="fw-semibold m-b-5 fs-6">Please make sure that all questions are answered. Please indicate using a ‘✓’ where appropriate. If a section does not apply to you, please indicate using ‘N/A’.</p>
                     <p class="fw-bold m-b-5 fs-6">List both names where account is in joint names.</p>
                     <form action="{{ route('application_form') }}" method="POST">
                         @csrf
-                        <h5 class="p-t-20 p-b-20 bg-danger w-full txt-white p-l-30 fw-bold" style="margin: 0 -30px;">Step 1 Customer Details</h5>
+                        <h5 class="p-t-20 p-b-20 w-full p-l-30 fw-bold" style="margin: 0 -30px;">Step 1 Customer Details</h5>
                         <div class="row">
                             <div class="col-md-12 m-t-15">
                                 <div class="row">
@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h5 class="p-t-10 p-b-10 w-full m-t-25 txt-white p-l-30 fw-bold" style="margin: 0 -30px; background:#ed5c6a;">Joint customer details (if applicable)</h5>
+                        <h5 class="p-t-10 p-b-10 w-full m-t-25 p-l-30 fw-400" style="margin: 0 -30px;">Joint customer details (if applicable)</h5>
                         <div class="row">
                             <div class="col-md-12 m-t-25">
                                 <div class="row">
@@ -362,13 +362,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-t-20 p-b-20 bg-danger w-full txt-white p-l-30 fw-bold" style="margin: 25px -30px 0px -30px;">
+                        <div class="p-t-20 p-b-20 w-full p-l-30" style="margin: 25px -30px 0px -30px;">
                             <div class="row">
                                 <div class="col-md-6 col-xs-12">
-                                    <h5 class="txt-white"><b>Step 2</b> Term deposit set up instruction</h5>
+                                    <h5 class="fw-bold">Step 2 Term deposit set up instruction</h5>
                                 </div>
                                 <div class="col-md-6 col-xs-12">
-                                    <h5 class="txt-white">Bank account you will use to make payment</h5>
+                                    <h5 class="">Bank account you will use to make payment</h5>
                                 </div>
                             </div>
                         </div>
@@ -397,20 +397,14 @@
                                     Source of Funds
                                 </label>
                                 <div class="col-md-10 col-xs-12">
-                                    <div class="checkbox checkbox-dark">
-                                        <input name="income_item_31" id="inline-1" type="checkbox">
-                                        <label for="inline-1">Transfer from transaction account</label>
-                                    </div>
+                                    <label class="fs-6"><input name="income_item_31" value="1" class="checkbox_animated" type="radio" required>Transfer from transaction account</label>
                                 </div>
                             </div>
                             <div class="row m-t-20">
                                 <label class="col-md-2 col-sm-4 col-xs-12 col-form-label fs-6">
                                 </label>
                                 <div class="col-md-4 col-sm-12">
-                                    <div class="checkbox checkbox-dark">
-                                        <input name="income_item_32" id="inline-1" type="checkbox">
-                                        <label for="inline-1">Transfer from savings account</label>
-                                    </div>
+                                    <label class="fs-6"><input name="income_item_31" class="checkbox_animated" value="2" type="radio" required>Transfer from savings account</label>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="row">
@@ -461,13 +455,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-t-20 p-b-20 bg-danger w-full txt-white p-l-30 fw-bold" style="margin: 25px -30px 0px -30px;">
+                        <div class="p-t-20 p-b-20 w-full p-l-30" style="margin: 25px -30px 0px -30px;">
                             <div class="row">
                                 <div class="col-md-6 col-xs-12">
-                                    <h5 class="txt-white"><b>Step 3</b> Term deposit maturity instructions</h5>
+                                    <h5 class="fw-bold"><b>Step 3</b> Term deposit maturity instructions</h5>
                                 </div>
                                 <div class="col-md-6 col-xs-12">
-                                    <h5 class="txt-white">Bank account you will use to receive interest payments</h5>
+                                    <h5>Bank account you will use to receive interest payments</h5>
                                 </div>
                             </div>
                         </div>
@@ -477,10 +471,7 @@
                                     1. Principal
                                 </label>
                                 <div class="col-md-7 col-sm-12">
-                                    <div class="checkbox checkbox-dark">
-                                        <input name="income_item_37" id="inline-1" type="checkbox">
-                                        <label for="inline-1">I would like to receive my principal investment sum in the following bank account</label>
-                                    </div>
+                                    <label class="fs-6"><input name="income_item_37" class="checkbox_animated" value="1" type="radio" required><span>I would like to receive my principal investment sum in the following bank account</span></label>
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <input name="income_item_38" type="text" class="form-control">
@@ -493,34 +484,27 @@
                                     2. Interest
                                 </label>
                                 <div class="col-md-7 col-sm-12">
-                                    <div class="checkbox checkbox-dark">
-                                        <input name="income_item_39" id="inline-1" type="checkbox">
-                                        <label for="inline-1">I would like to receive my interest payments in the following bank account</label>
-                                    </div>
+                                    <label class="fs-6"><input name="income_item_37" class="checkbox_animated" value="2" type="radio" required><span>I would like to receive my interest payments in the following bank account</span></label>
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <input name="income_item_40" type="text" class="form-control">
                                 </div>
                             </div>
                         </div>
-                        <div class="p-t-20 p-b-20 bg-danger w-full txt-white p-l-30 fw-bold" style="margin: 25px -30px 0px -30px;">
-                            <h5 class="txt-white"><b>Step 4</b> Terms and conditions</h5>
+                        <div class="p-t-20 p-b-20 w-full p-l-30 fw-bold" style="margin: 25px -30px 0px -30px;">
+                            <h5 class="">Step 4 Terms and conditions</h5>
                         </div>
-                        <label class="col-md-12 col-form-label fs-6">
-                            1. The amount deposited is to be invested for the fixed term stated above. The interest rate applicable will be the
-                            interest rate offered by HSBC,at the time of receipt of the deposit.
+                        <label class="col-md-12 col-form-label fs-6 fw-300">
+                            1. The amount deposited is to be invested for the fixed term stated above. The interest rate applicable will be the interest rate offered by Watchstone Capital, at the time of receipt of the deposit.
                         </label>
-                        <label class="col-md-12 col-form-label fs-6">
-                            2. If the deposit is to be reinvested on maturity the interest rate applicable will be the rate offered by HSBC,at the
-                            date of reinvestment and will be fixed for the term of the investment.
+                        <label class="col-md-12 col-form-label fs-6 fw-300">
+                            2. If the deposit is to be reinvested on maturity the interest rate applicable will be the rate offered by Watchstone Capital, at the date of reinvestment and will be fixed for the term of the investment.
                         </label>
-                        <label class="col-form-label fs-6">
-                            3. Interest on this deposit will commence from the date the funds are invested
+                        <label class="col-form-label fs-6 fw-300">
+                            3. Interest on this deposit will commence from the date the funds are invested.
                         </label>
-                        <label class="col-form-label fs-6">
-                            4. In accepting a fixed term deposit you agree to invest those funds with HSBC, for the nominated term. The
-                            acceptance of an early redemption request will be subject to a penalty interest adjustment, calculated as a
-                            percentage on the actual term of the deposit, referenced to the original maturity date.
+                        <label class="col-form-label fs-6 fw-300">
+                            4. In accepting a fixed term deposit you agree to invest those funds with Watchstone Capital, for the nominated term. The acceptance of an early redemption request will be subject to a penalty interest adjustment, calculated as a percentage of the actual term of the deposit, referenced to the original maturity date.
                         </label>
                         <div class="row">
                             <div class="col-md-6">
@@ -550,7 +534,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <h6 class="m-b-5 m-t-20 fw-bold">Please choose at least 2 files. each file size must be less than 10M.</h6>
+                                <h6 class="m-b-5 m-t-20 fw-bold">Please upload the documents requested by your representative below.</h6>
                             </div>
                             <div class="col-md-3 col-sm-6 col-xs-12">
                                 <p class="fw-bold m-t-5 m-b-5">File 1</p>

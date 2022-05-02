@@ -30,7 +30,6 @@ class AppServiceProvider extends ServiceProvider
          */
         View::composer([
             'dashboard.overview',
-            'dashboard.xtbs.all',
             'dashboard.documents.all',
             'dashboard.stocks.search',
             'dashboard.stocks.details',

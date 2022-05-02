@@ -91,7 +91,7 @@ class CustomBondData
      * @param  string $range
      * @return array
      */
-    function chart($bond_id, $range)
+    function chart($bond_id, $range="1m")
     {
 
         /**

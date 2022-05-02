@@ -77,7 +77,7 @@ class BondsController extends Controller
         /**
          * Get highlighted bonds and cache them for 15 min
          */
-        $bonds = Cache::remember('bonds:highlighted', 15, function () use ($cnt) {
+        $bonds = Cache::remember('bonds:highlighted_'.$cnt, 15, function () use ($cnt) {
             return Bond::where('highlighted', true)->take($cnt)->get();
         });
 
@@ -96,31 +96,42 @@ class BondsController extends Controller
              */
             switch ($bond['data_source']) {
                 case 'asx':
+                    $asx_data = [];
+                    try {
+                        if ($bond['is_indexed'] != 0)
+                            $asx_data = ASX::getEDetails($bond['symbol'], $bond['is_indexed']);
+                        else
+                            $asx_data = ASX::getXDetails($bond['symbol']);
+                    } catch (\Exception $e) {
+                    }
                     $price = ASX::getBPrice($bond->get('symbol'));
                     $changePercentage = ASX::changePercentage($bond->get('symbol'));
                     $chart = ASX::getBChart($bond->get('id'), '1m');
                     $bond->put('price', $price);
                     $bond->put('chart', $chart);
                     $bond->put('change_percentage', $changePercentage);
+                    $bond->put('coupon_pa', $bond['is_indexed']!=0?$asx_data['couponPercent'].'%':$asx_data['coupon_pa']);
                     break;
 
                 case 'custom':
                     $bond->put('price', CustomBondData::price($bond->get('symbol')));
                     $bond->put('chart', CustomBondData::chart($bond->get('id')));
                     $bond->put('change_percentage', CustomBondData::changePercentage($bond->get('symbol')));
+                    $bond->put('coupon_pa', 0);
                     break;
 
                 default:
                     $bond->put('price', null);
                     $bond->put('chart', null);
                     $bond->put('change_percentage', null);
+                    $bond->put('coupon_pa', null);
                     break;
             }
 
             /**
              * Return bond
              */
-            return $bond->only('wherefrom', 'symbol', 'name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source');
+            return $bond->only('wherefrom', 'symbol', 'name', 'price', 'chart', 'change_percentage', 'exchange', 'gcurrency', 'data_source', 'coupon_pa');
         });
 
         /**

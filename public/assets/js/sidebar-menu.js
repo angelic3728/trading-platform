@@ -213,10 +213,12 @@ $toggle_nav_top = $("#sidebar-toggle");
 $toggle_nav_top.click(function() {
     $this = $(this);
     $nav = $(".main-nav");
-    if($nav.hasClass('close_icon')) {
-        $('#ad1_container').css('width', 'calc(100% - 420px)');
+    if ($nav.hasClass("close_icon")) {
+        if (window.innerWidth > 1580)
+            $("#ad1_container").css("width", "calc(100% - 420px)");
+        else $("#ad1_container").css("width", "calc(100% - 320px)");
     } else {
-        $('#ad1_container').css('width', 'calc(100% - 130px)');
+        $("#ad1_container").css("width", "calc(100% - 130px)");
     }
     $nav.toggleClass("close_icon");
     $header.toggleClass("close_icon");

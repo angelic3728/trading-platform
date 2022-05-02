@@ -36,7 +36,7 @@ class Bond extends Model
      */
     public function formatPrice($price, $decimals = 2)
     {
-        return '$'.number_format($price, $decimals);
+        return 'A$'.number_format($price, $decimals);
     }
 
     /**

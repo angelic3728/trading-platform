@@ -150,7 +150,8 @@ class Transaction extends Resource
                         ]))),
 
             Number::make('Shares')
-                ->step(1)
+                ->step(0.001)
+                ->help('>=0.001')
                 ->sortable()
                 ->rules('required')
                 ->withMeta([
