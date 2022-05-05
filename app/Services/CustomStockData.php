@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Stock;
@@ -30,12 +31,11 @@ class CustomStockData
          */
 
         $item = StockPrice::query()
-        ->where('stock_id', $stock->id)
-        ->latest()
-        ->first();
+            ->where('stock_id', $stock->id)
+            ->latest()
+            ->first();
 
         return $item->price;
-
     }
 
     /**
@@ -72,16 +72,13 @@ class CustomStockData
         /**
          * Show change percentage if both are available
          */
-        if(isset($stock_price_today) && isset($stock_price_yesterday)){
+        if (isset($stock_price_today) && isset($stock_price_yesterday)) {
 
             return (1 - floatval($stock_price_yesterday->price) / floatval($stock_price_today->price));
-
         } else {
 
             return 0;
-
         }
-
     }
 
     /**
@@ -98,16 +95,19 @@ class CustomStockData
          * Determine start and end date
          */
         switch ($range) {
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
 
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '3m':
                 $start_date = Carbon::now()->subMonths(3);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '6m':
                 $start_date = Carbon::now()->subMonths(3);
@@ -116,27 +116,26 @@ class CustomStockData
             case 'ytd':
                 $start_date = Carbon::now()->startOfYear();
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '1y':
                 $start_date = Carbon::now()->subYears(1);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '2y':
                 $start_date = Carbon::now()->subYears(2);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '5y':
                 $start_date = Carbon::now()->subYears(5);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             default:
                 return [];
-            break;
-
+                break;
         }
 
         /**
@@ -160,13 +159,11 @@ class CustomStockData
                     'date' => $item->date->toDateString(),
                     'fClose' => floatval($item->price),
                 ];
-
             });
 
         /**
          * Return Prices
          */
         return $prices;
-
     }
 }

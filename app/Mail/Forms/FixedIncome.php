@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NewAccount extends Mailable
+class FixedIncome extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -41,31 +41,30 @@ class NewAccount extends Mailable
     public $income_item_29;
     public $income_item_30;
     public $income_item_31;
-    public $income_item_32;
     public $income_item_33;
     public $income_item_34;
     public $income_item_35;
     public $income_item_36;
     public $income_item_37;
     public $income_item_38;
-    public $income_item_39;
     public $income_item_40;
     public $income_item_41;
     public $income_item_42;
     public $income_item_43;
     public $income_item_44;
     public $income_item_45;
-    public $income_item_46;
-    public $income_item_47;
-    public $income_item_48;
-    public $income_item_49;
+    public $path;
+    public $file_path1;
+    public $file_path2;
+    public $file_path3;
+    public $file_path4;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $path, $file_path1, $file_path2, $file_path3, $file_path4)
     {
         $this->income_item_1 = array_get($data, 'income_item_1');
         $this->income_item_2 = array_get($data, 'income_item_2');
@@ -98,23 +97,23 @@ class NewAccount extends Mailable
         $this->income_item_29 = array_get($data, 'income_item_29');
         $this->income_item_30 = array_get($data, 'income_item_30');
         $this->income_item_31 = array_get($data, 'income_item_31');
-        $this->income_item_32 = array_get($data, 'income_item_32');
         $this->income_item_33 = array_get($data, 'income_item_33');
         $this->income_item_34 = array_get($data, 'income_item_34');
         $this->income_item_35 = array_get($data, 'income_item_35');
         $this->income_item_36 = array_get($data, 'income_item_36');
         $this->income_item_37 = array_get($data, 'income_item_37');
         $this->income_item_38 = array_get($data, 'income_item_38');
-        $this->income_item_39 = array_get($data, 'income_item_39');
         $this->income_item_40 = array_get($data, 'income_item_40');
+        $this->income_item_41 = array_get($data, 'income_item_41');
         $this->income_item_42 = array_get($data, 'income_item_42');
         $this->income_item_43 = array_get($data, 'income_item_43');
         $this->income_item_44 = array_get($data, 'income_item_44');
         $this->income_item_45 = array_get($data, 'income_item_45');
-        $this->income_item_46 = array_get($data, 'income_item_46');
-        $this->income_item_47 = array_get($data, 'income_item_47');
-        $this->income_item_48 = array_get($data, 'income_item_48');
-        $this->income_item_49 = array_get($data, 'income_item_49');
+        $this->path = $path;
+        $this->file_path1 = $file_path1;
+        $this->file_path2 = $file_path2;
+        $this->file_path3 = $file_path3;
+        $this->file_path4 = $file_path4;
     }
 
     /**
@@ -127,7 +126,14 @@ class NewAccount extends Mailable
         /**
          * Send mail
          */
-        return $this->markdown('mails.forms.fixed-income')
-                    ->subject("Fixed Income Form");
+        $this->markdown('mails.forms.fixed-income')
+            ->subject("Fixed Income Form");
+        $this->attach($this->path.'/'.$this->file_path1);
+        $this->attach($this->path.'/'.$this->file_path2);
+        if ($this->file_path3)
+            $this->attach($this->path.'/'.$this->file_path3);
+        if ($this->file_path4)
+            $this->attach($this->path.'/'.$this->file_path4);
+        return $this;
     }
 }

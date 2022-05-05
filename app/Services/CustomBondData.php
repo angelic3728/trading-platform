@@ -98,6 +98,9 @@ class CustomBondData
          * Determine start and end date
          */
         switch ($range) {
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
 
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);

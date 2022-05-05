@@ -31,9 +31,9 @@ class CustomCryptoData
          */
 
         $item = CryptoCurrencyPrice::query()
-        ->where('crypto_currency_id', $crypto->id)
-        ->latest()
-        ->first();
+            ->where('crypto_currency_id', $crypto->id)
+            ->latest()
+            ->first();
 
         return $item->price;
     }
@@ -102,6 +102,10 @@ class CustomCryptoData
 
             case '5d':
                 $start_date = Carbon::now()->subDays(5);
+                break;
+
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
                 break;
 
             case '1m':

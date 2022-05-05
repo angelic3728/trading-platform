@@ -244,6 +244,10 @@ class IEX
                 $start_date = Carbon::now()->subDays(5);
                 break;
 
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
+
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
                 break;
@@ -344,8 +348,8 @@ class IEX
 
         $result = array();
 
-        $rates = $rates->map(function ($symbol) {
-            return [$symbol['symbol'] => $symbol['rate']];
+        $rates = $rates->map(function ($item) {
+            return [$item['symbol'] => $item['rate']];
         });
 
         foreach ($rates as $rate) {
@@ -356,6 +360,66 @@ class IEX
 
         /**
          * Return symbols
+         */
+        return $result;
+    }
+
+    public function getHistoricRates($currency_str, $range)
+    {
+        $start_date = '';
+        switch ($range) {
+
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
+
+            case '1m':
+                $start_date = Carbon::now()->subMonths(1);
+                break;
+
+            case '6m':
+                $start_date = Carbon::now()->subMonths(6);
+
+            case 'ytd':
+                $start_date = Carbon::now()->startOfYear();
+                break;
+
+            case '1y':
+                $start_date = Carbon::now()->subYears(1);
+                break;
+
+            case '5y':
+                $start_date = Carbon::now()->subYears(5);
+                break;
+
+            default:
+                return Carbon::now();
+                break;
+        }
+
+        $rates = $this->makeApiCall('get', '/stable/fx/historical', ['symbols' => $currency_str, 'from' => $start_date->format('Y-m-d')]);
+        /**
+         * Map data to individual collections
+         */
+
+        $result = array();
+
+        $rates = $rates->map(function ($item) {
+            $new_item = array();
+            foreach ($item as $unit) {
+                array_push($new_item, [$unit['timestamp'], $unit['rate']]);
+            }
+            return [$item[0]['symbol'] => $new_item];
+        });
+
+        foreach ($rates as $rate) {
+            array_push($result, $rate);
+        }
+
+        $result = call_user_func_array('array_merge', $result);
+
+        /**
+         * Return historical rate
          */
         return $result;
     }

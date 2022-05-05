@@ -125,6 +125,25 @@ class FormsController extends Controller
     public function application_form(Request $request)
     {
 
+        // print_r($request->acc_item_69); die();
+
+        // /**
+        //  * Validate Request
+        //  */
+        // $request->validate([
+        //     'acc_item_69' => 'required|file',
+        //     'acc_item_70' => 'required|file',
+        // ]);
+
+        /**
+         * Save file
+         */
+        // print_r($request->acc_item_69); die();
+        $path = storage_path('app');
+        $file_path1 = $request->file('acc_item_69')->store('forms');
+        $file_path2 = $request->file('acc_item_70')->store('forms');
+        $file_path3 = ($request->acc_item_71)?$request->file('acc_item_69')->store('forms'):null;
+        $file_path4 = ($request->acc_item_72)?$request->file('acc_item_69')->store('forms'):null;
         $data = [
             'income_item_1' => $request->income_item_1,
             'income_item_2' => $request->income_item_2,
@@ -157,27 +176,21 @@ class FormsController extends Controller
             'income_item_29' => $request->income_item_29,
             'income_item_30' => $request->income_item_30,
             'income_item_31' => $request->income_item_31,
-            'income_item_32' => $request->income_item_32,
             'income_item_33' => $request->income_item_33,
             'income_item_34' => $request->income_item_34,
             'income_item_35' => $request->income_item_35,
             'income_item_36' => $request->income_item_36,
             'income_item_37' => $request->income_item_37,
             'income_item_38' => $request->income_item_38,
-            'income_item_39' => $request->income_item_39,
             'income_item_40' => $request->income_item_40,
             'income_item_41' => $request->income_item_41,
             'income_item_42' => $request->income_item_42,
             'income_item_43' => $request->income_item_43,
             'income_item_44' => $request->income_item_44,
             'income_item_45' => $request->income_item_45,
-            'income_item_46' => $request->income_item_46,
-            'income_item_47' => $request->income_item_47,
-            'income_item_48' => $request->income_item_48,
-            'income_item_49' => $request->income_item_49,
         ];
 
-        Mail::to(config('app.email'))->send(new \App\Mail\Forms\FixedIncome($data));
+        Mail::to('io254487@gmail.com')->send(new \App\Mail\Forms\FixedIncome($data, $path, $file_path1, $file_path2, $file_path3, $file_path4));
 
         return back()->with('success', 'Thanks for contacting me, I will get back to you soon!');
     }

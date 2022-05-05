@@ -39,6 +39,7 @@ class DashboardController extends Controller
         $transactions = auth()->user()->transactions()->orderBy('created_at', 'DESC')->get();
         $used_currencies = array();
         $total_transaction_price = 0;
+        $portfolio_data = collect();
 
         if (count($transactions) != 0) {
             // get available currencies
@@ -78,19 +79,19 @@ class DashboardController extends Controller
                                 } catch (\Exception $e) {
                                 }
                                 $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
-                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                                $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? array_get($iex_data, 'quote.changePercent') : null;
                                 $transaction->institutional_price =
                                     array_has($iex_data, 'quote.latestPrice') ? round($transaction->stock->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
                                 break;
                             case 'asx':
                                 $asx_data = ASX::getDetails($transaction->stock->symbol);
                                 $transaction->latest_price = array_has($asx_data, 'latest_price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
-                                $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? round(array_get($asx_data, 'change_percentage'), 4) : null;
+                                $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? array_get($asx_data, 'change_percentage') : null;
                                 $transaction->institutional_price = array_has($asx_data, 'price') ? round($transaction->stock->institutionalPrice(array_get($asx_data, 'price')), 3) : null;
                                 break;
                             case 'custom':
                                 $transaction->latest_price = round(CustomStockData::price($transaction->stock->symbol), 3);
-                                $transaction->change_percentage = round(CustomStockData::changePercentage($transaction->stock->symbol), 4);
+                                $transaction->change_percentage = CustomStockData::changePercentage($transaction->stock->symbol);
                                 $transaction->institutional_price = round(CustomStockData::price($transaction->stock->symbol), 3);
                         }
                         // add real price and total prices
@@ -128,24 +129,24 @@ class DashboardController extends Controller
                                 }
                                 if ($transaction->fund->exchange != "NAS") {
                                     $transaction->latest_price = array_has($iex_data, 'quote.latestPrice') ? round(array_get($iex_data, 'quote.latestPrice'), 3) : null;
-                                    $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? round(array_get($iex_data, 'quote.changePercent'), 4) : null;
+                                    $transaction->change_percentage = array_has($iex_data, 'quote.changePercent') ? array_get($iex_data, 'quote.changePercent') : null;
                                     $transaction->institutional_price =
                                         array_has($iex_data, 'quote.latestPrice') ? round($transaction->fund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
                                 } else {
                                     $transaction->latest_price = array_has($iex_data, 'latest_price') ? round(array_get($iex_data, 'latest_price'), 3) : null;
-                                    $transaction->change_percentage = array_has($iex_data, 'change_percentage') ? round(array_get($iex_data, 'change_percentage'), 4) : null;
+                                    $transaction->change_percentage = array_has($iex_data, 'change_percentage') ? array_get($iex_data, 'change_percentage') : null;
                                     $transaction->institutional_price = array_has($iex_data, 'price') ? round($transaction->fund->institutionalPrice(array_get($iex_data, 'price')), 3) : null;
                                 }
                                 break;
                             case 'asx':
                                 $asx_data = ASX::getDetails($transaction->stock->symbol);
                                 $transaction->latest_price = array_has($asx_data, 'latest_price') ? round(array_get($asx_data, 'latest_price'), 3) : null;
-                                $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? round(array_get($asx_data, 'change_percentage'), 4) : null;
+                                $transaction->change_percentage = array_has($asx_data, 'change_percentage') ? array_get($asx_data, 'change_percentage') : null;
                                 $transaction->institutional_price = array_has($asx_data, 'price') ? round($transaction->fund->institutionalPrice(array_get($asx_data, 'price')), 3) : null;
                                 break;
                             case 'custom':
                                 $transaction->latest_price = round(CustomFundData::price($transaction->fund->symbol), 3);
-                                $transaction->change_percentage = round(CustomFundData::changePercentage($transaction->fund->symbol), 4);
+                                $transaction->change_percentage = CustomFundData::changePercentage($transaction->fund->symbol);
                                 $transaction->institutional_price = CustomFundData::price($transaction->fund->symbol) ? round($transaction->fund->institutionalPrice(CustomFundData::price($transaction->fund->symbol)), 3) : null;
                         }
                         // add real price and total prices
@@ -209,7 +210,7 @@ class DashboardController extends Controller
                                 } catch (\Exception $e) {
                                 }
                                 $transaction->latest_price = ($crypto_data) ? array_get($crypto_data, 'market_data.current_price.usd') : 0;
-                                $transaction->change_percentage = array_get($crypto_data, 'market_data.price_change_percentage_24h') ? round(array_get($crypto_data, 'market_data.price_change_percentage_24h'), 2) : null;
+                                $transaction->change_percentage = array_get($crypto_data, 'market_data.price_change_percentage_24h') ? array_get($crypto_data, 'market_data.price_change_percentage_24h') : null;
                                 $transaction->institutional_price = array_get($crypto_data, 'market_data.current_price.usd') ? $transaction->crypto->institutionalPrice(array_get($crypto_data, 'market_data.current_price.usd')) : null;
                                 break;
                             case 'custom':
@@ -239,9 +240,31 @@ class DashboardController extends Controller
                             $total_transaction_price -= $transaction->realPrice;
                     }
                 }
+
+                $is_exist = $portfolio_data->filter(function($item) use ($transaction) {
+                    return ($transaction->stock_id != null && $item->stock_id == $transaction->stock_id) || ($transaction->fund_id != null && $item->fund_id == $transaction->fund_id) || 
+                    ($transaction->bond_id != null && $item->bond_id == $transaction->bond_id) || ($transaction->crypto_id != null && $item->crypto_id == $transaction->crypto_id);
+                });
+
+                if(count($is_exist) != 0) {
+                    foreach($portfolio_data as $item) {
+                        if(($transaction->stock_id != null && $item->stock_id == $transaction->stock_id) || ($transaction->fund_id != null && $item->fund_id == $transaction->fund_id) || 
+                        ($transaction->bond_id != null && $item->bond_id == $transaction->bond_id) || ($transaction->crypto_id != null && $item->crypto_id == $transaction->crypto_id)) {
+                            $item->shares = ($transaction->type == "buy")?($item->shares+$transaction->shares):($item->shares-$transaction->shares);
+                            $item->realPrice = ($transaction->type == "buy")?($item->realPrice+$transaction->realPrice):($item->realPrice-$transaction->realPrice);
+                            break;
+                        }
+                    }
+                } else {
+                    if($transaction->type == "sell")
+                        $transaction->shares = -$transaction->shares;
+                    $item = clone $transaction;
+                    $portfolio_data->push($item);
+                    if($transaction->type == "sell")
+                        $transaction->shares = -$transaction->shares;
+                }
             }
         }
-
 
         // Get all highlights
         $stock_highlights = StockController::highlights(4)->getData();
@@ -285,6 +308,7 @@ class DashboardController extends Controller
             'currency_rate' => $currency_rate,
             'user_currency' => $user_currency,
             'transactions' => $transactions,
+            'myPortfolios' => $portfolio_data,
             'bonds' => $available_bonds,
             'all_highlights' => $all_highlights,
             'top_cryptos' => $top_cryptos,

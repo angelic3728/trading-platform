@@ -69,8 +69,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     /**
      * Stocks
      */
-    Route::get('stocks/search', 'StockController@index')->name('stocks.search');
-    Route::get('stocks/{symbol}', 'StockController@show')->name('stocks.show');
+    Route::get('stocks/search', 'StocksController@index')->name('stocks.search');
+    Route::get('stocks/{symbol}', 'StocksController@show')->name('stocks.show');
 
     /**
      * Funds
@@ -108,10 +108,13 @@ Route::middleware(['auth', 'active'])->group(function () {
      */
     Route::namespace('API')->prefix('api')->group(function () {
 
+        // Get portfolio info
+
+        Route::get('dashboard/performance/{range}', 'PortfolioController@performance');
+
         /**
          * Get stocks
          */
-        Route::get('stocks/investments', 'StockController@investments');
         Route::get('stocks/highlights', 'StockController@highlights');
         Route::get('stocks/all', 'StockController@all');
         Route::get('stocks/chart/{symbol}/{range}', 'StockController@chart');

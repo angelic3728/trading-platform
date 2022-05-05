@@ -107,16 +107,16 @@
                                         </a>
                                     </div>
                                     <h5>
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'USD')
+                                        @if($user_currency)
                                         <span class="f-w-600">$</span>
                                         @endif
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'EUR')
+                                        @if($user_currency == 'EUR')
                                         <span class="f-w-600">€</span>
                                         @endif
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'GBP')
+                                        @if($user_currency == 'GBP')
                                         <span class="f-w-600">£</span>
                                         @endif
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'AUD')
+                                        @if($user_currency == 'AUD')
                                         <span class="f-w-600">A$</span>
                                         @endif
                                         @if(auth()->user()->getBalance())
@@ -171,16 +171,40 @@
                                 </ul>
                                 <div class="tab-content p-t-20 sm:p-t-0">
                                     <div class="tab-pane fade active show" id="stock_chart" role="tabpanel" aria-labelledby="stock-chart">
-                                        <div id="chart-timeline-dashboard1"></div>
+                                        <div id="chart-timeline-dashboard1">
+                                            <div class="d-flex justify-content-center align-items-center" style="min-height: 355px; width:100%">
+                                                <div class="loader-box">
+                                                    <div class="loader-19"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="fund_chart" role="tabpanel" aria-labelledby="fund-chart">
-                                        <div id="chart-timeline-dashboard2"></div>
+                                        <div id="chart-timeline-dashboard2">
+                                            <div class="d-flex justify-content-center align-items-center" style="min-height: 355px; width:100%">
+                                                <div class="loader-box">
+                                                    <div class="loader-19"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="bond_chart" role="tabpanel" aria-labelledby="crypto-chart">
-                                        <div id="chart-timeline-dashboard3"></div>
+                                        <div id="chart-timeline-dashboard3">
+                                            <div class="d-flex justify-content-center align-items-center" style="min-height: 355px; width:100%">
+                                                <div class="loader-box">
+                                                    <div class="loader-19"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="crypto_chart" role="tabpanel" aria-labelledby="crypto-chart">
-                                        <div id="chart-timeline-dashboard4"></div>
+                                        <div id="chart-timeline-dashboard4">
+                                            <div class="d-flex justify-content-center align-items-center" style="min-height: 355px; width:100%">
+                                                <div class="loader-box">
+                                                    <div class="loader-19"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -246,28 +270,28 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 0)
+                                                            @if(count($myPortfolios) != 0)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 0)
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('stocks.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
+                                                                    <a href="{{ route('stocks.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->company_name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->stock->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?(round($transaction->change_percentage*100, 2)."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*100, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->stock->formatPrice($myPortfolio->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->stock->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -294,30 +318,30 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody class="d-sm-none">
-                                                            @if(count($transactions) != 0)
+                                                            @if(count($myPortfolios) != 0)
                                                             <?php $cnt = 0 ?>
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 0)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 0)
                                                             <?php $cnt++; ?>
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('stocks.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
+                                                                    <a href="{{ route('stocks.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->company_name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->stock->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?(round($transaction->change_percentage*100, 2)."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*100, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->stock->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->stock->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->stock->formatPrice($myPortfolio->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->stock->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->stock->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -349,28 +373,28 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 1)
+                                                            @if(count($myPortfolios) != 0)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 1)
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('funds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
+                                                                    <a href="{{ route('funds.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->company_name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->fund->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?(round($transaction->change_percentage*100, 2)."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*100, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->fund->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->fund->formatPrice($myPortfolio->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->fund->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -397,30 +421,30 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
+                                                            @if(count($myPortfolios) != 0)
                                                             <?php $cnt = 0 ?>
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 1)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 1)
                                                             <?php $cnt++; ?>
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('funds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->company_name}}</p>
+                                                                    <a href="{{ route('funds.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->company_name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->fund->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?(round($transaction->change_percentage*100, 2)."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*100, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->fund->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->fund->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->fund->formatPrice($myPortfolio->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->fund->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->company_name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->fund->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -452,30 +476,30 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
+                                                            @if(count($myPortfolios) != 0)
                                                             <?php $cnt = 0 ?>
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 2)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 2)
                                                             <?php $cnt++; ?>
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('bonds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->name}}</p>
+                                                                    <a href="{{ route('bonds.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->bond->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?(round($transaction->change_percentage*100, 2)."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*100, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->bond->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->bond->formatPrice($myPortfolio->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->bond->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -505,28 +529,28 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 2)
+                                                            @if(count($myPortfolios) != 0)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 2)
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('bonds.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->name}}</p>
+                                                                    <a href="{{ route('bonds.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->bond->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?(round($transaction->change_percentage*100, 2)."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*100, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->bond->formatPrice($transaction->institutional_price):"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->bond->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->bond->formatPrice($myPortfolio->institutional_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->bond->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}', '{{$transaction->bond->exchange}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -555,28 +579,28 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 3)
+                                                            @if(count($myPortfolios) != 0)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 3)
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('cryptos.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->name}}</p>
+                                                                    <a href="{{ route('cryptos.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->crypto->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?($transaction->change_percentage."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*1, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->institutional_price:"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->institutional_price:"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->crypto->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position:sticky; right:0px;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -603,30 +627,30 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @if(count($transactions) != 0)
+                                                            @if(count($myPortfolios) != 0)
                                                             <?php $cnt = 0 ?>
-                                                            @foreach($transactions as $transaction)
-                                                            @if($transaction->wherefrom == 3)
+                                                            @foreach($myPortfolios as $myPortfolio)
+                                                            @if($myPortfolio->wherefrom == 3)
                                                             <?php $cnt++; ?>
                                                             <tr>
                                                                 <td class="py-03">
-                                                                    <a href="{{ route('cryptos.show', ['symbol' => $transaction->symbol]) }}" style="color:#24695c;">
-                                                                        <span class="f-w-600">{{$transaction->symbol}}</span>
-                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$transaction->name}}</p>
+                                                                    <a href="{{ route('cryptos.show', ['symbol' => $myPortfolio->symbol]) }}" style="color:#24695c;">
+                                                                        <span class="f-w-600">{{$myPortfolio->symbol}}</span>
+                                                                        <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;" class="f-w-400">{{$myPortfolio->name}}</p>
                                                                     </a>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice($transaction->latest_price):"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->crypto->formatPrice($myPortfolio->latest_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">
-                                                                    <span class="{{($transaction->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
-                                                                        {{ ($transaction->change_percentage)?($transaction->change_percentage."%"):"-"}}
+                                                                    <span class="{{($myPortfolio->change_percentage > 0)?'text-success f-w-600':'text-danger f-w-600'}}">
+                                                                        {{ ($myPortfolio->change_percentage)?(number_format($myPortfolio->change_percentage*1, 2)."%"):"-"}}
                                                                     </span>
                                                                 </td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->institutional_price) ? $transaction->institutional_price:"-"}}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
-                                                                <td class="py-03" style="vertical-align: middle;">{{ ($transaction->latest_price)?$transaction->crypto->formatPrice(round($transaction->latest_price*$transaction->shares, 2)):"-" }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->institutional_price:"-"}}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
+                                                                <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->crypto->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModel('buy', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModel('sell', '{{$transaction->symbol}}', '{{$transaction->name}}', '{{$transaction->latest_price}}', '{{ $transaction->institutional_price }}', '{{ $transaction->gcurrency }}', '{{$transaction->shares}}', '{{$transaction->wherefrom}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -682,8 +706,28 @@
                                                             </table>
                                                             <small id="trade_is_xnys" class="d-block mb-3">Our platform includes both real time pricing and end of day pricing. When submitting a trade, we will confirm the actual price with you.</small>
                                                             <div class="form-group">
-                                                                <label class="form-label" id="shares-label" style="color:#24695c !important;">Shares</label>
-                                                                <input type="number" class="form-control" placeholder="Enter the amount of shares" required id="shares_amount">
+                                                                <div class="row">
+                                                                    <div class="col-sm-7">
+                                                                        <label class="form-label" id="shares-label" style="color:#24695c !important;">Shares</label>
+                                                                        <input type="number" class="form-control" placeholder="Enter the amount of $" required id="shares_amount" style="width: 90%; margin-bottom:10px;">
+                                                                    </div>
+                                                                    <div class="col-sm-5">
+                                                                        <label class="form-label" id="shares-label" style="color:#24695c !important;">Local Currency</label>
+                                                                        <label for="" style="width: 100%;">
+                                                                            @if($user_currency == 'AUD')
+                                                                            <span style="float: left; padding-top:6px; padding-right:5px;">A$</span>
+                                                                            @elseif($user_currency == 'GBP')
+                                                                            <span style="float: left; padding-top:6px; padding-right:5px;">£</span>
+                                                                            @elseif($user_currency == 'EUR')
+                                                                            <span style="float: left; padding-top:6px; padding-right:5px;">€</span>
+                                                                            @else
+                                                                            <span style="float: left; padding-top:6px; padding-right:5px;">$</span>
+                                                                            @endif
+                                                                            <input type="number" class="form-control" required id="local_calc_amount" style="width: 84%;" disabled="">
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-sm-12" style="color:#24695c !important;"><p>Number of shares: <span id="calc_shares">23</span></p></div>
+                                                                </div>
                                                                 <small class="text-info" style="color:#24695c!important">Your account manager will contact you as soon as possible to confirm best price.</small>
                                                             </div>
                                                             <div class="alert-wrapper mb-2"></div>
@@ -1012,7 +1056,7 @@
                                             <td class="text-center f-w-600">{{ $transaction->symbol }}</td>
                                             <td class="text-center">{{ $transaction->type }}</td>
                                             <td class="text-center">{{ $transaction->wherefrom=="0"?$transaction->stock->formatPrice($transaction->price):($transaction->wherefrom=="1"?$transaction->fund->formatPrice($transaction->price):($transaction->wherefrom=="2"?$transaction->bond->formatPrice($transaction->price):$transaction->crypto->formatPrice($transaction->price)))}}</td>
-                                            <td class="py-03" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?$transaction->shares:number_format($transaction->shares, 0) }}</td>
+                                            <td class="py-03 text-center" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?number_format($transaction->shares, 3):number_format($transaction->shares, 0) }}</td>
                                         </tr>
                                         @endforeach
                                         @else

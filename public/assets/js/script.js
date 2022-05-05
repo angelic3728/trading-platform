@@ -962,9 +962,10 @@ $(document).ready(function() {
             success: function(res) {
                 var artiles = res.data;
                 if (artiles.length > 0) {
+                    console.log(artiles);
                     for (var i = 0; i < artiles.length; i++) {
                         $(".news-" + i).css("display", "block");
-                        if (artiles[i]["source"] == "SBWire" || artiles[i]["source"] == "PR Newswire")
+                        if (artiles[i]["source"] == "SBWire" || artiles[i]["source"] == "PR Newswire" || artiles[i]["source"] == "Seeking Alpha")
                             $(".news-img-" + i).attr("src", "/assets/images/pros/default_news.png");
                         else
                             $(".news-img-" + i).attr(

@@ -68,7 +68,7 @@ class Transaction extends Resource
                 ->displayUsingLabels()
                 ->rules('required')
                 ->withMeta([
-                    'value' => $this->type ?? $request->type,
+                    'value' => $this->stock_id ? $this->stock->company_name : ($this->fund_id ? $this->fund->company_name:($this->bond_id ? $this->bond->name:($this->crypto_id ? $this->crypto->name:$this->id))),
                 ]),
 
             NovaDependencyContainer::make([

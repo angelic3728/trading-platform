@@ -14,7 +14,7 @@ class Transaction extends Model
      */
     public function getCreatedAtAttribute($created_at)
     {
-        return Carbon::parse($created_at)->format('j F Y');
+        return Carbon::parse($created_at)->format('Y-m-d');
     }
 
     /**

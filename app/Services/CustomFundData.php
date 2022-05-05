@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Fund;
@@ -30,12 +31,11 @@ class CustomFundData
          */
 
         $item = FundPrice::query()
-        ->where('fund_id', $fund->id)
-        ->latest()
-        ->first();
+            ->where('fund_id', $fund->id)
+            ->latest()
+            ->first();
 
-        return ($item)?$item->price:0;
-
+        return ($item) ? $item->price : 0;
     }
 
     /**
@@ -72,16 +72,13 @@ class CustomFundData
         /**
          * Show change percentage if both are available
          */
-        if(isset($fund_price_today) && isset($fund_price_yesterday)){
+        if (isset($fund_price_today) && isset($fund_price_yesterday)) {
 
             return (1 - floatval($fund_price_yesterday->price) / floatval($fund_price_today->price));
-
         } else {
 
             return 0;
-
         }
-
     }
 
     /**
@@ -98,16 +95,19 @@ class CustomFundData
          * Determine start and end date
          */
         switch ($range) {
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
 
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '3m':
                 $start_date = Carbon::now()->subMonths(3);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '6m':
                 $start_date = Carbon::now()->subMonths(3);
@@ -116,27 +116,26 @@ class CustomFundData
             case 'ytd':
                 $start_date = Carbon::now()->startOfYear();
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '1y':
                 $start_date = Carbon::now()->subYears(1);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '2y':
                 $start_date = Carbon::now()->subYears(2);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             case '5y':
                 $start_date = Carbon::now()->subYears(5);
                 $end_date = Carbon::now();
-            break;
+                break;
 
             default:
                 return [];
-            break;
-
+                break;
         }
 
         /**
@@ -165,6 +164,5 @@ class CustomFundData
          * Return Prices
          */
         return $prices;
-
     }
 }

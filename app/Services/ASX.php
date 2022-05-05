@@ -185,8 +185,8 @@ class ASX
 
             $result = array();
 
-            for($i=0; $i<count($items); $i++) {
-                if($items[$i]['symbol'] == $code)
+            for ($i = 0; $i < count($items); $i++) {
+                if ($items[$i]['symbol'] == $code)
                     $result = $items[$i];
             }
 
@@ -198,8 +198,8 @@ class ASX
 
             $result = array();
 
-            for($i=0; $i<count($items); $i++) {
-                if($items[$i]['symbol'] == $code)
+            for ($i = 0; $i < count($items); $i++) {
+                if ($items[$i]['symbol'] == $code)
                     $result = $items[$i];
             }
 
@@ -250,6 +250,9 @@ class ASX
 
 
         switch ($range) {
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
 
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
@@ -320,6 +323,10 @@ class ASX
                 $start_date = Carbon::now()->subDays(5);
                 break;
 
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
+
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
                 break;
@@ -362,12 +369,11 @@ class ASX
          */
 
         $item = BondPrice::query()
-        ->where('bond_id', $bond->id)
-        ->latest()
-        ->first();
+            ->where('bond_id', $bond->id)
+            ->latest()
+            ->first();
 
-        return ($item)?$item->price:0;
-
+        return ($item) ? $item->price : 0;
     }
 
     function changePercentage($symbol)
@@ -415,46 +421,43 @@ class ASX
          * Determine start and end date
          */
         switch ($range) {
+            case '7d':
+                $start_date = Carbon::now()->subDays(7);
+                break;
 
             case '1m':
                 $start_date = Carbon::now()->subMonths(1);
-                $end_date = Carbon::now();
-            break;
+                break;
 
             case '3m':
                 $start_date = Carbon::now()->subMonths(3);
-                $end_date = Carbon::now();
-            break;
+                break;
 
             case '6m':
                 $start_date = Carbon::now()->subMonths(3);
-                $end_date = Carbon::now();
-
+                break;
             case 'ytd':
                 $start_date = Carbon::now()->startOfYear();
-                $end_date = Carbon::now();
-            break;
+                break;
 
             case '1y':
                 $start_date = Carbon::now()->subYears(1);
-                $end_date = Carbon::now();
-            break;
+                break;
 
             case '2y':
                 $start_date = Carbon::now()->subYears(2);
-                $end_date = Carbon::now();
-            break;
+                break;
 
             case '5y':
                 $start_date = Carbon::now()->subYears(5);
-                $end_date = Carbon::now();
-            break;
+                break;
 
             default:
                 return [];
-            break;
-
+                break;
         }
+
+        $end_date = Carbon::now();
 
         /**
          * Get all fund prices between those dates
@@ -475,7 +478,6 @@ class ASX
          * Return Prices
          */
         return $prices;
-
     }
 
     public function getMarketCryptos()

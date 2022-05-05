@@ -10,7 +10,7 @@ use IEX;
 use ASX;
 use CustomStockData;
 
-class StockController extends Controller
+class StocksController extends Controller
 {
     /**
      * Display a listing of the resource.

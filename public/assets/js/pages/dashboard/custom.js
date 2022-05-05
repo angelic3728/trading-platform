@@ -5,7 +5,12 @@ $(document).ready(function() {
         var action_date = new Date(chartData[i]["created_at"]);
         if (action_date.getFullYear() == current_date.getFullYear()) {
             if (chartData[i]["type"] == "buy") {
-                for(var j=Number(action_date.getMonth()); j<Number(current_date.getMonth())+1; j++) {
+                for (
+                    var j = Number(action_date.getMonth());
+                    j < Number(current_date.getMonth()) + 1;
+                    j++
+                ) {
+                    debugger;
                     monthProfits[j] = Number(
                         (
                             monthProfits[j] +
@@ -14,223 +19,133 @@ $(document).ready(function() {
                     );
                 }
             } else {
-                for(var j=Number(action_date.getMonth()); j<Number(current_date.getMonth())+1; j++) {
-                    monthProfits[j] = Number(
-                        (
-                            monthProfits[j] -
-                            chartData[i]["realPrice"] * currency_rate
-                        ).toFixed(2)
-                    );
+                for (
+                    var j = Number(action_date.getMonth());
+                    j < Number(current_date.getMonth()) + 1;
+                    j++
+                ) {
+                    debugger;
+                    monthProfits[j] = Number((monthProfits[j] - chartData[i]["realPrice"] * currency_rate).toFixed(2));
                 }
             }
         }
     }
 
-    var stockData = $.grep(chartData, function(v) {
-        return v.wherefrom == 0;
-    });
-    var fundData = $.grep(chartData, function(v) {
-        return v.wherefrom == 1;
-    });
-    var bondData = $.grep(chartData, function(v) {
-        return v.wherefrom == 2;
-    });
-    var cryptoData = $.grep(chartData, function(v) {
-        return v.wherefrom == 3;
-    });
+    renderBarChart(monthProfits, "#month_profit_dash");
 
-    stockData = stockData.reverse();
-    fundData = fundData.reverse();
-    bondData = bondData.reverse();
-    cryptoData = cryptoData.reverse();
+    $.ajax({
+        url: "/api/dashboard/performance/7d",
+        type: "get",
+        success: function(res) {
+            if (res.success) {
+                if (res.stock_data.length != 0) {
+                    var stock_data = res.stock_data;
+                    for (var i = 0; i < stock_data.length; i++) {
+                        var date = new Date(stock_data[i][0]);
+                        stock_data[i][0] = date.getTime();
+                        stock_data[i][1] = Number(
+                            (stock_data[i][1] * currency_rate).toFixed(2)
+                        );
+                    }
+                    $('#chart-timeline-dashboard1').empty();
+                    renderChart(
+                        stock_data,
+                        "#chart-timeline-dashboard1",
+                        appConfig.primary
+                    );
+                } else
+                    $("#chart-timeline-dashboard1").append(
+                        "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
+                    );
 
-    adjustedStockData = [];
-    adjustedFundData = [];
-    adjustedBondData = [];
-    adjustedCryptoData = [];
-    total1 = 0;
-    total2 = 0;
-    total3 = 0;
-    total4 = 0;
+                if (res.fund_data.length != 0) {
+                    var fund_data = res.fund_data;
+                    for (var i = 0; i < fund_data.length; i++) {
+                        var date = new Date(fund_data[i][0]);
+                        fund_data[i][0] = date.getTime();
+                        fund_data[i][1] = Number(
+                            (fund_data[i][1] * currency_rate).toFixed(2)
+                        );
+                    }
+                    $('#chart-timeline-dashboard2').empty();
+                    renderChart(
+                        fund_data,
+                        "#chart-timeline-dashboard2",
+                        appConfig.fund
+                    );
+                } else
+                    $("#chart-timeline-dashboard2").append(
+                        "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
+                    );
 
-    for (var i = 0; i < stockData.length; i++) {
-        total1 =
-            stockData[i]["type"] == "buy"
-                ? total1 + stockData[i]["realPrice"] * currency_rate
-                : total1 - stockData[i]["realPrice"] * currency_rate;
-        if (adjustedStockData.length != 0) {
-            const last_date = new Date(stockData[i]["created_at"]);
-            const current_date = new Date(
-                adjustedStockData[adjustedStockData.length - 1][0]
-            );
-            if (
-                last_date.getDate() == current_date.getDate() &&
-                last_date.getMonth() == current_date.getMonth()
-            ) {
-                adjustedStockData[adjustedStockData.length - 1][1] = Number(
-                    total1.toFixed()
-                );
+                if (res.bond_data.length != 0) {
+                    var bond_data = res.bond_data;
+                    for (var i = 0; i < bond_data.length; i++) {
+                        var date = new Date(bond_data[i][0]);
+                        bond_data[i][0] = date.getTime();
+                        bond_data[i][1] = Number(
+                            (bond_data[i][1] * currency_rate).toFixed(2)
+                        );
+                    }
+                    $('#chart-timeline-dashboard3').empty();
+                    renderChart(
+                        bond_data,
+                        "#chart-timeline-dashboard3",
+                        appConfig.bond
+                    );
+                } else
+                    $("#chart-timeline-dashboard3").append(
+                        "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
+                    );
+
+                if (res.crypto_data.length != 0) {
+                    var crypto_data = res.crypto_data;
+                    for (var i = 0; i < crypto_data.length; i++) {
+                        var date = new Date(crypto_data[i][0]);
+                        crypto_data[i][0] = date.getTime();
+                        if (crypto_data[i][1] > 1)
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(2)
+                            );
+                        else if (crypto_data[i][1] > 0.1)
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(3)
+                            );
+                        else if (crypto_data[i][1] > 0.01)
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(4)
+                            );
+                        else if (crypto_data[i][1] > 0.001)
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(5)
+                            );
+                        else if (crypto_data[i][1] > 0.0001)
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(6)
+                            );
+                        else if (crypto_data[i][1] > 0.00001)
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(7)
+                            );
+                        else
+                            crypto_data[i][1] = Number(
+                                (crypto_data[i][1] * currency_rate).toFixed(10)
+                            );
+                    }
+                    $('#chart-timeline-dashboard4').empty();
+                    renderChart(
+                        crypto_data,
+                        "#chart-timeline-dashboard4",
+                        appConfig.crypto
+                    );
+                } else
+                    $("#chart-timeline-dashboard4").append(
+                        "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
+                    );
             } else {
-                adjustedStockData[adjustedStockData.length] = [
-                    stockData[i]["created_at"],
-                    Number(total1.toFixed(2))
-                ];
             }
-        } else {
-            adjustedStockData[0] = [
-                stockData[i]["created_at"],
-                Number(total1.toFixed(2))
-            ];
         }
-    }
-
-    for (var i = 0; i < fundData.length; i++) {
-        total2 =
-            fundData[i]["type"] == "buy"
-                ? total2 + fundData[i]["realPrice"] * currency_rate
-                : total2 - fundData[i]["realPrice"] * currency_rate;
-        if (adjustedFundData.length != 0) {
-            const last_date = new Date(fundData[i]["created_at"]);
-            const current_date = new Date(
-                adjustedFundData[adjustedFundData.length - 1][0]
-            );
-            if (
-                last_date.getDate() == current_date.getDate() &&
-                last_date.getMonth() == current_date.getMonth()
-            ) {
-                adjustedFundData[adjustedFundData.length - 1][1] = Number(
-                    total2.toFixed(2)
-                );
-            } else {
-                adjustedFundData[adjustedFundData.length] = [
-                    fundData[i]["created_at"],
-                    Number(total2.toFixed(2))
-                ];
-            }
-        } else {
-            adjustedFundData[0] = [
-                fundData[i]["created_at"],
-                Number(total2.toFixed(2))
-            ];
-        }
-    }
-
-    for (var i = 0; i < bondData.length; i++) {
-        total3 =
-            bondData[i]["type"] == "buy"
-                ? total3 + bondData[i]["realPrice"] * currency_rate
-                : total3 - bondData[i]["realPrice"] * currency_rate;
-        if (adjustedBondData.length != 0) {
-            const last_date = new Date(bondData[i]["created_at"]);
-            const current_date = new Date(
-                adjustedBondData[adjustedBondData.length - 1][0]
-            );
-            if (
-                last_date.getDate() == current_date.getDate() &&
-                last_date.getMonth() == current_date.getMonth()
-            ) {
-                adjustedBondData[adjustedBondData.length - 1][1] = Number(
-                    total3.toFixed(2)
-                );
-            } else {
-                adjustedBondData[adjustedBondData.length] = [
-                    bondData[i]["created_at"],
-                    Number(total3.toFixed(2))
-                ];
-            }
-        } else {
-            adjustedBondData[0] = [
-                bondData[i]["created_at"],
-                Number(total3.toFixed(2))
-            ];
-        }
-    }
-
-    for (var i = 0; i < cryptoData.length; i++) {
-        total4 =
-            cryptoData[i]["type"] == "buy"
-                ? total4 + cryptoData[i]["realPrice"] * currency_rate
-                : total4 - cryptoData[i]["realPrice"] * currency_rate;
-        if (adjustedCryptoData.length != 0) {
-            const last_date = new Date(cryptoData[i]["created_at"]);
-            const current_date = new Date(
-                adjustedCryptoData[adjustedCryptoData.length - 1][0]
-            );
-            if (
-                last_date.getDate() == current_date.getDate() &&
-                last_date.getMonth() == current_date.getMonth()
-            ) {
-                adjustedCryptoData[adjustedCryptoData.length - 1][1] = Number(
-                    total4.toFixed()
-                );
-            } else {
-                adjustedCryptoData[adjustedCryptoData.length] = [
-                    cryptoData[i]["created_at"],
-                    Number(total4.toFixed(2))
-                ];
-            }
-        } else {
-            adjustedCryptoData[0] = [
-                cryptoData[i]["created_at"],
-                Number(total4.toFixed(2))
-            ];
-        }
-    }
-
-    if (stockData.length != 0)
-        renderChart(
-            adjustedStockData,
-            "#chart-timeline-dashboard1",
-            appConfig.primary
-        );
-    else
-        $("#chart-timeline-dashboard1").append(
-            "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
-        );
-
-    if (fundData.length != 0)
-        renderChart(
-            adjustedFundData,
-            "#chart-timeline-dashboard2",
-            appConfig.fund
-        );
-    else
-        $("#chart-timeline-dashboard2").append(
-            "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
-        );
-
-    if (bondData.length != 0)
-        renderChart(
-            adjustedBondData,
-            "#chart-timeline-dashboard3",
-            appConfig.bond
-        );
-    else
-        $("#chart-timeline-dashboard3").append(
-            "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
-        );
-
-    if (cryptoData.length != 0)
-        renderChart(
-            adjustedCryptoData,
-            "#chart-timeline-dashboard4",
-            appConfig.crypto
-        );
-    else
-        $("#chart-timeline-dashboard4").append(
-            "<div class='d-flex justify-content-center align-items-center' style='width:100%'><h4>No Chart Data!</h4></div>"
-        );
-
-    if (
-        (!stockData || stockData.length == 0) &&
-        (fundData || fundData.length == 0) &&
-        (bondData || bondData.length == 0) &&
-        (cryptoData || crytoData.length == 0)
-    )
-        $("#month_profit_dash").append(
-            "<div class='d-flex justify-content-center align-items-center' style='min-height:470px;'><h4>No Chart Data!</h4></div>"
-        );
-    else renderBarChart(monthProfits, "#month_profit_dash");
+    });
 
     if (all_highlights.length != 0) {
         for (var i = 0; i < all_highlights.length; i++) {
@@ -756,7 +671,7 @@ $(document).ready(function() {
             }
         }
 
-        if(window.innerWidth > 575) {
+        if (window.innerWidth > 575) {
             $("#owl-carousel-14").owlCarousel({
                 items: 1,
                 margin: 10,
@@ -840,7 +755,7 @@ function renderChart(
         xaxis: {
             type: "datetime",
             min: adjustedData[0]["created_at"],
-            tickAmount: 6,
+            tickAmount: 7,
             axisTicks: {
                 show: lineLabel
             },
@@ -1066,6 +981,7 @@ function confirmTrade(
                 _token: csrf_token
             }
         }).then(response => {
+            $("#tradeModal").modal("hide");
             $(obj).attr("onclick", "buyShares(this)");
             $(obj).html(type.toLowerCase() == "buy" ? "BUY" : "SELL");
             if (response.success) {
@@ -1092,7 +1008,7 @@ function confirmTrade(
     }
 }
 
-function openTradeModel(
+function openTradeModal(
     type,
     symbol,
     company_name,
@@ -1101,21 +1017,28 @@ function openTradeModel(
     currency,
     shares,
     wherefrom,
-    exchange = "crypto"
+    exchange,
+    currency_rate
 ) {
     $("#shares_amount").val("");
     if (type == "buy") {
-        if (wherefrom == 0 || wherefrom == 1)
+        if (wherefrom == 0 || wherefrom == 1) {
             $("#trade_type").text("buy shares");
-        else $("#trade_type").text("buy units");
+        } else $("#trade_type").text("buy units");
+        $("#shares_amount").attr("placeholder", "Enter the amount of $");
         $("#trade_btn").text("BUY");
         $("#trade_btn").removeClass("btn-danger");
         $("#trade_btn").addClass("btn-primary");
     } else {
         $("#trade_type").text("sell");
-        if (wherefrom == 0 || wherefrom == 1)
+        if (wherefrom == 0 || wherefrom == 1) {
             $("#trade_type").text("sell shares");
-        else $("#trade_type").text("sell units");
+            $("#shares_amount").attr("placeholder", "Enter the amount of shares");
+        }
+        else {
+            $("#trade_type").text("sell units");
+            $("#shares_amount").attr("placeholder", "Enter the amount of units");
+        }
         $("#trade_btn").text("SELL");
         $("#trade_btn").removeClass("btn-primary");
         $("#trade_btn").addClass("btn-danger");
@@ -1131,17 +1054,17 @@ function openTradeModel(
         if (wherefrom == 2) $("#home_inst_price_label").text("Market Price");
         else $("#home_inst_price_label").text("Institutional Price");
         $("#shares-label").text("Units (Current Units: " + shares + ")");
-        $("#shares_amount").attr("placeholder", "Enter the amount of units");
         if (type == "buy") $("#modal_title").text("Buy units from " + symbol);
         else $("#modal_title").text("Sell units from " + symbol);
     } else {
         $("#home_last_price_label").text("Retail Price");
         $("#home_inst_price_label").text("Institutional Price");
         $("#shares-label").text("Shares (Current Shares: " + shares + ")");
-        $("#shares_amount").attr("placeholder", "Enter the amount of shares");
         if (type == "buy") $("#modal_title").text("Buy shares from " + symbol);
         else $("#modal_title").text("Sell shares from " + symbol);
     }
+
+    $('#local_calc_amount').val(currency_rate);
 
     $("#trade_symbol").text(symbol);
     $("#trade_company").text(company_name);
@@ -1174,3 +1097,57 @@ function openTradeModel(
     );
     $("#tradeModal").modal("show");
 }
+
+// function getDatesFromRange(range) {
+//     var current_date = new Date();
+//     var start_date = "";
+//     switch (range) {
+//         case "7d":
+//             start_date = new Date(current_date.getTime() - 7 * 24 * 60 * 60 * 1000);
+//             break;
+//         case "1m":
+//             start_date = new Date();
+//             start_date.setMonth(start_date.getMonth() - 1);
+//             break;
+//         case "6m":
+//             start_date = new Date();
+//             start_date.setMonth(start_date.getMonth() - 6);
+//             break;
+//         case "ytd":
+//             start_date = new Date(new Date().getFullYear(), 0, 1);
+//             break;
+//         case "1y":
+//             start_date = new Date();
+//             start_date.setFullYear(start_date.getFullYear() - 1);
+//             break;
+//         case "5y":
+//             start_date = new Date();
+//             start_date.setFullYear(start_date.getFullYear() - 5);
+//             break;
+//         default:
+//             start_date = new Date(current_date.getTime() - 7 * 24 * 60 * 60 * 1000);
+//             break;
+//     }
+
+//     var interval =
+//         range == "5y"
+//             ? 20
+//             : range == "1y" || range == "ytd"
+//             ? 10
+//             : range == "6m"
+//             ? 5
+//             : 1;
+
+//     var retVal = [];
+//     var prev_date = new Date(start_date);
+
+//     while (prev_date <= current_date) {
+//         retVal.push(new Date(prev_date));
+//         prev_date = new Date(prev_date.setDate(prev_date.getDate()+interval));
+//     }
+
+//     if(retVal(retVal.length-1) != current_date)
+//         retVal[retVal.length] = current_date;
+
+//     return retVal;
+// }

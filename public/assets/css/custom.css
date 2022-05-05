@@ -205,6 +205,24 @@ table .py-03 {
     box-shadow: 0 0 0 0 green;
 }
 
+.form-container {
+    padding: 0px 50px;
+}
+
+.form-wrapper {
+    padding: 0px 30px 20px!important;
+    margin: 0px 30px!important;
+}
+
+.app-form-title {
+    padding-left:48px!important;
+    padding-right:48px!important;
+}
+
+.label-adjust {
+    text-align: right;
+}
+
 /* responsive part */
 
 @media screen and (max-width: 575px) {
@@ -263,6 +281,24 @@ table .py-03 {
     table .py-03 {
         padding-top: 3px;
         padding-bottom: 3px;
+    }
+
+    .form-container {
+        padding: 0px 10px;
+    }
+
+    .form-wrapper {
+        padding: 10px!important;
+        margin: 0px 10px!important;
+    }
+
+    .app-form-title {
+        padding-left:16px!important;
+        padding-right:16px!important;
+    }
+
+    .label-adjust {
+        text-align: left;
     }
 }
 
