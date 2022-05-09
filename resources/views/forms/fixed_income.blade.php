@@ -41,7 +41,7 @@
             <a href="javascript:void(0)" onclick="hide_ad()" style="position: absolute; top:10px; right:10px;"><i class="fa fa-times fs-5"></i></a>
         </div>
         <div class="col-xl-12 box-col-12 des-xl-100 form-container">
-            <div class="card">
+            <div class="card" style="margin-bottom:60px;">
                 <div class="card-header p-b-0 app-form-title">
                     <h2>Application Form</h2>
                     @if(session('success'))
@@ -52,18 +52,18 @@
                     </div>
                     @endif
                 </div>
-                <div class="card-body p-t-0 form-wrapper" style="background-color:#f5f5f5ba; zoom:0.8;">
+                <div class="card-body p-t-0 form-wrapper" style="background-color:#f5f5f5ba;">
                     <h5 class="p-t-10 p-b-10 w-full fw-bold bg-primary" style="margin: 0 -60px; padding-left:60px;">WATCHSTONE CAPITAL</h5>
-                    <p class="fw-semibold m-b-5 m-t-15 fs-6">Please make sure that all questions are answered. Please indicate using a ‘✓’ where appropriate. If a section does not apply to you, please indicate using ‘N/A’.</p>
-                    <p class="fw-bold m-b-5 fs-6">List both names where account is in joint names.</p>
-                    <form action="{{ route('application_form') }}" enctype="multipart/form-data" method="POST">
+                    <p class="fw-semibold m-b-5 m-t-10 fs-6">Please make sure that all questions are answered. Please indicate using a ‘✓’ where appropriate. If a section does not apply to you, please indicate using ‘N/A’.</p>
+                    <p class="fw-bold m-b-10 fs-6">List both names where account is in joint names.</p>
+                    <form class="income-form" action="{{ route('application_form') }}" enctype="multipart/form-data" method="POST">
                         @csrf
-                        <h5 class="p-t-10 p-b-10 w-full fw-bold bg-primary" style="margin: 0 -60px; padding-left:60px;">Step 1 Customer Details</h5>
-                        <div class="container-fluid p-0" style="background-image: url({{asset('assets/images/pros/form_bg.jpg')}}); background-size:100%;">
+                        <h5 class="p-t-10 p-b-10 w-full bg-primary" style="margin: 0 -60px; padding-left:60px;"><b>Step 1</b> Customer Details</h5>
+                        <div class="container-fluid logo-bg" style="background-image: url({{asset('assets/images/pros/form_bg.jpg')}});">
                             <div class="row">
                                 <div class="col-md-12 m-t-15">
                                     <div class="row">
-                                        <label class="col-md-2  col-sm-4 col-xs-12 col-form-label fs-6">
+                                        <label class="col-md-2  col-sm-4 col-xs-12 fs-6" style="padding-top: 2px;">
                                             Title
                                         </label>
                                         <div class="col-md-5  col-sm-8 col-xs-12  m-checkbox-inline">
@@ -216,7 +216,7 @@
                             <div class="row">
                                 <div class="col-md-12 m-t-25">
                                     <div class="row">
-                                        <label class="col-md-2  col-sm-4 col-xs-12 fs-6">
+                                        <label class="col-md-2  col-sm-4 col-xs-12 fs-6" style="padding-top: 2px;">
                                             Title
                                         </label>
                                         <div class="col-md-6  col-sm-8 col-xs-12  m-checkbox-inline">
@@ -245,8 +245,8 @@
                                 </div>
                                 <div class="col-md-12 m-t-15">
                                     <div class="row">
-                                        <label class="col-md-2 col-sm-4 fs-6">
-                                            SurName
+                                        <label class="col-md-2 col-sm-4 fs-6  col-form-label">
+                                            Surname
                                         </label>
                                         <div class="col-md-10 col-sm-8">
                                             <input name="income_item_17" type="text" class="form-control">
@@ -366,11 +366,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="container-fluid p-0" style="background-image: url({{asset('assets/images/pros/form_bg.jpg')}}); background-size:100%;">
-                            <div class="p-t-10 p-b-10 w-full bg-primary" style="margin: 25px -60px 0px -60px; padding-left:60px;">
+                        <div class="container-fluid logo-bg" style="background-image: url({{asset('assets/images/pros/form_bg.jpg')}});">
+                            <div class="p-t-10 p-b-10 w-full bg-primary" style="margin: 0px -60px 0px -60px; padding-left:60px;">
                                 <div class="row">
                                     <div class="col-md-6 col-xs-12">
-                                        <h5 class="fw-bold m-b-0">Step 2 Term deposit set up instruction</h5>
+                                        <h5 class="m-b-0"><b>Step 2</b> Term deposit set up instruction</h5>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <h5 class="m-b-0">Bank account you will use to make payment</h5>
@@ -388,7 +388,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="row">
-                                            <label class="col-md-5 col-sm-6 col-xs-12 col-form-label fs-6 text-center">
+                                            <label class="col-md-5 col-sm-6 col-xs-12 col-form-label fs-6 label-adjust">
                                                 Asset ISIN
                                             </label>
                                             <div class="col-md-7 col-sm-6 col-xs-12">
@@ -402,10 +402,10 @@
                                         Source of Funds
                                     </label>
                                     <div class="col-md-10 col-xs-12">
-                                        <label class="fs-6"><input name="income_item_31" value="1" class="checkbox_animated" type="radio" required>Transfer from transaction account</label>
+                                        <label class="fs-6 col-form-label"><input name="income_item_31" value="1" class="checkbox_animated" type="radio" required>Transfer from transaction account</label>
                                     </div>
                                 </div>
-                                <div class="row m-t-20">
+                                <div class="row m-t-10">
                                     <label class="col-md-2 col-sm-4 col-xs-12 col-form-label fs-6">
                                     </label>
                                     <div class="col-md-4 col-sm-12">
@@ -413,7 +413,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="row">
-                                            <label class="col-md-5 col-sm-6 col-xs-12 col-form-label fs-6 text-center">
+                                            <label class="col-md-5 col-sm-6 col-xs-12 col-form-label fs-6 label-adjust">
                                                 (Bank Account Number)
                                             </label>
                                             <div class="col-md-7 col-sm-6 col-xs-12">
@@ -431,7 +431,7 @@
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="row">
-                                            <label class="col-md-5 col-sm-6 col-xs-12 col-form-label fs-6 text-center">
+                                            <label class="col-md-5 col-sm-6 col-xs-12 col-form-label fs-6 label-adjust">
                                                 (Bank Account Number)
                                             </label>
                                             <div class="col-md-7 col-sm-6 col-xs-12">
@@ -451,7 +451,7 @@
                                         <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="2" type="radio" required>
                                             Half Yearly
                                         </label>
-                                        <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="3" type="radio" required>
+                                        <label class="fs-6 yearly-label"><input name="income_item_36" class="checkbox_animated" value="3" type="radio" required>
                                             Yearly
                                         </label>
                                         <label class="fs-6"><input name="income_item_36" class="checkbox_animated" value="4" type="radio" required>
@@ -463,7 +463,7 @@
                             <div class="p-t-10 p-b-10 w-full bg-primary" style="margin: 25px -60px 0px -60px; padding-left:60px;">
                                 <div class="row">
                                     <div class="col-md-6 col-xs-12">
-                                        <h5 class="fw-bold m-b-0"><b>Step 3</b> Term deposit maturity instructions</h5>
+                                        <h5 class="m-b-0"><b>Step 3</b> Term deposit maturity instructions</h5>
                                     </div>
                                     <div class="col-md-6 col-xs-12">
                                         <h5 class="m-b-0">Bank account you will use to receive interest payments</h5>
@@ -472,10 +472,10 @@
                             </div>
                             <div class="col-md-12 m-t-15">
                                 <div class="row m-t-20">
-                                    <label class="col-md-2 col-sm-4 col-xs-12 col-form-label fs-6">
+                                    <label class="col-md-2 col-sm-4 col-xs-12 fs-6" style="padding-top: 6px;">
                                         1. Principal
                                     </label>
-                                    <div class="col-md-7 col-sm-12">
+                                    <div class="col-md-7 col-sm-12" style="padding-top: 6px;">
                                         <label class="fs-6"><input name="income_item_37" class="checkbox_animated" value="1" type="radio" required><span>I would like to receive my principal investment sum in the following bank account</span></label>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
@@ -485,10 +485,10 @@
                             </div>
                             <div class="col-md-12 m-t-15">
                                 <div class="row m-t-20">
-                                    <label class="col-md-2 col-sm-4 col-xs-12 col-form-label fs-6">
+                                    <label class="col-md-2 col-sm-4 col-xs-12 fs-6" style="padding-top: 6px;">
                                         2. Interest
                                     </label>
-                                    <div class="col-md-7 col-sm-12">
+                                    <div class="col-md-7 col-sm-12" style="padding-top: 6px;">
                                         <label class="fs-6"><input name="income_item_37" class="checkbox_animated" value="2" type="radio" required><span>I would like to receive my interest payments in the following bank account</span></label>
                                     </div>
                                     <div class="col-md-3 col-sm-12">
@@ -497,7 +497,7 @@
                                 </div>
                             </div>
                             <div class="p-t-10 p-b-10 w-full bg-primary" style="margin: 25px -60px 0px -60px; padding-left:60px;">
-                                <h5 class="fw-bold m-b-0">Step 4 Terms and conditions</h5>
+                                <h5 class="m-b-0"><b>Step 4</b> Terms and conditions</h5>
                             </div>
                             <label class="col-md-12 col-form-label fs-6 fw-300 d-flex">
                                 <span>1. </span><span class="m-l-15">The amount deposited is to be invested for the fixed term stated above. The interest rate applicable will be the interest rate offered by <b>Watchstone Capital</b>, at the time of receipt of the deposit.</span>
@@ -537,30 +537,30 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h6 class="m-b-5 m-t-20 fw-bold">Please upload the documents requested by your representative below.</h6>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6 class="m-b-5 m-t-20 fw-bold">Please upload the documents requested by your representative below.</h6>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <p class="fw-bold m-t-5 m-b-5">File 1</p>
+                                    <input name="acc_item_69" class="form-control" type="file" required>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <p class="fw-bold m-t-5 m-b-5">File 2</p>
+                                    <input name="acc_item_70" class="form-control" type="file" required>
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <p class="fw-bold m-t-5 m-b-5">File 3</p>
+                                    <input name="acc_item_71" class="form-control" type="file">
+                                </div>
+                                <div class="col-md-3 col-sm-6 col-xs-12">
+                                    <p class="fw-bold m-t-5 m-b-5">File 4</p>
+                                    <input name="acc_item_72" class="form-control" type="file">
+                                </div>
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <p class="fw-bold m-t-5 m-b-5">File 1</p>
-                                <input name="acc_item_69" class="form-control" type="file" required>
+                            <div class="d-flex justify-content-center m-t-20">
+                                <input class="btn btn-primary btn-outlined btn-lg m-b-10" type="submit" value="Submit">
                             </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <p class="fw-bold m-t-5 m-b-5">File 2</p>
-                                <input name="acc_item_70" class="form-control" type="file" required>
-                            </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <p class="fw-bold m-t-5 m-b-5">File 3</p>
-                                <input name="acc_item_71" class="form-control" type="file">
-                            </div>
-                            <div class="col-md-3 col-sm-6 col-xs-12">
-                                <p class="fw-bold m-t-5 m-b-5">File 4</p>
-                                <input name="acc_item_72" class="form-control" type="file">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center m-t-50">
-                            <input class="btn btn-primary btn-outlined btn-lg" type="submit" value="Submit">
                         </div>
                     </form>
                 </div>

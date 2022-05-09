@@ -169,12 +169,31 @@ class StocksController extends Controller
                     abort(500);
                     break;
             }
+
+            $currency_rate = 1;
+            if (auth()->user()->balance) {
+                $user_currency = json_decode(auth()->user()->balance, 'true')['currency'];
+                if ($user_currency != 'USD') {
+                    $user_currency_rate = IEX::getRates('USD' . $user_currency);
+                    $currency_rate = $user_currency_rate['USD' . $user_currency];
+                }
+            }
+
+            $item_rate = 1;
+            if($stock->gcurrency !="USD")
+                $item_rate = IEX::getRates('USD' . $stock->gcurrency)['USD'.$stock->gcurrency];
+
+            // print_r($data); die();
+
             /**
              * Return view
              */
             return view('dashboard.stocks.details', [
                 'data' => $data,
-                'account_manager' => $account_manager
+                'account_manager' => $account_manager,
+                'user_currency' => $user_currency,
+                'currency_rate' => $currency_rate,
+                'item_rate' => $item_rate
             ]);
         } catch (\Exception $e) {
             return redirect()->route('stocks.search')->withError("unknown");

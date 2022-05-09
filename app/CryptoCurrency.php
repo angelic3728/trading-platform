@@ -67,9 +67,7 @@ class CryptoCurrency extends Model
     public function institutionalPrice($last_price)
     {
         $decimal = 2;
-        if ($last_price > 1) {
-            $decimal = 2;
-        } else if ($last_price > 0.1) {
+        if ($last_price > 0.1) {
             $decimal = 3;
         } else if ($last_price > 0.01) {
             $decimal = 4;
@@ -81,8 +79,8 @@ class CryptoCurrency extends Model
             $decimal = 10;
         }
 
-        $insti_price = number_format($last_price - ($last_price * ($this->discount_percentage / 100)), $decimal);
-        return $insti_price;
+        $inst_price = round($last_price - ($last_price * ($this->discount_percentage / 100)), $decimal);
+        return $inst_price;
     }
 
 

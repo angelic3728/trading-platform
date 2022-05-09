@@ -2,11 +2,11 @@
   <div class="main-header-right row m-0">
     <div class="main-header-left">
       <div class="logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" src="{{asset('assets/images/logo/logo.png')}}" alt=""></a></div>
-      <div class="dark-logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" src="{{asset('assets/images/logo/dark-logo.png')}}" alt=""></a></div>
+      <div class="dark-logo-wrapper"><a href="{{ route('overview') }}"><img class="img-fluid" src="{{asset('assets/images/logo/dark-logo.png')}}" alt="" style="max-height: 30px; margin-left:10px;"></a></div>
       <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"> </i></div>
     </div>
     <div class="d-flex col header-wrapper">
-      <div class="nav-ticker col p-0 sm:d-none">
+      <div class="nav-ticker col p-0  d-sm-block">
         <div class="ticker-wrap">
           <div class="ticker">
             <ul class="ticker__item" id="forward_ticker_wrapper">

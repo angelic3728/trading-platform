@@ -22,13 +22,12 @@ class CryptosController extends Controller
          * Get Cryptocurrency
          */
         $crypto = CryptoCurrency::where('symbol', $symbol)->firstOrFail();
-
         /**
          * Validate request
          */
-        $request->validate([
-            'amounts' => 'required|numeric|min:0.001',
-        ]);
+        // $request->validate([
+        //     'amounts' => 'required|numeric|min:0.001',
+        // ]);
 
         /**
          * Deteremine which action to perform

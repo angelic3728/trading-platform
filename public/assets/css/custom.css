@@ -21,7 +21,7 @@
     padding-top: 95px;
 }
 
-.page-body-wrapper footer {
+footer {
     margin-left: 290px;
     padding-right: 125px;
 }
@@ -36,6 +36,7 @@
     position: fixed;
     margin-left: -27px;
     padding-top: 10px;
+    margin-top: -2px;
 }
 
 #ad2_container {
@@ -210,8 +211,8 @@ table .py-03 {
 }
 
 .form-wrapper {
-    padding: 0px 30px 20px!important;
-    margin: 0px 30px!important;
+    padding: 0px 28px!important;
+    margin: 0px 32px 30px!important;
 }
 
 .app-form-title {
@@ -219,8 +220,29 @@ table .py-03 {
     padding-right:48px!important;
 }
 
+.logo-bg { 
+    background-size:100%; 
+    margin-left:-60px; 
+    margin-right:-60px; 
+    padding:0px 60px 20px!important; 
+    width:auto;
+}
+
 .label-adjust {
     text-align: right;
+}
+
+.checkbox_animated:after {
+    top: -0.25rem;
+}
+
+.income-form input[type=text], .income-form input[type=date] {
+    font-size: 20px;
+    padding:2px 10px;
+}
+
+.bond-tb-header {
+    padding: 8px 30px!important;
 }
 
 /* responsive part */
@@ -288,8 +310,8 @@ table .py-03 {
     }
 
     .form-wrapper {
-        padding: 10px!important;
-        margin: 0px 10px!important;
+        padding: 0px 10px!important;
+        margin: 0px 10px 10px!important;
     }
 
     .app-form-title {
@@ -300,17 +322,33 @@ table .py-03 {
     .label-adjust {
         text-align: left;
     }
+
+    .yearly-label {
+        margin-right: 38px!important;
+    }
+
+    .logo-bg {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding: 0px 20px 20px!important;
+    }
+
+    .bond-tb-header {
+        padding: 8px!important;
+    }
+
+    .bond-price-td {
+        padding-right: 20px!important;
+    }
+
+    .graph-body {
+        padding: 5px 5px 35px 20px!important;
+    }
 }
 
 @media screen and (max-width: 767px) {
     .page-main-header .main-header-right .main-header-left {
         width: auto;
-    }
-}
-
-@media screen and (max-width: 991px) {
-    footer {
-        margin-left: 0px;
     }
 }
 
@@ -328,6 +366,7 @@ table .py-03 {
 
     #chart-timeline-dashboard, #chart-timeline-dashboard1, #chart-timeline-dashboard2, #chart-timeline-dashboard3, #chart-timeline-dashboard4{
         zoom: 117%;
+        margin-left: -22px;
     }
 
     .modal-backdrop {
@@ -343,7 +382,7 @@ table .py-03 {
         padding-top: 90px;
     }
 
-    .page-body-wrapper footer {
+    footer {
         padding-right: 75px;
         margin-left: 230px;
     }
@@ -375,5 +414,11 @@ table .py-03 {
 @media (max-width: 1200px) {
     .dashboard-content-wrapper {
         padding: 0px 15px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    footer {
+        margin-left: 0px;
     }
 }

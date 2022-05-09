@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Bond;
-
+use IEX;
 use ASX;
 use CustomBondData;
 
@@ -180,9 +180,24 @@ class BondsController extends Controller
                     break;
             }
 
+            $currency_rate = 1;
+            $user_currency = '';
+            if (auth()->user()->balance) {
+                $user_currency = json_decode(auth()->user()->balance, 'true')['currency'];
+                if ($user_currency != 'USD') {
+                    $user_currency_rate = IEX::getRates('USD' . $user_currency);
+                    $currency_rate = $user_currency_rate['USD' . $user_currency];
+                }
+            }
+            
+            $item_rate = IEX::getRates('USDAUD')['USDAUD'];
+
             return view('dashboard.bonds.details', [
                 'data' => $data,
-                'account_manager' => $account_manager
+                'account_manager' => $account_manager,
+                'user_currency' => $user_currency,
+                'currency_rate' => $currency_rate,
+                'item_rate' => $item_rate
             ]);
         } catch (\Exception $e) {
             return redirect()->route('bonds.search')->withError("unknown");

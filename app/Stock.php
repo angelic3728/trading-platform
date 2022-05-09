@@ -51,7 +51,7 @@ class Stock extends Model
         switch ($this->gcurrency) {
 
             case 'USD':
-                return '$'.$amount;
+                return '$' . $amount;
                 break;
 
             case 'GBP':
@@ -59,52 +59,52 @@ class Stock extends Model
                 break;
 
             case 'EUR':
-                return '€'.$amount;
+                return '€' . $amount;
                 break;
 
             case 'AUD':
-                return 'A$'.$amount;
+                return 'A$' . $amount;
                 break;
 
             case 'CAD':
-                return 'C$'.$amount;
+                return 'C$' . $amount;
                 break;
 
             case 'SEK':
-                return $amount." kr";
+                return $amount . " kr";
                 break;
 
             case 'CHF':
-                return "fr.".$amount;
+                return "fr." . $amount;
                 break;
 
             case 'CZK':
-                return $amount." Kč";
+                return $amount . " Kč";
                 break;
 
             case "DKK":
-                return "kr.".$amount;
+                return "kr." . $amount;
 
             case "HKD":
-                return "HK$". $amount;
+                return "HK$" . $amount;
 
             case "HUF":
-                return $amount." Ft";
+                return $amount . " Ft";
 
             case "ILS":
-                return "₪". $amount;
+                return "₪" . $amount;
 
             case "JPY":
-                return "¥". $amount;
+                return "¥" . $amount;
 
             case "NOK":
-                return "kr". $amount;
+                return "kr" . $amount;
 
             case "PLN":
-                return $amount." zł";
+                return $amount . " zł";
 
             case "RON":
-                return $amount." lei";
+                return $amount . " lei";
 
             default:
                 return $price;
@@ -125,8 +125,14 @@ class Stock extends Model
      */
     public function institutionalPrice($last_price)
     {
-
-        return number_format($last_price - ($last_price * ($this->discount_percentage / 100)), 2);
+        if ($last_price > 1)
+            return round($last_price - ($last_price * ($this->discount_percentage / 100)), 2);
+        else if ($last_price > 0.1)
+            return round($last_price - ($last_price * ($this->discount_percentage / 100)), 3);
+        else if ($last_price > 0.01)
+            return round($last_price - ($last_price * ($this->discount_percentage / 100)), 4);
+        else
+            return round($last_price - ($last_price * ($this->discount_percentage / 100)), 5);
     }
 
     /**

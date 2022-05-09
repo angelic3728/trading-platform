@@ -15,7 +15,8 @@
             <a href="{{ $article['url'] }}" class="card article" target="_blank">
                 <div class="prooduct-details-box" style="margin-bottom: 0px;">
                     <div class="media" style="text-align: center; padding:10px; min-height:410px; border:0px;">
-                        @if($article['source'] == 'PR Newswire' || $article['source'] == 'SBWire' || $article['source'] == 'Seeking Alpha')
+                        <!-- <h4>{{$article['source']}}</h4> -->
+                        @if($article['source'] == 'PR Newswire' || $article['source'] == 'SBWire' || $article['source'] == 'Seeking Alpha' || $article['source'] == 'GlobeNewswire')
                             <img class="align-self-center img-fluid" src="{{asset('assets/images/pros/default_news.png')}}" style="max-height: 180px;" alt="#">
                         @else
                             <img class="align-self-center img-fluid" src="{{ $article['image'] }}" style="max-height: 180px;" alt="#">

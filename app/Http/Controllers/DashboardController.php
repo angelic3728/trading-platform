@@ -97,12 +97,14 @@ class DashboardController extends Controller
                         // add real price and total prices
                         if ($transaction->stock->gcurrency != "USD") {
                             $rate = $all_rates['USD' . $transaction->stock->gcurrency];
+                            $transaction->currency_rate = $rate;
                             $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->latest_price * $transaction->shares / $rate, 2) : $transaction->price;
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
                                 $total_transaction_price -= $transaction->realPrice;
                         } else {
+                            $transaction->currency_rate = 1;
                             $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
@@ -152,12 +154,14 @@ class DashboardController extends Controller
                         // add real price and total prices
                         if ($transaction->fund->gcurrency != "USD") {
                             $rate = $all_rates['USD' . $transaction->fund->gcurrency];
+                            $transaction->currency_rate = $rate;
                             $transaction->realPrice = ($rate && $rate != 0) ? round($transaction->latest_price * $transaction->shares / $rate, 2) : $transaction->latest_price;
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
                             else
                                 $total_transaction_price -= $transaction->realPrice;
                         } else {
+                            $transaction->currency_rate = 1;
                             $transaction->realPrice = round($transaction->latest_price * $transaction->shares, 2);
                             if ($transaction->type == "buy")
                                 $total_transaction_price += $transaction->realPrice;
@@ -187,6 +191,7 @@ class DashboardController extends Controller
                         }
                         // add real price and total prices
                         $rate = $all_rates['USDAUD'];
+                        $transaction->currency_rate = $rate;
                         $transaction->realPrice =($rate && $rate != 0) ? round($transaction->latest_price * $transaction->shares / $rate, 2) : $transaction->latest_price;
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;
@@ -233,6 +238,8 @@ class DashboardController extends Controller
                             $decimal = 6;
                         else
                             $decimal = 10;
+                        
+                        $transaction->currency_rate = 1;
                         $transaction->realPrice = round($token_amount, $decimal);
                         if ($transaction->type == "buy")
                             $total_transaction_price += $transaction->realPrice;

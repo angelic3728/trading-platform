@@ -233,12 +233,29 @@ class FundsController extends Controller
                     abort(500);
                     break;
             }
+
+            $currency_rate = 1;
+            if (auth()->user()->balance) {
+                $user_currency = json_decode(auth()->user()->balance, 'true')['currency'];
+                if ($user_currency != 'USD') {
+                    $user_currency_rate = IEX::getRates('USD' . $user_currency);
+                    $currency_rate = $user_currency_rate['USD' . $user_currency];
+                }
+            }
+
+            $item_rate = 1;
+            if($fund->gcurrency !="USD")
+                $item_rate = IEX::getRates('USD' . $fund->gcurrency)['USD'.$fund->gcurrency];
+
             /**
              * Return view
              */
             return view('dashboard.funds.details', [
                 'data' => $data,
-                'account_manager' => $account_manager
+                'account_manager' => $account_manager,
+                'user_currency' => $user_currency,
+                'currency_rate' => $currency_rate,
+                'item_rate' => $item_rate
             ]);
         } catch (\Exception $e) {
             return redirect()->route('funds.search')->withError("unknown");

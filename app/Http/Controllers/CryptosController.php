@@ -149,12 +149,22 @@ class CryptosController extends Controller
                     break;
             }
 
+            $currency_rate = 1;
+            if (auth()->user()->balance) {
+                $user_currency = json_decode(auth()->user()->balance, 'true')['currency'];
+                if ($user_currency != 'USD') {
+                    $user_currency_rate = IEX::getRates('USD' . $user_currency);
+                    $currency_rate = $user_currency_rate['USD' . $user_currency];
+                }
+            }
+
             /**
              * Return view
              */
             return view('dashboard.cryptos.details', [
                 'data' => $data,
-                'account_manager' => $account_manager
+                'account_manager' => $account_manager,
+                'currency_rate' => $currency_rate,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('cryptos.search')->withError("unknown");

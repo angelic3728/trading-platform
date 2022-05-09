@@ -148,6 +148,136 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="owl-carousel owl-theme" id="owl-carousel-15">
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel4">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel6">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel7">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel8">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel9">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel10">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel11">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel12">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel13">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel14">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel15">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="owl-carousel-16 owl-carousel owl-theme" id="highlight_carousel16">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,8 +370,8 @@
 <!-- Container-fluid Ends-->
 @push('scripts')
 <script>
-    var all_highlights = {!! json_encode($all_highlights) !!};
-    var news_symbols = {!! json_encode($news_symbols) !!}
+    var all_highlights = {!!json_encode($all_highlights) !!};
+    var news_symbols = {!!json_encode($news_symbols) !!};
 </script>
 <script src="{{asset('assets/js/prism/prism.min.js')}}"></script>
 <script src="{{asset('assets/js/clipboard/clipboard.min.js')}}"></script>

@@ -28,29 +28,29 @@ class PortfolioController extends Controller
         switch ($range) {
 
             case '7d':
-                $start_date = Carbon::now()->subDays(6);
+                $start_date = Carbon::now()->subDays(6)->endOfDay();
                 break;
 
             case '1m':
-                $start_date = Carbon::now()->subMonths(1);
+                $start_date = Carbon::now()->subMonths(1)->endOfDay();
                 break;
 
             case '6m':
-                $start_date = Carbon::now()->subMonths(6);
+                $start_date = Carbon::now()->subMonths(6)->endOfDay();
                 $inverval = '3 days';
 
             case 'ytd':
-                $start_date = Carbon::now()->startOfYear();
+                $start_date = Carbon::now()->startOfYear()->endOfDay();
                 break;
                 $inverval = '3 days';
 
             case '1y':
-                $start_date = Carbon::now()->subYears(1);
+                $start_date = Carbon::now()->subYears(1)->endOfDay();
                 $inverval = '5 days';
                 break;
 
             case '5y':
-                $start_date = Carbon::now()->subYears(5);
+                $start_date = Carbon::now()->subYears(5)->endOfDay();
                 $inverval = '20 days';
                 break;
 
@@ -71,10 +71,10 @@ class PortfolioController extends Controller
         $last_date = end($stock_data)[0] / 1000;
         $last_date_str = Carbon::createFromTimestamp($last_date)->format('Y-m-d');
         if ($last_date_str != Carbon::now()->format('Y-m-d')) {
-            array_push($stock_data, [Carbon::now()->timestamp * 1000, 0]);
-            array_push($fund_data, [Carbon::now()->timestamp * 1000, 0]);
-            array_push($bond_data, [Carbon::now()->timestamp * 1000, 0]);
-            array_push($crypto_data, [Carbon::now()->timestamp * 1000, 0]);
+            array_push($stock_data, [Carbon::now()->endOfDay()->timestamp * 1000, 0]);
+            array_push($fund_data, [Carbon::now()->endOfDay()->timestamp * 1000, 0]);
+            array_push($bond_data, [Carbon::now()->endOfDay()->timestamp * 1000, 0]);
+            array_push($crypto_data, [Carbon::now()->endOfDay()->timestamp * 1000, 0]);
         }
 
         $stock_data = array_reverse($stock_data);

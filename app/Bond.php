@@ -61,7 +61,7 @@ class Bond extends Model
             $decimal = 10;
         }
         
-        return number_format($last_price - ($last_price * ($this->discount_percentage / 100)), $decimal);
+        return round($last_price - ($last_price * ($this->discount_percentage / 100)), $decimal);
     }
 
 

@@ -965,7 +965,7 @@ $(document).ready(function() {
                     console.log(artiles);
                     for (var i = 0; i < artiles.length; i++) {
                         $(".news-" + i).css("display", "block");
-                        if (artiles[i]["source"] == "SBWire" || artiles[i]["source"] == "PR Newswire" || artiles[i]["source"] == "Seeking Alpha")
+                        if (artiles[i]["source"] == "SBWire" || artiles[i]["source"] == "PR Newswire" || artiles[i]["source"] == "Seeking Alpha" || artiles[i]["source"] == "GlobeNewswire")
                             $(".news-img-" + i).attr("src", "/assets/images/pros/default_news.png");
                         else
                             $(".news-img-" + i).attr(
@@ -1028,7 +1028,6 @@ function formatPrice(price, currency) {
                       .toString()
                       .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 : Number(adj_price.toFixed(decimal)).toString();
-
         switch (currency) {
             case "USD":
                 return "$" + amount;
@@ -1036,10 +1035,10 @@ function formatPrice(price, currency) {
             case "GBP":
                 return (
                     (Number(adj_price) * 100 > 999
-                        ? (adj_price.toFixed(decimal) * 100)
+                        ? (adj_price * 100).toFixed(1)
                               .toString()
                               .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        : (adj_price.toFixed(decimal) * 100).toString()) + "p"
+                        : (adj_price * 100).toFixed(2)) + "p"
                 );
 
             case "EUR":
@@ -1094,6 +1093,61 @@ function formatPrice(price, currency) {
 
 function formatPercentage(percentage) {
     return (Number(percentage) * 100).toFixed(2) + "%";
+}
+
+function getCurrencyLabel(str) {
+    switch (str) {
+        case "USD":
+            return "$";
+            break;
+        case "GBP":
+            return "£";
+            break;
+        case "EUR":
+            return "€";
+            break;
+        case "AUD":
+            return "A$";
+            break;
+        case "CAD":
+            return "C$";
+            break;
+        case "SEK":
+            return "kr";
+            break;
+        case "CHF":
+            return "fr.";
+            break;
+        case "CZK":
+            return "Kč";
+
+        case "DKK":
+            return "kr.";
+
+        case "HKD":
+            return "HK$";
+
+        case "HUF":
+            return "Ft";
+
+        case "ILS":
+            return "₪";
+
+        case "JPY":
+            return "¥";
+
+        case "NOK":
+            return "kr";
+
+        case "PLN":
+            return "zł";
+
+        case "RON":
+            return "lei";
+
+        default:
+            return "$";
+    }
 }
 
 function hide_ad() {

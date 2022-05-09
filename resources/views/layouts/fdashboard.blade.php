@@ -51,9 +51,9 @@
             </div>
             <div class="col-sm-auto pt-2 pt-sm-0">
               <nav>
-                <a href="mailto://{{ config('app.email') }}" class="m-r-10">Contact Us</a>
-                <a href="{{ route('legal.terms-and-conditions') }}" class="m-r-10">Terms & Conditions</a>
-                <a href="{{ route('legal.privacy-policy') }}" class="m-r-10">Privacy Policy</a>
+                <a href="mailto://{{ config('app.email') }}" class="m-r-10 text-success">Contact Us</a>
+                <a href="{{ route('legal.terms-and-conditions') }}" class="m-r-10 text-success">Terms & Conditions</a>
+                <a href="{{ route('legal.privacy-policy') }}" class="m-r-10 text-success">Privacy Policy</a>
               </nav>
             </div>
           </div>

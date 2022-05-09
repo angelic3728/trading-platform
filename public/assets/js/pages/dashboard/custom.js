@@ -10,7 +10,6 @@ $(document).ready(function() {
                     j < Number(current_date.getMonth()) + 1;
                     j++
                 ) {
-                    debugger;
                     monthProfits[j] = Number(
                         (
                             monthProfits[j] +
@@ -24,8 +23,12 @@ $(document).ready(function() {
                     j < Number(current_date.getMonth()) + 1;
                     j++
                 ) {
-                    debugger;
-                    monthProfits[j] = Number((monthProfits[j] - chartData[i]["realPrice"] * currency_rate).toFixed(2));
+                    monthProfits[j] = Number(
+                        (
+                            monthProfits[j] -
+                            chartData[i]["realPrice"] * currency_rate
+                        ).toFixed(2)
+                    );
                 }
             }
         }
@@ -47,7 +50,7 @@ $(document).ready(function() {
                             (stock_data[i][1] * currency_rate).toFixed(2)
                         );
                     }
-                    $('#chart-timeline-dashboard1').empty();
+                    $("#chart-timeline-dashboard1").empty();
                     renderChart(
                         stock_data,
                         "#chart-timeline-dashboard1",
@@ -67,7 +70,7 @@ $(document).ready(function() {
                             (fund_data[i][1] * currency_rate).toFixed(2)
                         );
                     }
-                    $('#chart-timeline-dashboard2').empty();
+                    $("#chart-timeline-dashboard2").empty();
                     renderChart(
                         fund_data,
                         "#chart-timeline-dashboard2",
@@ -87,7 +90,7 @@ $(document).ready(function() {
                             (bond_data[i][1] * currency_rate).toFixed(2)
                         );
                     }
-                    $('#chart-timeline-dashboard3').empty();
+                    $("#chart-timeline-dashboard3").empty();
                     renderChart(
                         bond_data,
                         "#chart-timeline-dashboard3",
@@ -132,7 +135,7 @@ $(document).ready(function() {
                                 (crypto_data[i][1] * currency_rate).toFixed(10)
                             );
                     }
-                    $('#chart-timeline-dashboard4').empty();
+                    $("#chart-timeline-dashboard4").empty();
                     renderChart(
                         crypto_data,
                         "#chart-timeline-dashboard4",
@@ -518,7 +521,7 @@ $(document).ready(function() {
                         "href",
                         "/" +
                             all_highlights[i]["wherefrom"] +
-                            "/" +
+                            "s/" +
                             all_highlights[i]["symbol"]
                     );
                 var h6 = $("<h6>")
@@ -719,9 +722,9 @@ function renderChart(
     width = 3,
     height = window.innerWidth > 1580
         ? 340
-        : window.innerWidth > 575
+        : (window.innerWidth > 575
         ? 288
-        : 310
+        : 310)
 ) {
     var options = {
         series: [
@@ -842,7 +845,7 @@ function renderChart(
                 breakpoint: 535,
                 options: {
                     chart: {
-                        height: 250
+                        height: 230
                     }
                 }
             }
@@ -946,7 +949,9 @@ function confirmTrade(
     current_shares,
     wherefrom
 ) {
-    var shares_amount = $("#shares_amount").val();
+    var shares_amount = 0;
+    if (type == "buy") shares_amount = $("#calc_shares").text();
+    else shares_amount = $("#shares_amount").val();
     var csrf_token = $('meta[name="csrf-token"]').attr("content");
 
     if (Number(shares_amount) == 0) {
@@ -967,17 +972,17 @@ function confirmTrade(
             wherefrom == 0
                 ? "/api/stocks/" + symbol + "/" + type.toLowerCase()
                 : wherefrom == 1
-                ? "/api/fund/" + symbol + "/" + type.toLowerCase()
+                ? "/api/funds/" + symbol + "/" + type.toLowerCase()
                 : wherefrom == 2
-                ? "/api/bond/" + symbol + "/" + type.toLowerCase()
-                : "/api/crypto/" + symbol + "/" + type.toLowerCase();
+                ? "/api/bonds/" + symbol + "/" + type.toLowerCase()
+                : "/api/cryptos/" + symbol + "/" + type.toLowerCase();
         $.ajax({
             method: "post",
             url: url,
             data: {
                 shares: shares_amount,
                 price: price,
-                institutional_price: institutional_price,
+                institutional_price: institutional_price.toString(),
                 _token: csrf_token
             }
         }).then(response => {
@@ -1018,30 +1023,126 @@ function openTradeModal(
     shares,
     wherefrom,
     exchange,
+    item_rate,
     currency_rate
 ) {
+    var currency_label = getCurrencyLabel(currency);
+    $(".alert-wrapper").empty();
+    $("#max_shares").prop("checked", false);        
     $("#shares_amount").val("");
+    $("#local_calc_amount").val("0");
+    $("#calc_shares").text("0");
+    $("#trade_btn").prop("disabled", false);
     if (type == "buy") {
+        $(".max-sell-part").css("display", "none");
         if (wherefrom == 0 || wherefrom == 1) {
             $("#trade_type").text("buy shares");
-        } else $("#trade_type").text("buy units");
-        $("#shares_amount").attr("placeholder", "Enter the amount of $");
+            $("#calc_amount_label").text("Number of shares:");
+        } else {
+            $("#calc_amount_label").text("Number of units:");
+            $("#trade_type").text("buy units");
+        }
+        if(window.innerWidth > 575)
+            $("#shares_amount").attr("placeholder", "Enter the amount of "+currency_label);
+        else
+            $("#shares_amount").attr("placeholder", "Enter "+currency_label);
+        $("#shares_amount").attr(
+            "onkeyup",
+            "buyInputHandle(this, " +
+                currency_rate +
+                ", " +
+                institutional_price.replace(",", "") +
+                ", " +
+                item_rate +
+                ", " +
+                wherefrom +
+                ")"
+        );
+        $("#shares_amount").attr(
+            "onchange",
+            "buyInputHandle(this, " +
+                currency_rate +
+                ", " +
+                institutional_price.replace(",", "") +
+                ", " +
+                item_rate +
+                ", " +
+                wherefrom +
+                ")"
+        );
         $("#trade_btn").text("BUY");
         $("#trade_btn").removeClass("btn-danger");
         $("#trade_btn").addClass("btn-primary");
     } else {
+        $(".max-sell-part").css("display", "block");
+        $("#shares_amount").attr("max", shares);
         $("#trade_type").text("sell");
+        $("#max_shares").attr(
+            "onclick",
+            "checkMaxShares(this, " +
+                shares +
+                ", " +
+                currency_rate +
+                ", " +
+                price +
+                ", " +
+                item_rate +
+                ")"
+        );
         if (wherefrom == 0 || wherefrom == 1) {
             $("#trade_type").text("sell shares");
-            $("#shares_amount").attr("placeholder", "Enter the amount of shares");
-        }
-        else {
+            if(window.innerWidth > 575)
+            $("#shares_amount").attr(
+                "placeholder",
+                "Enter the amount of shares"
+            );
+            else
+            $("#shares_amount").attr(
+                "placeholder",
+                "Enter shares"
+            );
+        } else {
             $("#trade_type").text("sell units");
-            $("#shares_amount").attr("placeholder", "Enter the amount of units");
+            if(window.innerWidth > 575) {
+                $("#shares_amount").attr(
+                    "placeholder",
+                    "Enter the amount of units"
+                );
+            } else {
+                $("#shares_amount").attr(
+                    "placeholder",
+                    "Enter units"
+                );
+            }
         }
+        $("#shares_amount").attr(
+            "onkeyup",
+            "sellInputHandle(this, " +
+                shares +
+                ", " +
+                currency_rate +
+                ", " +
+                price +
+                ", " +
+                item_rate +
+                ")"
+        );
+        $("#shares_amount").attr(
+            "onchange",
+            "sellInputHandle(this, " +
+                shares +
+                ", " +
+                currency_rate +
+                ", " +
+                price +
+                ", " +
+                item_rate +
+                ")"
+        );
         $("#trade_btn").text("SELL");
         $("#trade_btn").removeClass("btn-primary");
         $("#trade_btn").addClass("btn-danger");
+        $("#calc_amount_label").text("Amount of "+currency_label+":");
     }
 
     if (wherefrom == 0) $("#wherefrom_home").text("stock");
@@ -1053,24 +1154,24 @@ function openTradeModal(
         $("#home_last_price_label").text("Unit Price");
         if (wherefrom == 2) $("#home_inst_price_label").text("Market Price");
         else $("#home_inst_price_label").text("Institutional Price");
-        $("#shares-label").text("Units (Current Units: " + shares + ")");
+        $("#shares-label").text(
+            "(Current Units: " + Number(shares) + ")"
+        );
         if (type == "buy") $("#modal_title").text("Buy units from " + symbol);
         else $("#modal_title").text("Sell units from " + symbol);
     } else {
         $("#home_last_price_label").text("Retail Price");
         $("#home_inst_price_label").text("Institutional Price");
-        $("#shares-label").text("Shares (Current Shares: " + shares + ")");
+        $("#shares-label").text(
+            "(Current Shares: " + Number(shares) + ")"
+        );
         if (type == "buy") $("#modal_title").text("Buy shares from " + symbol);
         else $("#modal_title").text("Sell shares from " + symbol);
     }
 
-    $('#local_calc_amount').val(currency_rate);
-
     $("#trade_symbol").text(symbol);
     $("#trade_company").text(company_name);
     $("#trade_price").text(formatPrice(price, currency));
-    console.log(price);
-    console.log(institutional_price);
     $("#trade_institutional_price").text(
         formatPrice(institutional_price, currency)
     );
@@ -1098,56 +1199,47 @@ function openTradeModal(
     $("#tradeModal").modal("show");
 }
 
-// function getDatesFromRange(range) {
-//     var current_date = new Date();
-//     var start_date = "";
-//     switch (range) {
-//         case "7d":
-//             start_date = new Date(current_date.getTime() - 7 * 24 * 60 * 60 * 1000);
-//             break;
-//         case "1m":
-//             start_date = new Date();
-//             start_date.setMonth(start_date.getMonth() - 1);
-//             break;
-//         case "6m":
-//             start_date = new Date();
-//             start_date.setMonth(start_date.getMonth() - 6);
-//             break;
-//         case "ytd":
-//             start_date = new Date(new Date().getFullYear(), 0, 1);
-//             break;
-//         case "1y":
-//             start_date = new Date();
-//             start_date.setFullYear(start_date.getFullYear() - 1);
-//             break;
-//         case "5y":
-//             start_date = new Date();
-//             start_date.setFullYear(start_date.getFullYear() - 5);
-//             break;
-//         default:
-//             start_date = new Date(current_date.getTime() - 7 * 24 * 60 * 60 * 1000);
-//             break;
-//     }
+function buyInputHandle(obj, currency_rate, inst_price, item_rate, wherefrom) {
+    if (Number(inst_price) != 0) {
+        var current_val = obj.value;
+        $("#local_calc_amount").val((current_val * currency_rate / item_rate).toFixed(2));
+        if (wherefrom != 3)
+            $("#calc_shares").text(
+                (current_val / inst_price).toFixed()
+            );
+        else
+            $("#calc_shares").text(
+                (current_val / inst_price).toFixed(3)
+            );
+    } else {
+        $("#trade_btn").attr("disabled", "");
+        $("#trade_btn").attr("onclick", "");
+        $(".alert-wrapper").html(
+            '<div class="alert alert-danger dark alert-dismissible fade show" id="zero_shares_alert" role="alert">You can\'t buy it.<button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close" style="top: 0px; right:0px;"></button></div>'
+        );
+    }
+}
 
-//     var interval =
-//         range == "5y"
-//             ? 20
-//             : range == "1y" || range == "ytd"
-//             ? 10
-//             : range == "6m"
-//             ? 5
-//             : 1;
+function sellInputHandle(obj, shares, currency_rate, price, item_rate) {
+    var current_val = obj.value;
+    if(shares != Number(current_val))
+        $("#max_shares").prop("checked", false);        
+    $("#local_calc_amount").val(
+        ((current_val * price * currency_rate) / item_rate).toFixed(2)
+    );
+    $("#calc_shares").text((current_val * price).toFixed(2));
+}
 
-//     var retVal = [];
-//     var prev_date = new Date(start_date);
-
-//     while (prev_date <= current_date) {
-//         retVal.push(new Date(prev_date));
-//         prev_date = new Date(prev_date.setDate(prev_date.getDate()+interval));
-//     }
-
-//     if(retVal(retVal.length-1) != current_date)
-//         retVal[retVal.length] = current_date;
-
-//     return retVal;
-// }
+function checkMaxShares(obj, shares, currency_rate, price, item_rate) {
+    if (obj.checked) {
+        $("#shares_amount").val(shares);
+        $("#local_calc_amount").val(
+            ((shares * price * currency_rate) / item_rate).toFixed(2)
+        );
+        $("#calc_shares").text((shares * price).toFixed(2));
+    } else {
+        $("#shares_amount").val("0");
+        $("#local_calc_amount").val("0");
+        $("#calc_shares").text("0");
+    }
+}

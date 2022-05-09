@@ -31,7 +31,7 @@ class User extends Mailable
         $this->action = array_get($data, 'action');
         $this->user = array_get($data, 'user');
         $this->obj = array_get($data, 'obj');
-        $this->symbol = array_get($data, 'stock');
+        $this->symbol = array_get($data, 'symbol');
         $this->name = array_get($data, 'name');
         $this->price = array_get($data, 'price');
         $this->institutional_price = array_get($data, 'institutional_price');
@@ -56,7 +56,7 @@ class User extends Mailable
 
         } else {
 
-            $subject = 'Trade Confirmation: You have sold '.$this->shares.' shares of '.$this->stock->symbol.' stock';
+            $subject = 'Trade Confirmation: You have sold '.$this->shares.' shares of '.$this->symbol.' stock';
 
         }
 

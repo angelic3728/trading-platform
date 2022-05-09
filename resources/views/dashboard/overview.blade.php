@@ -80,19 +80,19 @@
                                         </a>
                                     </div>
                                     <h5>
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'USD')
+                                        @if($user_currency == 'USD')
                                         <span class="f-w-600">$</span>
                                         @endif
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'EUR')
+                                        @if($user_currency == 'EUR')
                                         <span class="f-w-600">€</span>
                                         @endif
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'GBP')
+                                        @if($user_currency == 'GBP')
                                         <span class="f-w-600">£</span>
                                         @endif
-                                        @if(auth()->user()->getBalance() && auth()->user()->getBalance()->currency == 'AUD')
+                                        @if($user_currency == 'AUD')
                                         <span class="f-w-600">A$</span>
                                         @endif
-                                        <span class="counter" id="total_profile_value"></span>
+                                        <span class="counter text-nowrap" id="total_profile_value"></span>
                                     </h5>
                                     <p>Portfolio Value</p>
                                 </div>
@@ -107,7 +107,7 @@
                                         </a>
                                     </div>
                                     <h5>
-                                        @if($user_currency)
+                                        @if($user_currency == "USD")
                                         <span class="f-w-600">$</span>
                                         @endif
                                         @if($user_currency == 'EUR')
@@ -120,7 +120,7 @@
                                         <span class="f-w-600">A$</span>
                                         @endif
                                         @if(auth()->user()->getBalance())
-                                        <span class="counter" id="cash_on_account"></span>
+                                        <span class="counter text-nowrap" id="cash_on_account"></span>
                                         @else
                                         <span>0</span>
                                         @endif
@@ -138,7 +138,7 @@
                                 <h5 class="md:d-block lg:d-none"><span>Performance</span></h5>
                             </div>
                         </div>
-                        <div class="card-body p-t-5">
+                        <div class="card-body p-t-5 graph-body">
                             <div class="tabbed-card">
                                 <ul class="pull-right nav nav-tabs border-tab nav-success" id="chart_tab" role="tablist" style="z-index: 7;">
                                     <li class="nav-item">
@@ -266,7 +266,7 @@
                                                                 <th style="font-size:13px; min-width:100px;">Inst. Price</th>
                                                                 <th style="font-size:13px;">Shares</th>
                                                                 <th style="font-size:13px;">Value</th>
-                                                                <th class="text-center table-secondary" style="right: 0px; width:120px; position: sticky;">Action</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:130px; position: sticky;">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -290,8 +290,8 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->stock->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -340,8 +340,8 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->stock->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$currency_rate}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->stock->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -369,7 +369,7 @@
                                                                 <th style="font-size:13px; min-width:100px;">Inst. Price</th>
                                                                 <th style="font-size:13px;">Shares</th>
                                                                 <th style="font-size:13px;">Value</th>
-                                                                <th class="text-center table-secondary" style="right: 0px; width:120px; position: sticky;">Action</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:130px; position: sticky;">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -392,9 +392,9 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->fund->formatPrice($myPortfolio->institutional_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->fund->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
-                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Sell</button>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:130px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -443,8 +443,8 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->fund->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$currency_rate}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->company_name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->fund->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -472,7 +472,7 @@
                                                                 <th style="font-size:13px; min-width:100px;">Mkt Price</th>
                                                                 <th style="font-size:13px;">Units</th>
                                                                 <th style="font-size:13px;">Value</th>
-                                                                <th class="text-center table-secondary" style="right: 0px; width:120px; position: sticky;">Action</th>
+                                                                <th class="text-center table-secondary" style="right: 0px; width:130px; position: sticky;">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -497,9 +497,9 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->bond->formatPrice($myPortfolio->institutional_price):"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->bond->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
-                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Sell</button>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:130px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -549,8 +549,8 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->bond->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$currency_rate}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', '{{$myPortfolio->bond->exchange}}', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -575,7 +575,7 @@
                                                                 <th style="font-size:13px; min-width:100px;">Inst. Price</th>
                                                                 <th style="font-size:13px;">Units</th>
                                                                 <th style="font-size:13px;">Value</th>
-                                                                <th class="text-center table-secondary" style="position:sticky; right: 0px; width:120px;">Action</th>
+                                                                <th class="text-center table-secondary" style="position:sticky; right: 0px; width:130px;">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -598,9 +598,9 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->institutional_price) ? $myPortfolio->institutional_price:"-"}}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->crypto->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
-                                                                <td class="py-03" class="text-center table-secondary" style="width:120px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position:sticky; right:0px;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Sell</button>
+                                                                <td class="py-03" class="text-center table-secondary" style="width:130px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position:sticky; right:0px;">
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @endif
@@ -649,8 +649,8 @@
                                                                 <td class="py-03" style="vertical-align: middle;">{{ (fmod($myPortfolio->shares, 1) !== 0.000)?$myPortfolio->shares:number_format($myPortfolio->shares, 0) }}</td>
                                                                 <td class="py-03" style="vertical-align: middle;">{{ ($myPortfolio->latest_price)?$myPortfolio->crypto->formatPrice(round($myPortfolio->latest_price*$myPortfolio->shares, 2)):"-" }}</td>
                                                                 <td class="py-03" class="text-center table-secondary" style="max-width:90px; text-align:center; vertical-align:middle; background-color:#e2e3e5; position: sticky; right:0px; white-space:initial;">
-                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Buy</button>
-                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$currency_rate}}')">Sell</button>
+                                                                    <button class="btn btn-pill btn-outline-primary btn-xs md:me-1" onclick="openTradeModal('buy', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Buy</button>
+                                                                    <button class="btn btn-pill btn-outline-danger btn-xs md:ms-1" onclick="openTradeModal('sell', '{{$myPortfolio->symbol}}', '{{$myPortfolio->name}}', '{{$myPortfolio->latest_price}}', '{{ $myPortfolio->institutional_price }}', '{{ $myPortfolio->gcurrency }}', '{{$myPortfolio->shares}}', '{{$myPortfolio->wherefrom}}', 'crypto', '{{$myPortfolio->currency_rate}}', '{{$currency_rate}}')">Sell</button>
                                                                 </td>
                                                             </tr>
                                                             @if ($cnt == 5)
@@ -707,11 +707,11 @@
                                                             <small id="trade_is_xnys" class="d-block mb-3">Our platform includes both real time pricing and end of day pricing. When submitting a trade, we will confirm the actual price with you.</small>
                                                             <div class="form-group">
                                                                 <div class="row">
-                                                                    <div class="col-sm-7">
+                                                                    <div class="col-xs-7" style="width:58.33333%;">
                                                                         <label class="form-label" id="shares-label" style="color:#24695c !important;">Shares</label>
-                                                                        <input type="number" class="form-control" placeholder="Enter the amount of $" required id="shares_amount" style="width: 90%; margin-bottom:10px;">
+                                                                        <input type="number" min="0" class="form-control" placeholder="Enter the amount of $" required id="shares_amount" style="width: 90%; margin-bottom:10px;">
                                                                     </div>
-                                                                    <div class="col-sm-5">
+                                                                    <div class="col-xs-5" style="width: 41.66667%;">
                                                                         <label class="form-label" id="shares-label" style="color:#24695c !important;">Local Currency</label>
                                                                         <label for="" style="width: 100%;">
                                                                             @if($user_currency == 'AUD')
@@ -723,10 +723,11 @@
                                                                             @else
                                                                             <span style="float: left; padding-top:6px; padding-right:5px;">$</span>
                                                                             @endif
-                                                                            <input type="number" class="form-control" required id="local_calc_amount" style="width: 84%;" disabled="">
+                                                                            <input type="number" class="form-control" required id="local_calc_amount" style="width: 80%;" disabled="">
                                                                         </label>
                                                                     </div>
-                                                                    <div class="col-sm-12" style="color:#24695c !important;"><p>Number of shares: <span id="calc_shares">23</span></p></div>
+                                                                    <div class="col-sm-6" style="color:#24695c !important;"><p><span id="calc_amount_label">Number of shares: </span><span class="p-t-5 p-l-5" id="calc_shares">0</span></p></div>
+                                                                    <div class="col-sm-6 max-sell-part text-end" style="color:#24695c !important;"><label for="max shares" class="p-r-5">Sell Max</label><input type="checkbox" id="max_shares" style="margin-right: 5px; position:relative;"></div>
                                                                 </div>
                                                                 <small class="text-info" style="color:#24695c!important">Your account manager will contact you as soon as possible to confirm best price.</small>
                                                             </div>
@@ -780,22 +781,22 @@
                             <table style="white-space: nowrap;" class="table table-responsive-sm  table-sm">
                                 <thead>
                                     <tr>
-                                    <th style="padding:8px 32px;">Name</th>
-                                    <th class="text-center"  style="padding:8px;">Bond Type</th>
-                                    <th class="text-center"  style="padding:8px;">Price</th>
-                                    <th class="text-center d-none d-sm-table-cell"  style="padding:8px;">Coupon</th>
+                                    <th style="padding:8px 8px 8px 32px; width:170px;">Name</th>
+                                    <th class="text-center bond-tb-header">Bond Type</th>
+                                    <th class="text-center bond-tb-header bont-price-td">Price</th>
+                                    <th class="text-center d-none d-sm-table-cell bond-tb-header">Coupon</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if(count($bonds) != 0)
                                     @foreach($bonds as $bond)
                                     <tr>
-                                        <td class="text-nowrap" style="color:#24695c; vertical-align: middle; padding:8px 32px;">
+                                        <td class="text-nowrap" style="color:#24695c; vertical-align: middle; padding:8px 8px 8px 32px; width:170px;">
                                             <span class="f-w-600">{{ $bond->symbol }}</span>
-                                            <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:150px;">{{$bond->name}}</p>
+                                            <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width:130px;">{{$bond->name}}</p>
                                         </td>
                                         <td class="text-center text-nowrap" style="vertical-align: middle; padding:8px;">{{ $bond->exchange }}</td>
-                                        <td class="text-center text-nowrap" style="vertical-align: middle; padding:8px;">{{ "A$".$bond->price }}</td>
+                                        <td class="text-center text-nowrap bont-price-td" style="vertical-align: middle; padding:8px;">{{ "A$".$bond->price }}</td>
                                         <td class="text-center text-nowrap d-none d-sm-table-cell" style="vertical-align: middle; padding:8px;">{{ $bond->coupon_pa }}</td>
                                     </tr>
                                     @endforeach
@@ -1039,14 +1040,14 @@
                             <a class="btn btn-outline-success btn-xs" href="{{ route('transactions') }}">see more</a>
                         </div>
                         <div class="card-body p-0">
-                            <div class="table-responsive" style="height: 317px; width:100%;">
+                            <div class="table-responsive" style="height: 317px; width:100%; overflow-x:hidden">
                                 <table style="white-space: nowrap;" class="table table-responsive-sm">
                                     <thead>
                                         <tr>
                                             <th class="text-center">Symbol</th>
                                             <th class="text-center">Type</th>
                                             <th class="text-center">Price</th>
-                                            <th class="text-center">Shares/Units</th>
+                                            <th class="text-center bond-price-td">Shares/Units</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1056,7 +1057,7 @@
                                             <td class="text-center f-w-600">{{ $transaction->symbol }}</td>
                                             <td class="text-center">{{ $transaction->type }}</td>
                                             <td class="text-center">{{ $transaction->wherefrom=="0"?$transaction->stock->formatPrice($transaction->price):($transaction->wherefrom=="1"?$transaction->fund->formatPrice($transaction->price):($transaction->wherefrom=="2"?$transaction->bond->formatPrice($transaction->price):$transaction->crypto->formatPrice($transaction->price)))}}</td>
-                                            <td class="py-03 text-center" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?number_format($transaction->shares, 3):number_format($transaction->shares, 0) }}</td>
+                                            <td class="py-03 text-center bond-price-td" style="vertical-align: middle;">{{ (fmod($transaction->shares, 1) !== 0.000)?number_format($transaction->shares, 3):number_format($transaction->shares, 0) }}</td>
                                         </tr>
                                         @endforeach
                                         @else
@@ -1074,7 +1075,7 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-top d-sm-flex align-items-center">
-                                <h5><span>Recent Document</span></h5>
+                                <h5><span>Recent Documents</span></h5>
                             </div>
                             <a class="btn btn-outline-success btn-xs" href="{{ route('documents.index') }}">see more</a>
                         </div>
